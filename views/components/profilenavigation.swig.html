@@ -1,0 +1,6 @@
+<ul class="nav nav-pills">
+    <li {% if title == "Profile" %}class="active" {% endif %}><a href="/profile"><span class="glyphicon glyphicon-home"></span>  General</a></li>
+    <li {% if title == "Likes" %}class="active" {% endif %}><a href="/profile/likes"><span class="glyphicon glyphicon-user"></span> Likes</a></li>
+    <li {% if title == "Songs" %}class="active" {% endif %}><a href="/profile/songs"><span class="glyphicon glyphicon-envelope"></span> Songs</a></li>
+    <li {% if title == "Upload" %}class="active" {% endif %}><a href="/profile/upload"><span class="glyphicon glyphicon-envelope"></span> Upload</a></li>
+</ul>

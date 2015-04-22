@@ -1,0 +1,1 @@
+{"version":3,"file":"JobController.js","sourceRoot":"","sources":["JobController.ts"],"names":[],"mappings":"AAAA,qDAAqD;AASrD,AAPA;;;;;GAKG;AAEH,MAAM,CAAC,OAAO,GAAG;IACb,OAAO,EAAE;QACL,OAAO,EAAE,KAAK;QACd,SAAS,EAAE,KAAK;QAChB,IAAI,EAAE,KAAK;KACd;IAED,IAAI,EAAE,UAAS,GAAG,EAAE,GAAG;IAEvB,CAAC;CACJ,CAAC"}

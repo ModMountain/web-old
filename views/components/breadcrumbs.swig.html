@@ -1,0 +1,17 @@
+<div class="breadcrumbs">
+    <div class="container">
+        <h1 class="pull-left">{{ title }}
+            <small> {{ subtitle }}</small>
+        </h1>
+        <ul class="pull-right breadcrumb">
+            <li><a href="/">Home</a></li>
+            {% for breadcrumb in breadcrumbs %}
+                {% if loop.last %}
+                    <li class="active">{{ breadcrumb[1] }}</li>
+                {% else %}
+                    <li><a href="{{ breadcrumb[0] }}">{{ breadcrumb[1] }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
