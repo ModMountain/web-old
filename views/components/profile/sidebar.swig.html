@@ -5,18 +5,18 @@
     {# Navigation #}
     <ul class="list-group sidebar-nav-v1 margin-bottom-40" id="sidebar-nav-1">
         <li class="list-group-item {% if activeTab == "profile.index" %}active{% endif %}">
-            <a href="/profile"><i class="fa fa-bar-chart-o"></i> Overview</a>
+            <a href="/profile"><i class="icon icon-bar-chart-o"></i> Overview</a>
         </li>
         <li class="list-group-item {% if activeTab == "profile.addons" %}active{% endif %}">
             <span class="badge badge-blue">{{ user.addons.length }}</span>
-            <a href="/profile/addons"><i class="fa fa-user"></i> Addons </a>
+            <a href="/profile/addons"><i class="icon icon-user"></i> Addons </a>
         </li>
         <li class="list-group-item {% if activeTab == "profile.jobs" %}active{% endif %}">
             <span class="badge badge-blue">{{ user.jobs.length }}</span>
-            <a href="/profile/jobs"><i class="fa fa-users"></i> Jobs</a>
+            <a href="/profile/jobs"><i class="icon icon-users"></i> Jobs</a>
         </li>
         <li class="list-group-item {% if activeTab == "profile.settings" %}active{% endif %}">
-            <a href="/profile/settings"><i class="fa fa-cog"></i> Settings</a>
+            <a href="/profile/settings"><i class="icon icon-cog"></i> Settings</a>
         </li>
     </ul>
 
@@ -24,8 +24,8 @@
 
     <!--Notification-->
     <div class="panel-heading-v2 overflow-h">
-        <h2 class="heading-xs pull-left"><i class="fa fa-bell-o"></i> Notifications</h2>
-        <a href="#"><i class="fa fa-cog pull-right"></i></a>
+        <h2 class="heading-xs pull-left"><i class="icon icon-bell-o"></i> Notifications</h2>
+        <a href="#"><i class="icon icon-cog pull-right"></i></a>
     </div>
     <ul class="list-unstyled mCustomScrollbar margin-bottom-20" data-mcs-theme="minimal-dark">
         <li class="notification">
@@ -45,7 +45,7 @@
             </div>
         </li>
         <li class="notification">
-            <i class="icon-custom icon-sm rounded-x icon-bg-yellow icon-line fa fa-bolt"></i>
+            <i class="icon-custom icon-sm rounded-x icon-bg-yellow icon-line icon icon-bolt"></i>
 
             <div class="overflow-h">
                 <span><strong>Natasha Kolnikova</strong> accepted your invitation.</span>
@@ -61,7 +61,7 @@
             </div>
         </li>
         <li class="notification">
-            <i class="icon-custom icon-sm rounded-x icon-bg-blue icon-line fa fa-comments"></i>
+            <i class="icon-custom icon-sm rounded-x icon-bg-blue icon-line icon icon-comments"></i>
 
             <div class="overflow-h">
                 <span><strong>Bruno Js.</strong> added you to group chating.</span>
