@@ -117,10 +117,16 @@ nbproject
 .idea/workspace.xml
 .node_history
 
-api/*.js*
-assets/js/*.js*
-config/*.js*
-tasks/*.js*
-Gruntfile.js*
-modmtn.js*
-Unify HTML
+api/*.js
+api/*.map
+assets/js/*.js
+assets/js/*.map
+config/*.js
+config/*.map
+tasks/*.js
+tasks/*.map
+Gruntfile.js
+Gruntfile.js.map
+modmtn.js
+modmtn.js.map
+UnifyHTML
