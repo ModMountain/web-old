@@ -14,42 +14,47 @@
 
 module.exports = {
 
-  log: {
-    level: 'info'
-  },
+    log: {
+        level: 'info'
+    },
 
-  models: {
-    connection: 'mongodb_production'
-  },
+    connections: {
+        mongodb: {
+            adapter: 'sails-mongo',
+            host: 'localhost',
+            port: 27017,
+            database: 'modmountain_production'
+        }
+    },
 
-  gridFs: 'mongodb://modmtn:modmtn@ds037617.mongolab.com:37617/modmtn_development',
+    gridFs: 'mongodb://modmtn:modmtn@ds037617.mongolab.com:37617/modmtn_development',
 
-  auth: {
-    steam: {
-      returnURL: "http://local.modmtn.com:1337/auth/steamCallback",
-      realm: 'http://local.modmtn.com:1337/',
-      apiKey: '***REMOVED***'
+    auth: {
+        steam: {
+            returnURL: "http://local.modmtn.com:1337/auth/steamCallback",
+            realm: 'http://local.modmtn.com:1337/',
+            apiKey: '***REMOVED***'
+        }
+    },
+
+    http: {
+        middleware: {
+            order: [
+                'startRequestTimer',
+                'cookieParser',
+                'session',
+                'passportInit',
+                'passportSession',
+                'userToTemplate',
+                'myRequestLogger',
+                'bodyParser',
+                'handleBodyParserError',
+                'router',
+                'www',
+                'favicon',
+                '404',
+                '500'
+            ],
+        }
     }
-  },
-
-  http: {
-    middleware: {
-      order: [
-        'startRequestTimer',
-        'cookieParser',
-        'session',
-        'passportInit',
-        'passportSession',
-        'userToTemplate',
-        'myRequestLogger',
-        'bodyParser',
-        'handleBodyParserError',
-        'router',
-        'www',
-        'favicon',
-        '404',
-        '500'
-      ],
-    }
-  }
 };

@@ -21,20 +21,4 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.connections.html
  */
 
-module.exports.connections = {
-    mongodb_development: {
-        adapter: 'sails-mongo',
-        host: 'ds037617.mongolab.com',
-        port: 37617,
-        user: 'modmtn',
-        password: 'modmtn',
-        database: 'modmtn_development'
-    },
-
-    mongodb_production: {
-        adapter: 'sails-mongo',
-        host: 'localhost',
-        port: 27017,
-        database: 'modmountain_production'
-    },
-};
+module.exports.connections = {};

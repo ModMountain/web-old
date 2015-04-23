@@ -19,8 +19,15 @@ module.exports = {
      * environment (see config/connections.js and config/models.js )           *
      ***************************************************************************/
 
-    models: {
-        connection: 'mongodb_development'
+    connections: {
+        mongodb: {
+            adapter: 'sails-mongo',
+            host: 'ds037617.mongolab.com',
+            port: 37617,
+            user: 'modmtn',
+            password: 'modmtn',
+            database: 'modmtn_development'
+        }
     },
 
     gridFs: 'mongodb://modmtn:modmtn@ds037617.mongolab.com:37617/modmtn_development',
