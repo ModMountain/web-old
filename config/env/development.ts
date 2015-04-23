@@ -34,8 +34,8 @@ module.exports = {
 
     auth: {
         steam: {
-            returnURL: "http://local.modmtn.com:1337/auth/steamCallback",
-            realm: 'http://local.modmtn.com:1337/',
+            returnURL: "http://modmtn.com:1337//auth/steamCallback",
+            realm: 'http://modmtn.com:1337/',
             apiKey: '***REMOVED***'
         }
     },
@@ -43,7 +43,7 @@ module.exports = {
     http: {
         middleware: {
             order: [
-                'startRequestTimer',
+                'morgan',
                 'cookieParser',
                 'session',
                 'passportInit',

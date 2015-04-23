@@ -33,7 +33,7 @@ module.exports.http = {
          ***************************************************************************/
 
         order: [
-            'startRequestTimer',
+            'morgan',
             'cookieParser',
             'session',
             'passportInit',
@@ -53,7 +53,8 @@ module.exports.http = {
         userToTemplate: function(req, res, next) {
             res.locals.user = req.user;
             next();
-        }
+        },
+        morgan: require('morgan')('dev')
 
 
         /***************************************************************************
