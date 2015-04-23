@@ -22,26 +22,6 @@
  */
 
 module.exports.connections = {
-
-    /***************************************************************************
-     *                                                                          *
-     * Local disk storage for DEVELOPMENT ONLY                                  *
-     *                                                                          *
-     * Installed by default.                                                    *
-     *                                                                          *
-     ***************************************************************************/
-    localDiskDb: {
-        adapter: 'sails-disk'
-    },
-
-    /***************************************************************************
-     *                                                                          *
-     * MongoDB is the leading NoSQL database.                                   *
-     * http://en.wikipedia.org/wiki/MongoDB                                     *
-     *                                                                          *
-     * Run: npm install sails-mongo                                             *
-     *                                                                          *
-     ***************************************************************************/
     mongodb_development: {
         adapter: 'sails-mongo',
         host: 'ds037617.mongolab.com',
@@ -49,6 +29,12 @@ module.exports.connections = {
         user: 'modmtn',
         password: 'modmtn',
         database: 'modmtn_development'
-    }
+    },
 
+    mongodb_production: {
+        adapter: 'sails-mongo',
+        host: 'localhost',
+        port: 27017,
+        database: 'modmountain_production'
+    },
 };

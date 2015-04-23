@@ -43,7 +43,6 @@ module.exports.http = {
             'bodyParser',
             'handleBodyParserError',
             'router',
-            'www',
             'favicon',
             '404',
             '500'

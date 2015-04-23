@@ -31,6 +31,26 @@ module.exports = {
             realm: 'http://local.modmtn.com:1337/',
             apiKey: '***REMOVED***'
         }
-    }
+    },
 
+    http: {
+        middleware: {
+            order: [
+                'startRequestTimer',
+                'cookieParser',
+                'session',
+                'passportInit',
+                'passportSession',
+                'userToTemplate',
+                'myRequestLogger',
+                'bodyParser',
+                'handleBodyParserError',
+                'router',
+                'www',
+                'favicon',
+                '404',
+                '500'
+            ],
+        }
+    }
 };
