@@ -39,9 +39,13 @@
                 </div>
                 <div class="col-sm-6">
                     <ul class="list-inline right-topbar pull-right">
-                        <li><a href="#">Account</a></li>
-                        <li><a href="shop-ui-add-to-cart.html">Wishlist (0)</a></li>
-                        <li><a href="/auth/login">Login</a> | <a href="shop-ui-register.html">Register</a></li>
+                        {% if user %}
+                            <li><a href="/profile">Dashboard</a></li>
+                            <li><a href="shop-ui-add-to-cart.html">Wishlist (0)</a></li>
+                            <li><a href="/auth/logout">Logout</a></li>
+                        {% else %}
+                            <li><a href="/auth/login">Login</a> | <a href="/auth/login">Register</a></li>
+                        {% endif %}
                         <li><i class="search icon icon-search search-button"></i></li>
                     </ul>
                 </div>

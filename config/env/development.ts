@@ -34,7 +34,7 @@ module.exports = {
 
     auth: {
         steam: {
-            returnURL: "http://modmtn.com:1337//auth/steamCallback",
+            returnURL: "http://modmtn.com:1337/auth/steamCallback",
             realm: 'http://modmtn.com:1337/',
             apiKey: '***REMOVED***'
         }
@@ -43,7 +43,6 @@ module.exports = {
     http: {
         middleware: {
             order: [
-                'morgan',
                 'cookieParser',
                 'session',
                 'passportInit',
@@ -52,6 +51,7 @@ module.exports = {
                 'myRequestLogger',
                 'bodyParser',
                 'handleBodyParserError',
+                'morgan',
                 'router',
                 'www',
                 'favicon',

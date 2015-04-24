@@ -17,15 +17,20 @@ module.exports = {
 
     login: function(req, res) {
         if (req.user) res.redirect('/profile');
-        else res.view();
+        else res.redirect('/auth/steamSignIn');
+    },
+
+    logout: function(req, res) {
+        req.logout();
+        res.redirect('/');
     },
 
     steamSignIn: function(req, res, next) {
-        Passport.authenticate('steam')(req, res, next)
+        Passport.authenticate('steam')(req, res, next);
     },
 
     steamCallback: function(req, res, next) {
-        Passport.authenticate('steam', {successRedirect: '/profile', failureRedirect: '/auth/login'})(req, res, next)
+        Passport.authenticate('steam', {successRedirect: '/profile', failureRedirect: '/auth/login'})(req, res, next);
     }
 };
 
