@@ -27,12 +27,12 @@ module.exports = {
         }
     },
 
-    gridFs: 'mongodb://modmtn:modmtn@ds037617.mongolab.com:37617/modmtn_development',
+    gridFs: 'mongodb://localhoust:27017/modmountain_production',
 
     auth: {
         steam: {
-            returnURL: "http://local.modmtn.com:1337/auth/steamCallback",
-            realm: 'http://local.modmtn.com:1337/',
+            returnURL: "https://modmountain.com/auth/steamCallback",
+            realm: 'https://modmountain.com/',
             apiKey: '***REMOVED***'
         }
     },
@@ -40,18 +40,16 @@ module.exports = {
     http: {
         middleware: {
             order: [
-                'startRequestTimer',
+                'favicon',
                 'cookieParser',
                 'session',
                 'passportInit',
                 'passportSession',
                 'userToTemplate',
-                'myRequestLogger',
                 'bodyParser',
                 'handleBodyParserError',
+                'morgan',
                 'router',
-                'www',
-                'favicon',
                 '404',
                 '500'
             ],
