@@ -18,6 +18,8 @@ module.exports = {
         level: 'info'
     },
 
+    port: '4337',
+
     connections: {
         mongodb: {
             adapter: 'sails-mongo',
