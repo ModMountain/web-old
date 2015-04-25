@@ -41,7 +41,9 @@
 <body>
 <div class="wrapper">
   {% include 'components/navigation.swig.html' %}
-  {% include 'components/flashhandler.swig.html' %}
+  {% if breadcrumbs %}
+    {% include 'components/breadcrumbs.swig.html' %}
+  {% endif %}
 
   {% block content %}{% endblock %}
 
