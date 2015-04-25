@@ -32,30 +32,15 @@ module.exports.http = {
          *                                                                          *
          ***************************************************************************/
 
-        order: [
-            'morgan',
-            'cookieParser',
-            'session',
-            'passportInit',
-            'passportSession',
-            'userToTemplate',
-            'myRequestLogger',
-            'bodyParser',
-            'handleBodyParserError',
-            'router',
-            'favicon',
-            '404',
-            '500'
-        ],
-
         passportInit: require('passport').initialize(),
         passportSession: require('passport').session(),
         userToTemplate: function(req, res, next) {
             res.locals.user = req.user;
             next();
         },
-        morgan: require('morgan')('dev')
-
+        morgan: require('morgan')('dev', {
+            skip: function (req, res) { return res.statusCode < 400 }
+        })
 
         /***************************************************************************
          *                                                                          *

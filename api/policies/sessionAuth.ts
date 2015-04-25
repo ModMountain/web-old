@@ -10,14 +10,14 @@
  *
  */
 module.exports = function(req, res, next) {
-
-  // User is allowed, proceed to the next policy, 
-  // or if this is the last policy, the controller
-  if (req.user) {
-    return next();
+  if (req.isSocket) {
+    if (req.session.passport.user !== undefined) return next();
+    else return req.socket.emit('error', {type: 'Authentication Error', message: "You must be logged in to do that!"});
+  } else {
+    if (req.user !== undefined) return next();
+    else {
+      req.flash('error', "You must be logged in to do that!");
+      res.redirect('/auth/login')
+    }
   }
-
-  // User is not allowed
-  // (default res.forbidden() behavior can be overridden in `config/403.js`)
-  return res.redirect('/auth/login');
 };

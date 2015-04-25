@@ -256,10 +256,10 @@
 .clients {
   border: 0;
   overflow: hidden;
-  margin-top: 10px;      
-  margin-bottom: 30px;  
+  margin-top: 10px;
+  margin-bottom: 30px;
   box-shadow:none !important;
-  margin-bottom: 0 !important;    
+  margin-bottom: 0 !important;
 }
 .clients li {
   overflow: hidden;
@@ -276,7 +276,7 @@
   display: none;
   position: absolute;
 }
-.clients li:hover img.color-img { 
+.clients li:hover img.color-img {
   display: block;
 }
 .clients li img {
@@ -345,12 +345,12 @@
 }
 
 .counters span.counter-icon i:after {
-   width: 0; 
+   width: 0;
    height: 0;
    left: 38%;
-   content: " "; 
+   content: " ";
    bottom: -7px;
-   display: block; 
+   display: block;
    position: absolute;
    border-top: 7px solid #72c02c;
    border-left: 7px solid transparent;
@@ -634,12 +634,12 @@
 .testimonials-v3 .owl-buttons .owl-next {
   padding: 13px;
   position: relative;
-  margin: 15px 2px 0; 
+  margin: 15px 2px 0;
     background: #f5f5f5;
-  display: inline-block;  
+  display: inline-block;
 }
 
-.testimonials-v3 .owl-buttons .owl-prev:after, 
+.testimonials-v3 .owl-buttons .owl-prev:after,
 .testimonials-v3 .owl-buttons .owl-next:after {
     top: 0;
     color: #bbb;

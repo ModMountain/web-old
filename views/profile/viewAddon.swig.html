@@ -1,0 +1,50 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+    <link rel="stylesheet" href="/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
+
+    <!-- CSS Page Style -->
+    <link rel="stylesheet" href="/css/pages/profile.css">
+
+    <link rel="stylesheet" href="/css/custom.css">
+{% endblock %}
+
+{% block content %}
+    <!--=== Profile ===-->
+    <div class="container content profile">
+        <div class="row">
+            {% include 'components/flashhandler.swig.html' %}
+            {% include 'components/profile/sidebar.swig.html' %}
+
+            <!-- Profile Content -->
+            <div class="col-md-9">
+                <div class="profile-body">
+                    <div class="profile-bio">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <img class="img-responsive md-margin-bottom-10" src="https://placehold.it/350x350&text=TODO" alt="">
+                                <a class="btn-u btn-u-sm" href="#">Change Picture</a>
+                            </div>
+                            <div class="col-md-7">
+                                <h2>{{ addon.name }}</h2>
+                                <span><strong>Status:</strong> {{ addon.status }}</span>
+                                <span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
+                                <hr>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eget massa nec turpis congue bibendum. Integer nulla felis, porta suscipit nulla et, dignissim commodo nunc. Morbi a semper nulla.</p>
+                                <p>Proin mauris odio, pharetra quis ligula non, vulputate vehicula quam. Nunc in libero vitae nunc ultricies tincidunt ut sed leo. Sed luctus dui ut congue consequat. Cras consequat nisl ante, nec malesuada velit pellentesque ac. Pellentesque nec arcu in ipsum iaculis convallis.</p>
+                            </div>
+                        </div>
+                    </div><!--/end row-->
+                </div>
+            </div>
+            <!-- End Profile Content -->
+        </div>
+    </div>
+    <!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

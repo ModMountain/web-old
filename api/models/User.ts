@@ -11,7 +11,6 @@ var User = {
         },
         email: {
             type: 'email'
-            //required: true
         },
         steamIdentifier: {
             type: 'string',

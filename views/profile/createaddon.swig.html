@@ -21,14 +21,13 @@
                 <div class="profile-body margin-bottom-20">
                     <div class="tab-v1">
                         <ul class="nav nav-justified nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#general">General</a></li>
-                            <li><a data-toggle="tab" href="#media">Media</a></li>
-                            <li><a data-toggle="tab" href="#specialFeatures">Special Features</a></li>
-                            <li><a data-toggle="tab" href="#finalize">Finalize</a></li>
+                            <li class="active"><a data-toggle="tab" href="#generalContent">General</a></li>
+                            <li><a data-toggle="tab" href="#mediaContent">Media</a></li>
+                            <li><a data-toggle="tab" href="#specialContent">Special Features</a></li>
                         </ul>
                         <div class="tab-content">
                             {# General addon stuff #}
-                            <div id="general" class="profile-edit tab-pane fade in active">
+                            <div id="generalContent" class="profile-edit tab-pane fade in active">
                                 <h2 class="heading-md">General Addon Information</h2>
 
                                 <p>Here you need to specify your addon's general information. All of this information is
@@ -36,216 +35,164 @@
                                 <br>
 
                                 <form class="sky-form" id="generalForm">
-                                    <dl class="dl-horizontal">
-                                        <dt>Addon Name</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="input">
-                                                    <i class="icon-append icon icon-font"></i>
-                                                    <input type="text" placeholder="Addon Name" name="name">
-                                                    <b class="tooltip tooltip-bottom-right">This is the name of your
-                                                        addon. Choose something short and descriptive.</b>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Desired Price</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="input">
-                                                    <i class="icon-append icon icon-usd"></i>
-                                                    <input type="number" name="desiredPrice"
-                                                           placeholder="Desired Price">
-                                                    <b class="tooltip tooltip-bottom-right">Don't forget your
-                                                        password</b>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Addon Gamemode</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="select">
-                                                    <select name="type">
-                                                        <option value="0">Sandbox Based</option>
-                                                        <option value="1">Dark RP</option>
-                                                        <option value="2">TTT</option>
-                                                        <option value="3">Murder</option>
-                                                        <option value="3">Other</option>
-                                                    </select>
-                                                    <i></i>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Addon Type</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="select">
-                                                    <select name="type">
-                                                        <option value="0">Weapon</option>
-                                                        <option value="1">Chatbox</option>
-                                                        <option value="2">Utility</option>
-                                                        <option value="3">Miscellaneous</option>
-                                                    </select>
-                                                    <i></i>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Description</dt>
-                                        <dd>
-                                            <textarea id="editor" rows="12" name="description"></textarea>
-                                        </dd>
-                                    </dl>
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Addon Name</label>
+                                            <label class="input">
+                                                <i class="icon-prepend icon icon-font"></i>
+                                                <input type="text" placeholder="Some Addon" name="name" id="nameInput" required>
+                                                <b class="tooltip tooltip-bottom-left">This is the name of your addon. Choose something short and descriptive.</b>
+                                            </label>
+                                        </section>
+
+                                        <section>
+                                            <label class="label">Desired Price</label>
+                                            <label class="input">
+                                                <i class="icon-prepend icon icon-usd"></i>
+                                                <input type="number" placeholder="0" name="price" id="priceInput" required>
+                                                <b class="tooltip tooltip-bottom-left">This is how much you would like your addon to sell for. If you want this to be a free addon, enter 0.</b>
+                                            </label>
+                                        </section>
+
+                                        <section>
+                                            <label class="label">Gamemode</label>
+                                            <label class="select">
+                                                <select name="gamemode" id="gamemodeInput" required>
+                                                    <option value="0">Sandbox Based</option>
+                                                    <option value="1">Dark RP</option>
+                                                    <option value="2">TTT</option>
+                                                    <option value="3">Murder</option>
+                                                    <option value="4">Other</option>
+                                                </select>
+                                                <i></i>
+                                            </label>
+                                        </section>
+
+                                        <section>
+                                            <label class="label">Type</label>
+                                            <label class="select">
+                                                <select name="category" id="categoryInput" required>
+                                                    <option value="0">Weapon</option>
+                                                    <option value="1">Chatbox</option>
+                                                    <option value="2">Utility</option>
+                                                    <option value="3">Other</option>
+                                                </select>
+                                                <i></i>
+                                            </label>
+                                        </section>
+
+                                        <section>
+                                            <label class="label">Zip File</label>
+                                            <label for="file" class="input input-file">
+                                                <div class="button"><input type="file" id="zipFileInput" name="zipFile" onchange="this.parentNode.nextSibling.value = this.value"  accept="application/zip,application/x-zip,application/x-zip-compressed">Browse</div><input type="text" readonly="">
+                                                <b class="tooltip tooltip-bottom-left">This should be a zip file containing your addon.</b>
+                                            </label>
+                                        </section>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Description</label>
+                                            <label class="textarea">
+                                                <textarea rows="10" placeholder="" name="description" id="descriptionInput"></textarea>
+                                            </label>
+                                        </section>
+
+                                        <section>
+                                            <label class="label">Instructions</label>
+                                            <label class="textarea">
+                                                <textarea rows="10" placeholder="" name="instructions" id="instructionsInput"></textarea>
+                                            </label>
+                                        </section>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Explanation</label>
+                                            <label class="input">
+                                                <i class="icon-prepend icon icon-question"></i>
+                                                <input type="text" placeholder="" name="explanation" id="explanationInput" required>
+                                                <b class="tooltip tooltip-bottom-left">Before your addon can be approved, we need to know what it does. Give us a short and concise explanation.</b>
+                                            </label>
+                                        </section>
+                                        <section>
+                                            <label class="checkbox"><input type="checkbox" name="outsideServers" id="outsideServersInput"><i></i>Does your addon make calls to outside servers?</label>
+                                            <label class="checkbox"><input type="checkbox" name="containsDrm" id="containsDrmInput"><i></i>Does your addon contain DRM or leak protection?</label>
+                                        </section>
+                                    </fieldset>
+
+                                    <footer>
+                                        <button type="submit" class="button">Next</button>
+                                    </footer>
                                 </form>
                             </div>
 
-                            <div id="media" class="profile-edit tab-pane fade">
+                            <div id="mediaContent" class="profile-edit tab-pane fade">
                                 <h2 class="heading-md">Addon Media</h2>
 
                                 <p>Here you can upload images for your addon and provide a link to a Youtube video. Adding media to your addon is highly reccomended.</p>
                                 <br>
 
-                                <form class="sky-form" id="generalForm">
-                                    <dl class="dl-horizontal">
-                                        <dt>Banner</dt>
-                                        <dd>
+                                <form class="sky-form" id="mediaForm">
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Banner Image</label>
+                                            <label for="file" class="input input-file">
+                                                <div class="button"><input type="file" id="bannerFileInput" name="bannerFile" onchange="this.parentNode.nextSibling.value = this.value"  accept="image/*">Browse</div><input type="text" readonly="">
+                                                <b class="tooltip tooltip-bottom-left">This image will be displayed prominently at the top of your addon's public page.</b>
+                                            </label>
+                                        </section>
 
-                                        </dd>
-                                        <dt>Images</dt>
-                                        <dd>
-                                        </dd>
-                                        <dt>Youtube Video</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="input">
-                                                    <i class="icon-append icon icon-youtube"></i>
-                                                    <input type="text" placeholder="https://www.youtube.com/watch?v=pEgFvAQN_WQ" name="video">
-                                                    <b class="tooltip tooltip-bottom-right">Provide a link to your Youtube video here.</b>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                    </dl>
+                                        <section>
+                                            <label class="label">Gallery Images</label>
+                                            <label for="file" class="input input-file">
+                                                <div class="button"><input type="file" id="galleryFilesInput" name="galleryFiles" onchange="this.parentNode.nextSibling.value = this.value; console.log(this.value);"  multiple accept="image/*">Browse</div><input type="text" readonly="">
+                                                <b class="tooltip tooltip-bottom-left">These images will be displayed in your addon's gallery.</b>
+                                            </label>
+                                        </section>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Youtube Videos</label>
+                                            <label class="textarea">
+                                                <i class="icon-prepend icon icon-youtube"></i>
+                                                <textarea rows="5" placeholder="" name="youtubeVideos" id="youtubeVideosInput"></textarea>
+                                                <b class="tooltip tooltip-bottom-left">One video URL per line. These Youtube videos will be embedded in your addon's gallery.</b>
+                                            </label>
+                                        </section>
+                                    </fieldset>
+
+                                    <footer>
+                                        <button type="submit" class="button">Next</button>
+                                        <button type="button" class="button button-secondary" onclick="window.history.back();">Back</button>
+                                    </footer>
                                 </form>
                             </div>
 
-                            <div id="media" class="profile-edit tab-pane fade">
-                                <h2 class="heading-md">Manage your Security Settings</h2>
-
-                                <p>Change your password.</p>
-                                <br>
-
-                                <form class="sky-form" id="generalForm">
-                                    <dl class="dl-horizontal">
-                                        <dt>Addon Name</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="input">
-                                                    <i class="icon-append icon icon-font"></i>
-                                                    <input type="text" placeholder="Addon Name" name="name">
-                                                    <b class="tooltip tooltip-bottom-right">This is the name of your
-                                                        addon. Choose something short and descriptive.</b>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Desired Price</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="input">
-                                                    <i class="icon-append icon icon-usd"></i>
-                                                    <input type="number" name="desiredPrice"
-                                                           placeholder="Desired Price">
-                                                    <b class="tooltip tooltip-bottom-right">Don't forget your
-                                                        password</b>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Addon Gamemode</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="select">
-                                                    <select name="type">
-                                                        <option value="0">Sandbox Based</option>
-                                                        <option value="1">Dark RP</option>
-                                                        <option value="2">TTT</option>
-                                                        <option value="3">Murder</option>
-                                                        <option value="3">Other</option>
-                                                    </select>
-                                                    <i></i>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                        <dt>Addon Type</dt>
-                                        <dd>
-                                            <section>
-                                                <label class="select">
-                                                    <select name="type">
-                                                        <option value="0">Weapon</option>
-                                                        <option value="1">Chatbox</option>
-                                                        <option value="2">Utility</option>
-                                                        <option value="3">Miscellaneous</option>
-                                                    </select>
-                                                    <i></i>
-                                                </label>
-                                            </section>
-                                        </dd>
-                                    </dl>
-                                    <a data-toggle="tab" href="#specialFeatures" class="btn-u" role="button">Next</a>
-                                </form>
-                            </div>
-
-
-                            <div id="specialFeatures" class="profile-edit tab-pane fade">
+                            <div id="specialContent" class="profile-edit tab-pane fade">
                                 <h2 class="heading-md">Special Addon Features.</h2>
 
                                 <p>Below you can enable special Mod Mountain features for your addon. Please note that
                                     some of these features require you to add extra Lua to your addon.</p>
                                 <br>
 
-                                <form class="sky-form" id="sky-form3" action="#">
+                                <form class="sky-form" id="specialForm" action="/profile/createAddon">
                                     <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Auto Updater</label>
+                                                                 name="autoUpdaterEnabled" id="autoUpdaterEnabledInput"><i></i>Auto Updater</label>
                                     <hr>
                                     <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Configurator Enabled</label>
+                                                                 name="configuratorEnabled" id="configuratorEnabledInput"><i></i>Configurator Enabled</label>
                                     <hr>
                                     <label class="toggle"><input type="checkbox" checked=""
-                                                                 name="checkbox-toggle-1"><i></i>Leak Protection</label>
+                                                                 name="leakProtectionEnabled" id="leakProtectionEnabled"><i></i>Leak Protection</label>
                                     <hr>
                                     <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Stat Tracker</label>
-                                    <hr>
-                                    <button type="button" class="btn-u btn-u-default">Reset</button>
-                                    <button class="btn-u" type="submit">Save Changes</button>
-                                </form>
-                            </div>
-
-                            <div id="finalize" class="profile-edit tab-pane fade">
-                                <h2 class="heading-md">Finalize Your Addon.</h2>
-
-                                <p>Below are the notifications you may manage.</p>
-                                <br>
-
-                                <form class="sky-form" id="sky-form3" action="#">
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Email
-                                        notification</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Send me email
-                                        notification when a user comments on my blog</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Send me email
-                                        notification for the latest update</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Send me email
-                                        notification when a user sends me message</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="checkbox-toggle-1"><i></i>Receive our monthly
-                                        newsletter</label>
-                                    <hr>
-                                    <button type="button" class="btn-u btn-u-default">Reset</button>
-                                    <button class="btn-u" type="submit">Save Changes</button>
+                                                                 name="statTrackerEnabled" id="statTrackerEnabledInput"><i></i>Stat Tracker</label>
+                                    <footer>
+                                        <button id='submitButton' class="button">Submit</button>
+                                        <button type="button" class="button button-secondary" onclick="window.history.back();">Back</button>
+                                    </footer>
                                 </form>
                             </div>
                         </div>
@@ -260,7 +207,137 @@
 
 {% block scripts %}
     <script src="/plugins/textboxio/textboxio.js"></script>
+    <script src="/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>
     <script type="text/javascript">
-        var editor = textboxio.replace('#editor');
+        $(function()
+        {
+            // Validation
+            $("#sky-form").validate(
+                    {
+                        // Rules for form validation
+                        rules:
+                        {
+                            required:
+                            {
+                                required: true
+                            },
+                            email:
+                            {
+                                required: true,
+                                email: true
+                            },
+                            url:
+                            {
+                                required: true,
+                                url: true
+                            },
+                            date:
+                            {
+                                required: true,
+                                date: true
+                            },
+                            min:
+                            {
+                                required: true,
+                                minlength: 5
+                            },
+                            max:
+                            {
+                                required: true,
+                                maxlength: 5
+                            },
+                            range:
+                            {
+                                required: true,
+                                rangelength: [5, 10]
+                            },
+                            digits:
+                            {
+                                required: true,
+                                digits: true
+                            },
+                            number:
+                            {
+                                required: true,
+                                number: true
+                            },
+                            minVal:
+                            {
+                                required: true,
+                                min: 5
+                            },
+                            maxVal:
+                            {
+                                required: true,
+                                max: 100
+                            },
+                            rangeVal:
+                            {
+                                required: true,
+                                range: [5, 100]
+                            }
+                        },
+
+                        // Messages for form validation
+                        messages:
+                        {
+                            required:
+                            {
+                                required: 'Please enter something'
+                            },
+                            email:
+                            {
+                                required: 'Please enter your email address'
+                            },
+                            url:
+                            {
+                                required: 'Please enter your URL'
+                            },
+                            date:
+                            {
+                                required: 'Please enter some date'
+                            },
+                            min:
+                            {
+                                required: 'Please enter some text'
+                            },
+                            max:
+                            {
+                                required: 'Please enter some text'
+                            },
+                            range:
+                            {
+                                required: 'Please enter some text'
+                            },
+                            digits:
+                            {
+                                required: 'Please enter some digits'
+                            },
+                            number:
+                            {
+                                required: 'Please enter some number'
+                            },
+                            minVal:
+                            {
+                                required: 'Please enter some value'
+                            },
+                            maxVal:
+                            {
+                                required: 'Please enter some value'
+                            },
+                            rangeVal:
+                            {
+                                required: 'Please enter some value'
+                            }
+                        },
+
+                        // Do not change code below
+                        errorPlacement: function(error, element)
+                        {
+                            error.insertAfter(element.parent());
+                        }
+                    });
+        });
     </script>
+    <script src="/js/pages/profile/createAddon.js"></script>
 {% endblock %}

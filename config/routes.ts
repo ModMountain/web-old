@@ -24,6 +24,9 @@
 
 module.exports.routes = {
 
-   '/': 'StaticController.home'
-
+    '/': 'StaticController.home',
+    'GET /profile/createAddon': 'ProfileController.createAddon',
+    'POST /profile/createAddon': 'ProfileController.createAddonPOST',
+    'GET /profile/addons/:id': 'ProfileController.viewAddon',
+    'POST /profile/settings': 'ProfileController.settingsPOST',
 };

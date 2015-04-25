@@ -43,18 +43,17 @@ module.exports = {
     http: {
         middleware: {
             order: [
+                'favicon',
                 'cookieParser',
                 'session',
                 'passportInit',
                 'passportSession',
                 'userToTemplate',
-                'myRequestLogger',
                 'bodyParser',
                 'handleBodyParserError',
                 'morgan',
                 'router',
                 'www',
-                'favicon',
                 '404',
                 '500'
             ],
