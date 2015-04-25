@@ -28,10 +28,8 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-   '*': true,
-  ProfileController: {
-    '*': ['sessionAuth']
-  }
+   '*': ['flashToSwig'],
+  ProfileController: ['sessionAuth', 'flashToSwig']
 
   /***************************************************************************
   *                                                                          *
