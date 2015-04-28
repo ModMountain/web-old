@@ -1,8 +1,8 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    <link rel="stylesheet" href="/plugins/owl-carousel/owl-carousel/owl.carousel.css">
-    <link rel="stylesheet" href="/plugins/revolution-slider/rs-plugin/css/settings.css">
+    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/css/settings.css">
 {% endblock %}
 
 {% block content %}
@@ -673,15 +673,15 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="/plugins/jquery.parallax.js"></script>
+    <script src="{{ assetPrefix }}/plugins/jquery.parallax.js"></script>
 
-    <script src="/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
-    <script src="/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
-    <script src="/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
+    <script src="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
+    <script src="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
+    <script src="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
     <!-- JS Page Level -->
-    <script src="/js/shop.app.js"></script>
-    <script src="/js/plugins/owl-carousel.js"></script>
-    <script src="/js/plugins/revolution-slider.js"></script>
+    <script src="{{ assetPrefix }}/js/shop.app.js"></script>
+    <script src="{{ assetPrefix }}/js/plugins/owl-carousel.js"></script>
+    <script src="{{ assetPrefix }}/js/plugins/revolution-slider.js"></script>
     <script>
         jQuery(document).ready(function() {
             App.init();

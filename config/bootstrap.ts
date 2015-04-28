@@ -39,8 +39,19 @@ var setupPassport = function () {
     }));
 };
 
+var setGlobals = function() {
+    var Sails = require('sails');
+
+    if (sails.config.environment === 'production') {
+        sails.hooks.http.app.locals.assetPrefix = '//cdn.modmountain.com'
+    } else {
+        sails.hooks.http.app.locals.assetPrefix = ''
+    }
+};
+
 module.exports.bootstrap = function (cb) {
     setupPassport();
+    setGlobals();
 
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)

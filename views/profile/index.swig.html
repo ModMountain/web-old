@@ -1,14 +1,7 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
-    <link rel="stylesheet" href="/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
-
-    <!-- CSS Page Style -->
-    <link rel="stylesheet" href="/css/pages/profile.css">
-
-    <link rel="stylesheet" href="/css/custom.css">
+    {% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
