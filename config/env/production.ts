@@ -52,6 +52,7 @@ module.exports = {
                 'handleBodyParserError',
                 'morgan',
                 'router',
+                'www',
                 '404',
                 '500'
             ],
