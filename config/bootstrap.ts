@@ -43,7 +43,7 @@ var setGlobals = function() {
     var Sails = require('sails');
 
     if (sails.config.environment === 'production') {
-        sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets.jessesavary.netdna-cdn.com'
+        sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets-jessesavary.netdna-ssl.com'
     } else {
         sails.hooks.http.app.locals.assetPrefix = ''
     }
