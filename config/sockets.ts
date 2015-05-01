@@ -14,6 +14,10 @@
 
 module.exports.sockets = {
 
+    transports: [
+        'xhr-polling',
+        'jsonp-polling'
+    ],
 
   /***************************************************************************
   *                                                                          *
