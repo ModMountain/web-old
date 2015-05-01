@@ -21,17 +21,15 @@ var Addon = {
             type: "string",
             required: true
         },
-        filePath: {
+        zipFile: {
             type: 'string',
             required: true
         },
         description: {
-            type: 'text',
-            required: true
+            type: 'text'
         },
         instructions: {
-            type: 'text',
-            required: true
+            type: 'text'
         },
         explanation: {
             type: 'text',
@@ -47,31 +45,28 @@ var Addon = {
         },
         bannerPath: {
             type: 'string',
-            required: true
         },
         galleryImagePaths: {
             type: 'string',
-            required: true
         },
         youtubeVideos: {
             type: 'string',
-            required: true
         },
         autoUpdaterEnabled: {
             type: 'boolean',
-            required: true
+            defaultsTo: false
         },
         configuratorEnabled: {
             type: 'boolean',
-            required: true
+            defaultsTo: false
         },
         leakProtectionEnabled: {
             type: 'boolean',
-            required: true
+            defaultsTo: false
         },
         statTrackerEnabled: {
             type: 'boolean',
-            required: true
+            defaultsTo: false
         },
 
         discount: {
@@ -88,12 +83,12 @@ var Addon = {
         },
 
         views: {
-            type: 'number',
+            type: 'string',
             defaultsTo: 0,
             min: 0
         },
         downloads: {
-            type: 'number',
+            type: 'string',
             defaultsTo: 0,
             min: 0
         },
@@ -113,6 +108,11 @@ var Addon = {
         },
         comments: {
             collection: 'Comment'
+        },
+
+        canDownload: function(user) {
+            if (this.author == user.id) return true;
+            else return false;
         }
     }
 };

@@ -15,8 +15,6 @@
                     <div class="tab-v1">
                         <ul class="nav nav-justified nav-tabs">
                             <li class="active"><a data-toggle="tab" href="#generalContent">General</a></li>
-                            <li><a data-toggle="tab" href="#mediaContent">Media</a></li>
-                            <li><a data-toggle="tab" href="#specialContent">Special Features</a></li>
                         </ul>
                         <div class="tab-content">
                             {# General addon stuff #}
@@ -24,10 +22,10 @@
                                 <h2 class="heading-md">General Addon Information</h2>
 
                                 <p>Here you need to specify your addon's general information. All of this information is
-                                    required and will make up your addon listing.</p>
+                                    required as we need it to review your addon. Once your addon has been accepted, you may customize its description and media.</p>
                                 <br>
 
-                                <form class="sky-form" id="generalForm">
+                                <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST" action="/profile/createAddon">
                                     <fieldset>
                                         <section>
                                             <label class="label">Addon Name</label>
@@ -73,30 +71,6 @@
                                                 <i></i>
                                             </label>
                                         </section>
-
-                                        <section>
-                                            <label class="label">Zip File</label>
-                                            <label for="file" class="input input-file">
-                                                <div class="button"><input type="file" id="zipFileInput" name="zipFile" onchange="this.parentNode.nextSibling.value = this.value"  accept="application/zip,application/x-zip,application/x-zip-compressed">Browse</div><input type="text" readonly="">
-                                                <b class="tooltip tooltip-bottom-left">This should be a zip file containing your addon.</b>
-                                            </label>
-                                        </section>
-                                    </fieldset>
-
-                                    <fieldset>
-                                        <section>
-                                            <label class="label">Description</label>
-                                            <label class="textarea">
-                                                <textarea rows="10" placeholder="" name="description" id="descriptionInput"></textarea>
-                                            </label>
-                                        </section>
-
-                                        <section>
-                                            <label class="label">Instructions</label>
-                                            <label class="textarea">
-                                                <textarea rows="10" placeholder="" name="instructions" id="instructionsInput"></textarea>
-                                            </label>
-                                        </section>
                                     </fieldset>
 
                                     <fieldset>
@@ -114,77 +88,18 @@
                                         </section>
                                     </fieldset>
 
-                                    <footer>
-                                        <button type="submit" class="button">Next</button>
-                                    </footer>
-                                </form>
-                            </div>
-
-                            <div id="mediaContent" class="profile-edit tab-pane fade">
-                                <h2 class="heading-md">Addon Media</h2>
-
-                                <p>Here you can upload images for your addon and provide a link to a Youtube video. Adding media to your addon is highly reccomended.</p>
-                                <br>
-
-                                <form class="sky-form" id="mediaForm">
                                     <fieldset>
                                         <section>
-                                            <label class="label">Banner Image</label>
+                                            <label class="label">Zip File</label>
                                             <label for="file" class="input input-file">
-                                                <div class="button"><input type="file" id="bannerFileInput" name="bannerFile" onchange="this.parentNode.nextSibling.value = this.value"  accept="image/*">Browse</div><input type="text" readonly="">
-                                                <b class="tooltip tooltip-bottom-left">This image will be displayed prominently at the top of your addon's public page.</b>
-                                            </label>
-                                        </section>
-
-                                        <section>
-                                            <label class="label">Gallery Images</label>
-                                            <label for="file" class="input input-file">
-                                                <div class="button"><input type="file" id="galleryFilesInput" name="galleryFiles" onchange="this.parentNode.nextSibling.value = this.value; console.log(this.value);"  multiple accept="image/*">Browse</div><input type="text" readonly="">
-                                                <b class="tooltip tooltip-bottom-left">These images will be displayed in your addon's gallery.</b>
+                                                <div class="button"><input type="file" id="zipFileInput" name="zipFile" onchange="this.parentNode.nextSibling.value = this.value" accept="application/zip,application/x-zip,application/x-zip-compressed">Browse</div><input type="text" readonly="">
+                                                <b class="tooltip tooltip-bottom-left">This should be a zip file containing your addon.</b>
                                             </label>
                                         </section>
                                     </fieldset>
 
-                                    <fieldset>
-                                        <section>
-                                            <label class="label">Youtube Videos</label>
-                                            <label class="textarea">
-                                                <i class="icon-prepend icon icon-youtube"></i>
-                                                <textarea rows="5" placeholder="" name="youtubeVideos" id="youtubeVideosInput"></textarea>
-                                                <b class="tooltip tooltip-bottom-left">One video URL per line. These Youtube videos will be embedded in your addon's gallery.</b>
-                                            </label>
-                                        </section>
-                                    </fieldset>
-
-                                    <footer>
-                                        <button type="submit" class="button">Next</button>
-                                        <button type="button" class="button button-secondary" onclick="window.history.back();">Back</button>
-                                    </footer>
-                                </form>
-                            </div>
-
-                            <div id="specialContent" class="profile-edit tab-pane fade">
-                                <h2 class="heading-md">Special Addon Features.</h2>
-
-                                <p>Below you can enable special Mod Mountain features for your addon. Please note that
-                                    some of these features require you to add extra Lua to your addon.</p>
-                                <br>
-
-                                <form class="sky-form" id="specialForm" action="/profile/createAddon">
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="autoUpdaterEnabled" id="autoUpdaterEnabledInput"><i></i>Auto Updater</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="configuratorEnabled" id="configuratorEnabledInput"><i></i>Configurator Enabled</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" checked=""
-                                                                 name="leakProtectionEnabled" id="leakProtectionEnabled"><i></i>Leak Protection</label>
-                                    <hr>
-                                    <label class="toggle"><input type="checkbox" 
-                                                                 name="statTrackerEnabled" id="statTrackerEnabledInput"><i></i>Stat Tracker</label>
                                     <footer>
                                         <button id='submitButton' class="button">Submit</button>
-                                        <button type="button" class="button button-secondary" onclick="window.history.back();">Back</button>
                                     </footer>
                                 </form>
                             </div>
@@ -199,138 +114,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="/plugins/textboxio/textboxio.js"></script>
-    <script src="/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>
-    <script type="text/javascript">
-        $(function()
-        {
-            // Validation
-            $("#sky-form").validate(
-                    {
-                        // Rules for form validation
-                        rules:
-                        {
-                            required:
-                            {
-                                required: true
-                            },
-                            email:
-                            {
-                                required: true,
-                                email: true
-                            },
-                            url:
-                            {
-                                required: true,
-                                url: true
-                            },
-                            date:
-                            {
-                                required: true,
-                                date: true
-                            },
-                            min:
-                            {
-                                required: true,
-                                minlength: 5
-                            },
-                            max:
-                            {
-                                required: true,
-                                maxlength: 5
-                            },
-                            range:
-                            {
-                                required: true,
-                                rangelength: [5, 10]
-                            },
-                            digits:
-                            {
-                                required: true,
-                                digits: true
-                            },
-                            number:
-                            {
-                                required: true,
-                                number: true
-                            },
-                            minVal:
-                            {
-                                required: true,
-                                min: 5
-                            },
-                            maxVal:
-                            {
-                                required: true,
-                                max: 100
-                            },
-                            rangeVal:
-                            {
-                                required: true,
-                                range: [5, 100]
-                            }
-                        },
-
-                        // Messages for form validation
-                        messages:
-                        {
-                            required:
-                            {
-                                required: 'Please enter something'
-                            },
-                            email:
-                            {
-                                required: 'Please enter your email address'
-                            },
-                            url:
-                            {
-                                required: 'Please enter your URL'
-                            },
-                            date:
-                            {
-                                required: 'Please enter some date'
-                            },
-                            min:
-                            {
-                                required: 'Please enter some text'
-                            },
-                            max:
-                            {
-                                required: 'Please enter some text'
-                            },
-                            range:
-                            {
-                                required: 'Please enter some text'
-                            },
-                            digits:
-                            {
-                                required: 'Please enter some digits'
-                            },
-                            number:
-                            {
-                                required: 'Please enter some number'
-                            },
-                            minVal:
-                            {
-                                required: 'Please enter some value'
-                            },
-                            maxVal:
-                            {
-                                required: 'Please enter some value'
-                            },
-                            rangeVal:
-                            {
-                                required: 'Please enter some value'
-                            }
-                        },
-
-                        // Do not change code below
-                        errorPlacement: function(error, element)
-                        {
-                            error.insertAfter(element.parent());
-                        }
-                    });
-        });
-    </script>
+    {#<script src="/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>#}
     <script src="/js/pages/profile/createAddon.js"></script>
 {% endblock %}

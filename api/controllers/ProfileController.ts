@@ -99,21 +99,12 @@ module.exports = {
             price: req.body.price,
             gamemode: req.body.gamemode,
             category: req.body.category,
-            filePath: 'TODO', //TODO put something useful here
+            zipFile: req.files.zipFile.objectId.toString(),
             description: req.body.description,
             instructions: req.body.instructions,
             explanation: req.body.explanation,
             outsideServers: (req.body.outsideServers !== undefined),
             containsDrm: (req.body.containsDrm !== undefined),
-            // Media tab
-            bannerPath: 'TODO', //TODO put something useful here
-            galleryImagePaths: 'TODO', //TODO put something useful here
-            youtubeVideos: 'TODO',//req.body.youtubeVideos, //TODO put something useful here
-            // Special features tab
-            autoUpdaterEnabled: (req.body.autoUpdaterEnabled !== undefined),
-            configuratorEnabled: (req.body.configuratorEnabled !== undefined),
-            leakProtectionEnabled: (req.body.leakProtectionEnabled !== undefined),
-            statTrackerEnabled: (req.body.statTrackerEnabled !== undefined),
             // Associations
             author: req.session.passport.user
         }).then(function (addon) {
@@ -124,13 +115,10 @@ module.exports = {
         }).spread(function (save, addon) {
             console.log("New addon was submitted and is awaiting approval:", addon);
             req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
-            req.socket.emit('createAddon.success');
+            res.redirect('/profile/addons')
         }).catch(function (err) {
             console.error("An error occurred during Addon.create inside ProfileController.createAddonPOST:", err);
-            req.socket.emit('error', {
-                type: "Database Error",
-                message: "Something went wrong while submitting your addon. Please try again."
-            });
+            req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
         });
     },
 

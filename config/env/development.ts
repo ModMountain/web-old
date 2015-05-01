@@ -14,30 +14,34 @@
 
 module.exports = {
 
-    /***************************************************************************
-     * Set the default database connection for models in the development       *
-     * environment (see config/connections.js and config/models.js )           *
-     ***************************************************************************/
+    port: 1337,
+
+    log: {
+        level: 'verbose'
+    },
 
     connections: {
         mongodb: {
             adapter: 'sails-mongo',
-            host: 'ds037617.mongolab.com',
-            port: 37617,
-            user: 'modmtn',
-            password: 'modmtn',
-            database: 'modmtn_development'
+            url: 'mongodb://modmountain:modmountain@ds059471.mongolab.com:59471/modmountain_development'
+        },
+        localDiskDb: {
+            adapter: 'sails-disk'
         }
     },
 
-    gridFs: 'mongodb://modmtn:modmtn@ds037617.mongolab.com:37617/modmtn_development',
-
-    auth: {
-        steam: {
-            returnURL: "http://modmtn.com:1337/auth/steamCallback",
-            realm: 'http://modmtn.com:1337/',
-            apiKey: '***REMOVED***'
+    session: {
+        adapter: 'mongo',
+        url: 'mongodb://modmountain:modmountain@ds059471.mongolab.com:59471/modmountain_development',
+        secret: '***REMOVED***',
+        cookie: {
+            maxAge: 24 * 60 * 60 * 1000
         }
+    },
+
+    models: {
+        connection: 'localDiskDb',
+        migrate: 'alter'
     },
 
     http: {
@@ -49,14 +53,21 @@ module.exports = {
                 'passportInit',
                 'passportSession',
                 'userToTemplate',
-                'bodyParser',
-                'handleBodyParserError',
+                'multer',
                 'morgan',
                 'router',
                 'www',
                 '404',
                 '500'
             ],
+        }
+    },
+
+    auth: {
+        steam: {
+            returnURL: "http://modmtn.com:1337/auth/steamCallback",
+            realm: 'http://modmtn.com:1337/',
+            apiKey: '***REMOVED***'
         }
     }
 };

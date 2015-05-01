@@ -11,6 +11,14 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
+var setGlobals = function () {
+    if (sails.config.environment === 'production') {
+        sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets-jessesavary.netdna-ssl.com'
+    } else {
+        sails.hooks.http.app.locals.assetPrefix = ''
+    }
+};
+
 var setupPassport = function () {
     var Passport = require('passport');
     var SteamStrategy = require('passport-steam').Strategy;
@@ -39,21 +47,22 @@ var setupPassport = function () {
     }));
 };
 
-var setGlobals = function() {
-    var Sails = require('sails');
+var setupGridFS = function (cb) {
+    var Mongo = require('mongodb');
+    var Grid = require('gridfs-stream');
 
-    if (sails.config.environment === 'production') {
-        sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets-jessesavary.netdna-ssl.com'
-    } else {
-        sails.hooks.http.app.locals.assetPrefix = ''
-    }
+    Mongo.connect(sails.config.connections.mongodb.url, function(err, db) {
+        if (err) {
+            return console.error(err);
+        }
+        sails.hooks.gfs = Grid(db, Mongo);
+        cb();
+    });
 };
 
 module.exports.bootstrap = function (cb) {
-    setupPassport();
     setGlobals();
 
-    // It's very important to trigger this callback method when you are finished
-    // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-    cb();
+    setupPassport();
+    setupGridFS(cb);
 };

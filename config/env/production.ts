@@ -14,29 +14,33 @@
 
 module.exports = {
 
+    port: 4337,
+
     log: {
         level: 'info'
     },
 
-    port: '4337',
-
     connections: {
         mongodb: {
             adapter: 'sails-mongo',
-            host: 'localhost',
-            port: 27017,
-            database: 'modmountain_production'
+            url: 'mongodb://localhost:27017/modmountain_production'
+        },
+        localDiskDb: {
+            adapter: 'sails-disk'
         }
     },
 
-    gridFs: 'mongodb://localhoust:27017/modmountain_production',
-
-    auth: {
-        steam: {
-            returnURL: "https://modmountain.com/auth/steamCallback",
-            realm: 'https://modmountain.com/',
-            apiKey: '***REMOVED***'
+    session: {
+        adapter: 'redis',
+        secret: '***REMOVED***',
+        cookie: {
+            maxAge: 24 * 60 * 60 * 1000 * 30
         }
+    },
+
+    models: {
+        connection: 'localDiskDb',
+        migrate: 'alter'
     },
 
     http: {
@@ -48,14 +52,21 @@ module.exports = {
                 'passportInit',
                 'passportSession',
                 'userToTemplate',
-                'bodyParser',
-                'handleBodyParserError',
+                'multer',
                 'morgan',
                 'router',
                 'www',
                 '404',
                 '500'
             ],
+        }
+    },
+
+    auth: {
+        steam: {
+            returnURL: "https://modmountain.com/auth/steamCallback",
+            realm: 'https://modmountain.com/',
+            apiKey: '***REMOVED***'
         }
     }
 };

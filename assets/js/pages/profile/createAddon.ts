@@ -1,57 +1,104 @@
 /// <reference path='../../../../typings/jquery/jquery.d.ts' />
-/// <reference path='../../../../typings/socket.io-client/socket.io-client.d.ts' />
+/// <reference path='../../../../typings/jquery.validation/jquery.validation.d.ts' />
 
-$(function () {
-    // Replace description and instructions text areas with Markdown editors
-    var descriptionEditor = textboxio.replace('#descriptionInput');
-    var instructionsEditor = textboxio.replace('#instructionsInput');
-
-    //// Combine all of our forms together
-    //$('#specialForm').submit(function() {
-    //    var action = $(this).attr('action');
-    //    var data = $('#generalForm, #mediaForm, #specialForm').serialize();
-    //    var description = descriptionEditor.content.get();
-    //    var instructions = instructionsEditor.content.get();
-    //
-    //    data += '&description=' + description + '&instructions=' + instructions;
-    //
-    //    console.log(data);
-    //    $.ajax({
-    //        url  : action,
-    //        type : 'POST',
-    //        data : data,
-    //        success : function() {
-    //            window.location.replace(action);
-    //        }
-    //    });
-    //    return false;
-    //});
-
-    $("#submitButton").on('click', function (e) {
-        submitAddon();
-        e.preventDefault();
-    });
-    function submitAddon() {
-        var addon = {
-            name: $("#nameInput").val(),
-            price: $("#priceInput").val(),
-            gamemode: $("#gamemodeInput").val(),
-            category: $("#categoryInput").val(),
-            //filePath: $("#zipFileInput").files[0],
-            filePath: "TODO",
-            description: descriptionEditor.content.get(),
-            instructions: instructionsEditor.content.get(),
-            explanation: $("#explanationInput").val(),
-            outsideServers: $("#outsideServersInput").val(),
-            containsDrm: $("#containsDrmInput").val(),
-            galleryImages: 'TODO',
-            youtubeVideos: 'TODO',
-            autoUpdaterEnabled: $("#autoUpdateEnabledInput").val(),
-            configuratorEnabled: $("#configuratorEnabledInput").val(),
-            leakProtectionEnabled: $("#leakProtectionEnabledInput").val(),
-            statTrackerEnabled: $("#statTrackerEnabledInput").val()
-        };
-        io.socket.post('/profile/createAddon', addon);
-    }
-    io.socket.on('error', function(data) {console.log(data);})
-});
+//$(function () {
+//    // Validation
+//    $("#sky-form").validate(
+//        {
+//            // Rules for form validation
+//            rules: {
+//                required: {
+//                    required: true
+//                },
+//                email: {
+//                    required: true,
+//                    email: true
+//                },
+//                url: {
+//                    required: true,
+//                    url: true
+//                },
+//                date: {
+//                    required: true,
+//                    date: true
+//                },
+//                min: {
+//                    required: true,
+//                    minlength: 5
+//                },
+//                max: {
+//                    required: true,
+//                    maxlength: 5
+//                },
+//                range: {
+//                    required: true,
+//                    rangelength: [5, 10]
+//                },
+//                digits: {
+//                    required: true,
+//                    digits: true
+//                },
+//                number: {
+//                    required: true,
+//                    number: true
+//                },
+//                minVal: {
+//                    required: true,
+//                    min: 5
+//                },
+//                maxVal: {
+//                    required: true,
+//                    max: 100
+//                },
+//                rangeVal: {
+//                    required: true,
+//                    range: [5, 100]
+//                }
+//            },
+//
+//            // Messages for form validation
+//            messages: {
+//                required: {
+//                    required: 'Please enter something'
+//                },
+//                email: {
+//                    required: 'Please enter your email address'
+//                },
+//                url: {
+//                    required: 'Please enter your URL'
+//                },
+//                date: {
+//                    required: 'Please enter some date'
+//                },
+//                min: {
+//                    required: 'Please enter some text'
+//                },
+//                max: {
+//                    required: 'Please enter some text'
+//                },
+//                range: {
+//                    required: 'Please enter some text'
+//                },
+//                digits: {
+//                    required: 'Please enter some digits'
+//                },
+//                number: {
+//                    required: 'Please enter some number'
+//                },
+//                minVal: {
+//                    required: 'Please enter some value'
+//                },
+//                maxVal: {
+//                    required: 'Please enter some value'
+//                },
+//                rangeVal: {
+//                    required: 'Please enter some value'
+//                }
+//            },
+//
+//            // Do not change code below
+//            errorPlacement: function (error, element) {
+//                error.insertAfter(element.parent());
+//            }
+//        });
+//});
