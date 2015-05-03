@@ -31,7 +31,7 @@ module.exports = {
     },
 
     session: {
-        adapter: 'redis',
+        adapter: 'mongo',
         secret: '***REMOVED***',
         cookie: {
             maxAge: 24 * 60 * 60 * 1000 * 30
@@ -68,5 +68,21 @@ module.exports = {
             realm: 'https://modmountain.com/',
             apiKey: '***REMOVED***'
         }
-    }
+    },
+
+    // Turn view caching on for production
+    views: {
+        engine: {
+            ext: 'swig.html',
+            fn: function (pathName, locals, cb) {
+                var swig = require('swig');
+                swig.setDefaults({
+                    root: process.cwd() + '/views',
+                    cache: 'memory',
+                    loader: swig.loaders.fs(process.cwd() + '/views')
+                });
+                return swig.renderFile(pathName, locals, cb);
+            }
+        }
+    },
 };
