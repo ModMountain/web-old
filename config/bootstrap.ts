@@ -29,6 +29,7 @@ var setupPassport = function () {
     });
     Passport.deserializeUser(function (id, done) {
         User.findOne(id, function (err, user) {
+            if (user === undefined) user = null;
             done(err, user)
         });
     });
