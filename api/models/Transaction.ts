@@ -1,10 +1,17 @@
 /// <reference path='../../typings/node/node.d.ts' />
 
-var User = {
+var Transaction = {
     schema: true,
     attributes: {
-
+        user: {
+            model: 'User',
+            required: true
+        },
+        addon: {
+            model: 'Addon',
+            required: true
+        }
     }
 };
 
-module.exports = User;
+module.exports = Transaction;

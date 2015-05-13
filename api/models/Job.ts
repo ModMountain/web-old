@@ -26,7 +26,8 @@ var User = {
 
         // Associations
         poster: {
-            model: 'User'
+            model: 'User',
+            required: true
         },
         worker: {
             model: 'User'

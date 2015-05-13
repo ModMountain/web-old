@@ -98,19 +98,27 @@ var Addon = {
             model: 'User'
         },
         purchasers: {
-            collection: 'User'
+            collection: 'User',
+            via: 'purchases'
         },
         transactions: {
-            collection: 'Transaction'
+            collection: 'Transaction',
+            via: 'addon'
         },
         dependencies: {
-            collection: 'Addon'
+            collection: 'Addon',
+            via: 'dependents'
+        },
+        dependents: {
+            collection: 'Addon',
+            via: 'dependencies'
         },
         comments: {
-            collection: 'Comment'
+            collection: 'Comment',
+            via: 'addon'
         },
 
-        canDownload: function(user) {
+        canDownload: function (user) {
             return !!(this.author == user.id || user.permissionLevel >= 1);
         }
     }

@@ -31,15 +31,30 @@ var User = {
             max: 2
         },
 
-        // Associations
+        //// Associations
         addons: {
-            collection: 'Addon'
+            collection: 'Addon',
+            via: 'author'
         },
-        jobs: {
-            collection: 'Job'
+        purchases: {
+            collection: 'Addon',
+            via: 'purchasers'
+        },
+        postedJobs: {
+            collection: 'Job',
+            via: 'poster'
+        },
+        workJobs: {
+            collection: 'Job',
+            via: 'worker'
         },
         transactions: {
-            collection: 'Transaction'
+            collection: 'Transaction',
+            via: 'user'
+        },
+        comments: {
+            collection: 'Comment',
+            via: 'author'
         },
 
         // Instance methods

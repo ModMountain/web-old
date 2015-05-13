@@ -7,10 +7,6 @@ var Comment = {
             type: "string",
             required: true
         },
-        isToplevel: {
-            type: 'boolean',
-            required: true
-        },
 
         // Associations
         author: {
@@ -18,11 +14,19 @@ var Comment = {
             required: true
         },
         addon: {
-            collection: 'Addon',
+            model: 'Addon',
             required: true
         },
+        parent: {
+            model: 'Comment',
+        },
         children: {
-            collection: 'Comment'
+            collection: 'Comment',
+            via: 'parent'
+        },
+
+        isTopLevel: function () {
+            return (this.parent === undefined || this.parent === null);
         }
     }
 };
