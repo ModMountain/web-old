@@ -13,12 +13,20 @@
 module.exports = function(grunt) {
 
 	grunt.config.set('less', {
+		bootstrapCore: {
+			options: {
+				strictMath: true
+			},
+			src: 'assets/plugins/bootstrap-3.3.4./less/bootstrap.less',
+			dest: '.tmp/public/bootstrap.css'
+		},
+
 		dev: {
 			files: [{
 				expand: true,
-				cwd: 'assets/styles/',
-				src: ['importer.less'],
-				dest: '.tmp/public/styles/',
+				cwd: 'assets/less/',
+				src: ['**/*.less'],
+				dest: '.tmp/public/css/',
 				ext: '.css'
 			}]
 		}
