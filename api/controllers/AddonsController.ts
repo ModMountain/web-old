@@ -29,12 +29,22 @@ module.exports = {
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
-                console.log('Addon:', addonId);
                 if (addon !== undefined) {
                     if (addon.canDownload(req.user)) {
-                        var filename =  addon.name + '.zip';
-                        res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-                        sails.hooks.gfs.createReadStream({_id: addon.zipFile}).pipe(res)
+                        sails.hooks.gfs.exist({_id: addon.zipFile}, function(err, found) {
+                            if (err) {
+                                console.error("An error occurred during sails.hooks.gfs.exist inside AddonsController.download:", err);
+                                req.flash('error', "Something went wrong while downloading addon '" + addon.name + "'");
+                                res.redirect('/addons/view/' + addon.id);
+                            } else if (found) {
+                                var filename =  addon.name + '.zip';
+                                res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+                                sails.hooks.gfs.createReadStream({_id: addon.zipFile, chunkSize: 1024 * 1024}).pipe(res);
+                            } else {
+                                req.flash('error', "Addon '" + addon.name + "' is still uploading.");
+                                res.redirect('/addons/view/' + addon.id);
+                            }
+                        });
                     } else {
                         res.send(403)
                     }
@@ -42,7 +52,7 @@ module.exports = {
                     res.send(404);
                 }
             }).catch(function (err) {
-                console.error('Error occurred during Addon.findOne inside AddonsController.download:', err)
+                console.error('Error occurred during Addon.findOne inside AddonsController.download:', err);
                 res.send(500);
             });
     }
