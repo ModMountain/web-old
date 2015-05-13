@@ -61,30 +61,49 @@ module.exports.http = {
                     _id: file.objectId,
                     filename: file.name,
                     mode: 'w',
-                    chunkSize: 1024,
+                    chunkSize: 1024 * 1024,
                     content_type: file.mimetype,
-                    metadata: {}
                 });
-                file.uploadStream.on('close', function() {
-                    console.log('Write stream closed');
+                file.uploadStream.once('close', function() {
+                    console.log('Write stream closed after writing ' + file.chunks + ' chunks to GridFS');
                 });
                 file.uploadStream.on('error', function(error) {
-                    console.error('Write stream error:', error)
+                    console.error('Write stream error:', error);
                 });
+                file.chunks = 0;
+                file.dataChunks = 0;
             },
             onFileUploadData: function (file, data, req, res) {
-                console.log(data.length + ' of ' + file.fieldname + ' arrived');
-                Streamifier.createReadStream(data).pipe(file.uploadStream);
+                file.dataChunks++;
+                file.uploadStream.write(data, function() {
+                    file.chunks++;
+                });
             },
             onFileUploadComplete: function (file) {
-                console.log(file.fieldname + ' uploaded to  ' + file.path);
-                file.uploadStream.end();
+                console.log(file.fieldname + ' uploaded to  ' + file.path + ' in ' + file.dataChunks + ' chunks');
+                file.uploadStream.end()
             },
             onParseEnd: function (req, next) {
                 console.log('Form parsing completed at: ', new Date());
 
                 // call the next middleware
                 next();
+            },
+            onError: function(error, next) {
+                console.error(error);
+                next(error);
+            },
+            onFileSizeLimit: function() {
+                console.error("File size limit reached");
+            },
+            onFilesLimit: function() {
+                console.error("Files limit reached");
+            },
+            onFieldsLimit: function() {
+                console.error("Form fields limit reached");
+            },
+            onPartsLimit: function() {
+                console.error("Parts limit reached");
             }
         })
 
