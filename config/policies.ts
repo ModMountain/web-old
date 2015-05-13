@@ -29,7 +29,7 @@ module.exports.policies = {
   ***************************************************************************/
 
    '*': ['flashToSwig', 'emailNagger'],
-  ProfileController: ['sessionAuth', 'flashToSwig', 'emailNagger']
+  ProfileController: ['sessionAuth', 'flashToSwig', 'emailNagger', 'profileCommonTemplate']
 
   /***************************************************************************
   *                                                                          *
