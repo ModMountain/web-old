@@ -17,13 +17,13 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'verbose'
+        level: 'silly'
     },
 
     connections: {
         mongodb: {
             adapter: 'sails-mongo',
-            url: 'mongodb://modmountain:modmountain@ds059471.mongolab.com:59471/modmountain_development'
+            url: 'mongodb://direct.mordrum.com:27017/modmountain_development'
         },
         localDiskDb: {
             adapter: 'sails-disk'
@@ -31,8 +31,7 @@ module.exports = {
     },
 
     session: {
-        adapter: 'mongo',
-        url: 'mongodb://modmountain:modmountain@ds059471.mongolab.com:59471/modmountain_development',
+        adapter: 'redis',
         secret: '***REMOVED***',
         cookie: {
             maxAge: 24 * 60 * 60 * 1000
