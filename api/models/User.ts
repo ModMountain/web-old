@@ -6,7 +6,7 @@ var User = {
         username: {
             type: 'string',
             required: true,
-            minLength: 4,
+            minLength: 1,
             maxLength: 50
         },
         email: {
