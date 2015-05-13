@@ -111,8 +111,7 @@ var Addon = {
         },
 
         canDownload: function(user) {
-            if (this.author == user.id) return true;
-            else return false;
+            return !!(this.author == user.id || user.permissionLevel >= 1);
         }
     }
 };
