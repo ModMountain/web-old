@@ -23,7 +23,7 @@
     <link rel='stylesheet' href='{{ assetPrefix }}/css/googlefonts.css'>
 
     <!-- CSS Global Compulsory -->
-    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap-3.3.4/css/bootstrap.css">
     <link rel="stylesheet" href="{{ assetPrefix }}/css/style.css">
     <link rel="stylesheet" href="{{ assetPrefix }}/css/shop.style.css">
 
@@ -57,7 +57,7 @@
 <!-- JS Global Compulsory -->
 <script src="{{ assetPrefix }}/plugins/jquery/jquery.min.js"></script>
 <script src="{{ assetPrefix }}/plugins/jquery/jquery-migrate.min.js"></script>
-<script src="{{ assetPrefix }}/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="{{ assetPrefix }}/plugins/bootstrap-3.3.4/js/bootstrap.js"></script>
 <!-- JS Implementing Plugins -->
 <script src="{{ assetPrefix }}/plugins/back-to-top.js"></script>
 <script src="{{ assetPrefix }}/plugins/smoothScroll.js"></script>
@@ -70,6 +70,13 @@
 <script src="{{ assetPrefix }}/js/plugins/placeholder-IE-fixes.js"></script>
 <![endif]-->
 <script src="{{ assetPrefix }}/plugins/sails.io.js"></script>
+<script>
+    io.socket.on('connect', function() {
+        io.socket.on('notification', function (data) {
+            console.log(data)
+        });
+    });
+</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

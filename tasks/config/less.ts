@@ -17,8 +17,8 @@ module.exports = function(grunt) {
 			options: {
 				strictMath: true
 			},
-			src: 'assets/plugins/bootstrap-3.3.4./less/bootstrap.less',
-			dest: '.tmp/public/bootstrap.css'
+			src: 'assets/plugins/bootstrap-3.3.4/less/bootstrap.less',
+			dest: '.tmp/public/plugins/bootstrap-3.3.4/css/bootstrap.css'
 		},
 
 		dev: {

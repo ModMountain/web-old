@@ -20,6 +20,10 @@ module.exports = function(grunt) {
 		css: {
 			src: require('../pipeline').cssFilesToInject,
 			dest: '.tmp/public/concat/production.css'
+		},
+		bootstrap: {
+			src: ['/assets/plugins/bootstrap-3.3.4/js/*.js'],
+			dest: '.tmp/public/plugins/bootstrap-3.3.4/js/bootstrap.js'
 		}
 	});
 
