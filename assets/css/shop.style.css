@@ -1577,9 +1577,9 @@ li:first-child {
 	left: -2px;
 	width: 15px;
 	height: 15px;
-	content: '\f00c';
+	content: '\f001';
 	text-align: center;
-	font: normal 8px/17px FontAwesome;
+	font: normal 8px/17px ModMountain;
 }
 
 .checkbox-list .checkbox input:checked + i:after {

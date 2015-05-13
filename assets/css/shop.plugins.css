@@ -150,10 +150,10 @@
 #topcontrol:after {
   /*top: -2px;*/
   left: 8.5px;
-  content: "\f106";
+  content: "\f00a";
   position: absolute;
   text-align: center;
-  font-family: FontAwesome;
+  font-family: ModMountain;
 }
 
 #topcontrol:hover {

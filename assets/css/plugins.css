@@ -162,9 +162,9 @@
 .rs-caption-1:after,
 .rs-caption-1:before {
   font-size: 16px;
-  content: "\f005";
+  content: "\f004";
   position: absolute;
-  font-family: FontAwesome;
+  font-family: ModMountain;
 }
 
 @media (max-width: 768px) {
@@ -381,10 +381,10 @@
 #topcontrol:after {
   top: -2px;
   left: 8.5px;
-  content: "\f106";
+  content: "\f00a";
   position: absolute;
   text-align: center;
-  font-family: FontAwesome;
+  font-family: ModMountain;
 }
 
 #topcontrol:hover {
@@ -647,7 +647,7 @@
     position: absolute;
     font-weight: normal;
     display: inline-block;
-    font-family: FontAwesome;
+    font-family: ModMountain;
 }
 
 .testimonials-v3 .owl-buttons .owl-prev:after {

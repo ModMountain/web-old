@@ -941,11 +941,11 @@ h3.heading-xs {
     right: 10px;
     color: #777;
     font-size: 14px;
-    content: "\f105";
+    content: "\f009";
     position: absolute;
     font-weight: normal;
     display: inline-block;
-    font-family: FontAwesome;
+    font-family: ModMountain;
 }
 
 .list-toggle.active:after {

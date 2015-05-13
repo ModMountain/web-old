@@ -96,13 +96,13 @@
   height: 20px;
   padding: 5px 0;
   font-size: 10px;
-  content: "\f067";
+  content: "\f010";
   line-height: 12px;
   margin-right: 10px;
   text-align: center;
   background: #18ba9b;
   display: inline-block;
-  font-family: FontAwesome;
+  font-family: ModMountain;
 }
 
 .accordion-v2.plus-toggle .panel-body {
@@ -166,10 +166,10 @@
 
 .breadcrumbs-v4 .breadcrumb-v4-in > li + li:before {
   color: #fff;
-  content: "\f105";
+  content: "\f009";
   margin-left: 7px;
   padding-right: 8px;
-  font-family: FontAwesome;
+  font-family: ModMountain;
 }
 
 .breadcrumbs-v4 .breadcrumb-v4-in li a {
@@ -212,10 +212,10 @@
 
 .breadcrumb-v5 > li + li:before {
   color: #ccc;
-  content: "\f105";
+  content: "\f009";
   margin-left: 7px;
   padding-right: 8px;
-  font-family: FontAwesome;
+  font-family: ModMountain;
 }
 
 .breadcrumb-v5 li h1 {

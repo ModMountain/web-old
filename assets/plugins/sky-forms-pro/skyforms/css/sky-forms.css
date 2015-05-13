@@ -253,12 +253,12 @@
 	border-radius: 50%;
 }
 .sky-form .checkbox input + i:after {
-	content: '\f00c';
+	content: '\f001';
 	top: -1px;
 	left: -1px;
 	width: 15px;
 	height: 15px;
-	font: normal 12px/16px FontAwesome;
+	font: normal 12px/16px ModMountain;
 	text-align: center;
 }
 .sky-form .radio input:checked + i:after,
