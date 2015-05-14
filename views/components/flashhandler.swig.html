@@ -1,0 +1,44 @@
+<!--General flash messages-->
+{% if successMessages != "" %}
+<div class="col-md-12">
+  {% for message in successMessages %}
+  <div class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Success!</strong> {{message|safe}}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if warningMessages != "" %}
+<div class="col-md-12">
+  {% for message in warningMessages %}
+  <div class="alert alert-warning alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Warning!</strong> {{message|safe}}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if errorMessages != "" %}
+<div class="col-md-12">
+  {% for message in errorMessages %}
+  <div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Error!</strong> {{message|safe}}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if infoMessages != "" %}
+<div class="col-md-12">
+  {% for message in infoMessages %}
+  <div class="alert alert-info alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {{message|safe}}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
