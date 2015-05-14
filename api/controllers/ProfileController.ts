@@ -250,20 +250,23 @@ module.exports = {
     },
 
     createTicketPOST: function (req, res) {
+        var tick;
         Ticket.create({
             title: req.param('title'),
             priority: req.param('priority'),
             affectedAddon: req.param('affectedAddon') || '',
             submitter: req.user
         }).then(function (ticket) {
-            return [ticket.addResponsse(req.user, req.param('content')), req.user.sentTickets.add(ticket)]
+            tick = ticket;
+            return [ticket.addResponse(req.user, req.param('content')), req.user.sentTickets.add(ticket)]
         }).spread(function () {
             req.flash('success', 'Ticket created successfully');
             res.redirect('/profile/tickets/')
         }).catch(function (err) {
             PrettyError(err, 'An error occurred during Ticket.create inside ProfileController.createTicketPOST');
             req.flash('error', 'Something went wrong while creating your ticket');
-            res.redirect('/profile/tickets/create')
+            tick.destroy()
+                .then(res.redirect('/profile/tickets/create'))
         });
     },
 
