@@ -1,54 +1,252 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    {% include 'components/profile/commoncss.swig.html' %}
+	{% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
-    <!--=== Profile ===-->
-    <div class="container content profile">
-        <div class="row">
-            {% include 'components/flashhandler.swig.html' %}
-            {% include 'components/profile/sidebar.swig.html' %}
-            <!-- Profile Content -->
-            <div class="col-md-9">
-                <div class="profile-body margin-bottom-20">
-                    <div class="tab-v1">
-                        <ul class="nav nav-justified nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#general">Your Info</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <form class="sky-form profile-edit tab-pane fade in active" id="generalForm" action="/profile/settings" method="POST" enctype="MULTIPART/FORM-DATA">
-                                <fieldset>
-                                    <section>
-                                        <label class="label">Username</label>
-                                        <label class="input">
-                                            <i class="icon-prepend icon icon-user"></i>
-                                            <input type="text" value="{{ user.username }}" name="username" id="usernameInput">
-                                            <b class="tooltip tooltip-bottom-left">This is your public username. Feel free to change it if you don't like the one we imported from steam.</b>
-                                        </label>
-                                    </section>
+	<!--=== Profile ===-->
+	<div class="container content profile">
+		<div class="row">
+			{% include 'components/flashhandler.swig.html' %}
+			{% include 'components/profile/sidebar.swig.html' %}
+			<!-- Profile Content -->
+			<div class="col-md-9">
+				{#<div class="profile-body margin-bottom-20">#}
+					{#<div class="tab-v1">#}
+						{#<ul class="nav nav-justified nav-tabs">#}
+							{#<li class="active"><a data-toggle="tab" href="#general">Personal Info</a></li>#}
+							{#<li><a data-toggle="tab" href="#payment">Payment Details</a></li>#}
+						{#</ul>#}
+						{#<div class="tab-content">#}
+							{#<form id="general" class="sky-form profile-edit tab-pane fade in active"#}
+							      {#action="/profile/settings" method="POST" enctype="MULTIPART/FORM-DATA">#}
+								{#<fieldset>#}
+									{#<section>#}
+										{#<label class="label">Username</label>#}
+										{#<label class="input">#}
+											{#<i class="icon-prepend icon icon-user"></i>#}
+											{#<input type="text" value="{{ user.username }}" name="username"#}
+											       {#id="usernameInput">#}
+											{#<b class="tooltip tooltip-bottom-left">This is your public username. Feel#}
+												{#free to change it if you don't like the one we imported from steam.</b>#}
+										{#</label>#}
+									{#</section>#}
 
-                                    <section>
-                                        <label class="label">Primary Email Address</label>
-                                        <label class="input">
-                                            <i class="icon-prepend icon icon-envelope"></i>
-                                            <input type="email" value="{{ user.email }}" name="primaryEmail" id="emailInput">
-                                            <b class="tooltip tooltip-bottom-left">Your primary email address. This is where we'll send emails to.</b>
-                                        </label>
-                                    </section>
-                                </fieldset>
+									{#<section>#}
+										{#<label class="label">Primary Email Address</label>#}
+										{#<label class="input">#}
+											{#<i class="icon-prepend icon icon-envelope"></i>#}
+											{#<input type="email" value="{{ user.email }}" name="primaryEmail"#}
+											       {#id="emailInput">#}
+											{#<b class="tooltip tooltip-bottom-left">Your primary email address. This is#}
+												{#where we'll send emails to.</b>#}
+										{#</label>#}
+									{#</section>#}
+								{#</fieldset>#}
 
-                                <footer>
-                                    <button type="submit" class="button">Save Changes</button>
-                                </footer>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Profile Content -->
-        </div>
-    </div><!--/container-->
-    <!--=== End Profile ===-->
+								{#<footer>#}
+									{#<button type="submit" class="button">Save Changes</button>#}
+								{#</footer>#}
+							{#</form>#}
+
+							{#<div id="payment" class="profile-edit tab-pane fade active in">#}
+								{#<h2 class="heading-md">Manage your Payment Settings</h2>#}
+
+								{#<p>Below are the payment options for your account.</p>#}
+								{#<br>#}
+
+								{#<form class="sky-form" id="sky-form" action="#" novalidate="novalidate">#}
+									{#<!--Checkout-Form-->#}
+									{#<section>#}
+										{#<div class="inline-group">#}
+											{#<label class="radio"><input type="radio" checked="" name="radio-inline"><i#}
+														{#class="rounded-x"></i>Visa</label>#}
+											{#<label class="radio"><input type="radio" name="radio-inline"><i#}
+														{#class="rounded-x"></i>MasterCard</label>#}
+											{#<label class="radio"><input type="radio" name="radio-inline"><i#}
+														{#class="rounded-x"></i>PayPal</label>#}
+										{#</div>#}
+									{#</section>#}
+
+									{#<section>#}
+										{#<label class="input">#}
+											{#<input type="text" name="name" placeholder="Name on card">#}
+										{#</label>#}
+									{#</section>#}
+
+									{#<div class="row">#}
+										{#<section class="col col-10">#}
+											{#<label class="input">#}
+												{#<input type="text" name="card" id="card" placeholder="Card number">#}
+											{#</label>#}
+										{#</section>#}
+										{#<section class="col col-2">#}
+											{#<label class="input">#}
+												{#<input type="text" name="cvv" id="cvv" placeholder="CVV2">#}
+											{#</label>#}
+										{#</section>#}
+									{#</div>#}
+
+									{#<div class="row">#}
+										{#<label class="label col col-4">Expiration date</label>#}
+										{#<section class="col col-5">#}
+											{#<label class="select">#}
+												{#<select name="month">#}
+													{#<option disabled="" selected="" value="0">Month</option>#}
+													{#<option value="1">January</option>#}
+													{#<option value="1">February</option>#}
+													{#<option value="3">March</option>#}
+													{#<option value="4">April</option>#}
+													{#<option value="5">May</option>#}
+													{#<option value="6">June</option>#}
+													{#<option value="7">July</option>#}
+													{#<option value="8">August</option>#}
+													{#<option value="9">September</option>#}
+													{#<option value="10">October</option>#}
+													{#<option value="11">November</option>#}
+													{#<option value="12">December</option>#}
+												{#</select>#}
+												{#<i></i>#}
+											{#</label>#}
+										{#</section>#}
+										{#<section class="col col-3">#}
+											{#<label class="input">#}
+												{#<input type="text" placeholder="Year" id="year" name="year">#}
+											{#</label>#}
+										{#</section>#}
+									{#</div>#}
+									{#<button type="button" class="btn-u btn-u-default">Cancel</button>#}
+									{#<button class="btn-u" type="submit">Save Changes</button>#}
+									{#<!--End Checkout-Form-->#}
+								{#</form>#}
+							{#</div>#}
+						{#</div>#}
+					{#</div>#}
+				{#</div>#}
+
+				<div class="profile-body margin-bottom-20">
+					<div class="tab-v1">
+						<ul class="nav nav-justified nav-tabs">
+							<li class="active"><a data-toggle="tab" href="#profile">Edit Profile</a></li>
+							<li><a data-toggle="tab" href="#payment">Payment Options</a></li>
+						</ul>
+						<div class="tab-content">
+							<div id="profile" class="profile-edit tab-pane fade active in">
+								<h2 class="heading-md">Manage your Name, ID and Email Addresses.</h2>
+
+								<p>Below are the name and email addresses on file for your account.</p>
+								<br>
+
+								<form class="sky-form profile-edit tab-pane fade in active" action="/profile/settings" method="POST" enctype="MULTIPART/FORM-DATA">
+									<fieldset>
+										<section>
+											<label class="label">Username</label>
+											<label class="input">
+												<i class="icon-prepend icon icon-user"></i>
+												<input type="text" value="{{ user.username }}" name="username"
+												       id="usernameInput">
+												<b class="tooltip tooltip-bottom-left">This is your public username.
+													Feel free to change it if you don't like the one we imported from
+													steam.</b>
+											</label>
+										</section>
+
+										<section>
+											<label class="label">Primary Email Address</label>
+											<label class="input">
+												<i class="icon-prepend icon icon-envelope"></i>
+												<input type="email" value="{{ user.email }}" name="primaryEmail"
+												       id="emailInput">
+												<b class="tooltip tooltip-bottom-left">Your primary email address. This
+													is where we'll send emails to.</b>
+											</label>
+										</section>
+									</fieldset>
+
+									<footer>
+										<button type="submit" class="button">Save Changes</button>
+									</footer>
+								</form>
+							</div>
+
+							<div id="payment" class="profile-edit tab-pane fade">
+								<h2 class="heading-md">Manage your Payment Settings</h2>
+
+								<p>Below are the payment options for your account.</p>
+								<br>
+
+								<form class="sky-form" id="sky-form" action="#" novalidate="novalidate">
+									<!--Checkout-Form-->
+									<section>
+										<div class="inline-group">
+											<label class="radio"><input type="radio" checked="" name="radio-inline"><i
+														class="rounded-x"></i>Visa</label>
+											<label class="radio"><input type="radio" name="radio-inline"><i
+														class="rounded-x"></i>MasterCard</label>
+											<label class="radio"><input type="radio" name="radio-inline"><i
+														class="rounded-x"></i>PayPal</label>
+										</div>
+									</section>
+
+									<section>
+										<label class="input">
+											<input type="text" name="name" placeholder="Name on card">
+										</label>
+									</section>
+
+									<div class="row">
+										<section class="col col-10">
+											<label class="input">
+												<input type="text" name="card" id="card" placeholder="Card number">
+											</label>
+										</section>
+										<section class="col col-2">
+											<label class="input">
+												<input type="text" name="cvv" id="cvv" placeholder="CVV2">
+											</label>
+										</section>
+									</div>
+
+									<div class="row">
+										<label class="label col col-4">Expiration date</label>
+										<section class="col col-5">
+											<label class="select">
+												<select name="month">
+													<option disabled="" selected="" value="0">Month</option>
+													<option value="1">January</option>
+													<option value="1">February</option>
+													<option value="3">March</option>
+													<option value="4">April</option>
+													<option value="5">May</option>
+													<option value="6">June</option>
+													<option value="7">July</option>
+													<option value="8">August</option>
+													<option value="9">September</option>
+													<option value="10">October</option>
+													<option value="11">November</option>
+													<option value="12">December</option>
+												</select>
+												<i></i>
+											</label>
+										</section>
+										<section class="col col-3">
+											<label class="input">
+												<input type="text" placeholder="Year" id="year" name="year">
+											</label>
+										</section>
+									</div>
+									<button type="button" class="btn-u btn-u-default">Cancel</button>
+									<button class="btn-u" type="submit">Save Changes</button>
+									<!--End Checkout-Form-->
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- End Profile Content -->
+		</div>
+	</div><!--/container-->
+	<!--=== End Profile ===-->
 {% endblock %}
