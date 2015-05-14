@@ -296,7 +296,7 @@ module.exports = {
         Ticket.findOne(ticketId)
             .then(function (ticket) {
                 if (ticket === undefined) res.send(404);
-                else if (!ticket.canClosed(req.user)) res.send(403);
+                else if (!ticket.canClose(req.user)) res.send(403);
                 else {
                     Ticket.update(ticketId, {status: 'closed'})
                         .then(Ticket.publishUpdate(ticketId, {
