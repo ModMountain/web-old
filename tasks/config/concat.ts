@@ -22,7 +22,20 @@ module.exports = function(grunt) {
 			dest: '.tmp/public/concat/production.css'
 		},
 		bootstrap: {
-			src: ['/assets/plugins/bootstrap-3.3.4/js/*.js'],
+			src: [
+				'assets/plugins/bootstrap-3.3.4/js/transition.js',
+				'assets/plugins/bootstrap-3.3.4/js/alert.js',
+				'assets/plugins/bootstrap-3.3.4/js/button.js',
+				'assets/plugins/bootstrap-3.3.4/js/carousel.js',
+				'assets/plugins/bootstrap-3.3.4/js/collapse.js',
+				'assets/plugins/bootstrap-3.3.4/js/dropdown.js',
+				'assets/plugins/bootstrap-3.3.4/js/modal.js',
+				'assets/plugins/bootstrap-3.3.4/js/tooltip.js',
+				'assets/plugins/bootstrap-3.3.4/js/popover.js',
+				'assets/plugins/bootstrap-3.3.4/js/scrollspy.js',
+				'assets/plugins/bootstrap-3.3.4/js/tab.js',
+				'assets/plugins/bootstrap-3.3.4/js/affix.js'
+			],
 			dest: '.tmp/public/plugins/bootstrap-3.3.4/js/bootstrap.js'
 		}
 	});
