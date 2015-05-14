@@ -49,10 +49,23 @@ var setupPassport = function () {
 };
 
 var setupGridFS = function (cb) {
+    var Promise = require('bluebird');
+    var Mapstrace = require('mapstrace');
+    Promise.promisifyAll(Mapstrace);
+    global.PrettyError = Promise.method(function (err, msg) {
+        return Mapstrace.build(err, true, function (result) {
+            console.error(msg);
+            console.error(err.toString() + ':\n' + Mapstrace.stringify(result));
+        })
+    });
+    process.on("unhandledRejection", function (reason, promise) {
+        console.error('Unhandled Rejection:', reason)
+    });
+
     var Mongo = require('mongodb');
     var Grid = require('gridfs-stream');
 
-    Mongo.connect(sails.config.connections.mongodb.url, function(err, db) {
+    Mongo.connect(sails.config.connections.mongodb.url, function (err, db) {
         if (err) {
             return console.error(err);
         }
