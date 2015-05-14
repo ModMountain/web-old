@@ -55,7 +55,7 @@
                     <li {% if activeTab.indexOf('addons') == 0 %}class="active"{% endif %}><a href="/addons">Addons</a></li>
 
                     {# Browse jobs #}
-                    <li {% if activeTab.indexOf('jobs') == 0 %}class="active"{% endif %}><a href="/jobs">Jobs</a></li>
+                    {#<li {% if activeTab.indexOf('jobs') == 0 %}class="active"{% endif %}><a href="/jobs">Jobs</a></li>#}
 
                     {# Browse profile #}
                     <li {% if activeTab.indexOf('profile') == 0 %}class="active"{% endif %}><a href="/profile">Dashboard</a></li>
@@ -71,11 +71,6 @@
                                 <li {% if activeTab == 'staff.tickets' %}class="active"{% endif %}><a href="/staff/tickets">Tickets</a></li>
                             </ul>
                         </li>
-                    {% endif %}
-
-                    {# Admin area #}
-                    {% if user.permissionLevel == 2 %}
-                        <li {% if activeTab.indexOf('admin') == 0 %}class="active"{% endif %}><a href="/admin">Admin</a></li>
                     {% endif %}
                 </ul>
                 <!-- End Nav Menu -->
