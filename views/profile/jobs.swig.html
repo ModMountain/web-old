@@ -12,7 +12,7 @@
             {% include 'components/profile/sidebar.swig.html' %}
             <!-- Profile Content -->
             <div class="col-md-9">
-                <a class="btn-u btn-u-default btn-u-sm btn-block" href="/profile/createJob" role="button">Create New Job</a>
+                <a class="btn-u btn-u-default btn-u-sm btn-block" href="/profile/jobs/create" role="button">Create New Job</a>
                 <div class="profile-body">
                     {% if user.jobs.length == 0 %}
                         <h1 style="text-align: center;">You have no jobs.</h1>

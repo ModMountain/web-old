@@ -57,8 +57,26 @@
                     {# Browse jobs #}
                     <li {% if activeTab.indexOf('jobs') == 0 %}class="active"{% endif %}><a href="/jobs">Jobs</a></li>
 
-                    {# Browse jobs #}
+                    {# Browse profile #}
                     <li {% if activeTab.indexOf('profile') == 0 %}class="active"{% endif %}><a href="/profile">Dashboard</a></li>
+
+                    {# Staff area #}
+                    {% if user.permissionLevel >= 1 %}
+                        <li class="dropdown {% if activeTab.indexOf('staff') == 0 %}active{% endif %}">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown" data-delay="1000">
+                                Staff
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li {% if activeTab == 'staff.addons' %}class="active"{% endif %}><a href="/staff/addons">Addons</a></li>
+                                <li {% if activeTab == 'staff.tickets' %}class="active"{% endif %}><a href="/staff/tickets">Tickets</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {# Admin area #}
+                    {% if user.permissionLevel == 2 %}
+                        <li {% if activeTab.indexOf('admin') == 0 %}class="active"{% endif %}><a href="/admin">Admin</a></li>
+                    {% endif %}
                 </ul>
                 <!-- End Nav Menu -->
             </div>

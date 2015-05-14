@@ -17,7 +17,7 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'silly'
+        level: 'info'
     },
 
     connections: {
@@ -57,7 +57,7 @@ module.exports = {
                 'router',
                 'www',
                 '404',
-                '500'
+                '500',
             ],
         }
     },

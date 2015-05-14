@@ -1,0 +1,53 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="/css/pages/page_search_inner_tables.css">
+{% endblock %}
+
+{% block content %}
+    <!--=== Profile ===-->
+    <div class="container content profile">
+        <div class="row">
+            {% include 'components/flashHandler.swig.html' %}
+            <div class="table-search-v2 margin-bottom-30">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Submitter</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ticket in tickets %}
+                            <tr>
+                                <td>
+                                    <div class="user-names">
+                                        <span>{{ ticket.submitter.username }}</span>
+                                        <small>({{ ticket.submitter.steamIdentifier }})</small>
+                                    </div>
+                                </td>
+                                <td class="td-width">
+                                    <h3><a href="#">{{ ticket.title }}</a></h3>
+
+                                    {#<p>{{ ticket.responses[0].content }}</p>#}
+                                    Created {{ ticket.createdAt.toDateString() }}
+                                </td>
+                                <td><span class="label label-success">{{ ticket.priority }}</span></td>
+                                <td><span class="label label-success">{{ ticket.status }}</span></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!--/container-->
+    <!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/pages/staff/addons.js"></script>
+{% endblock %}

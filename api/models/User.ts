@@ -31,7 +31,7 @@ var User = {
             max: 2
         },
 
-        //// Associations
+        // Associations
         addons: {
             collection: 'Addon',
             via: 'author'
@@ -55,6 +55,14 @@ var User = {
         comments: {
             collection: 'Comment',
             via: 'author'
+        },
+        sentTickets: {
+            collection: 'Ticket',
+            via: 'submitter'
+        },
+        receivedTickets: {
+            collection: 'Ticket',
+            via: 'handler'
         },
 
         // Instance methods

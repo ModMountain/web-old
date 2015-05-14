@@ -15,6 +15,10 @@
             <span class="badge badge-blue">{{ user.postedJobs.length + user.workJobs.length || 0 }}</span>
             <a href="/profile/jobs"><i class="icon icon-users"></i> Jobs</a>
         </li>
+        <li class="list-group-item {% if activeTab == "profile.tickets" %}active{% endif %}">
+            <span class="badge badge-blue">{{ user.tickets.length || 0 }}</span>
+            <a href="/profile/tickets"><i class="icon icon-envelope"></i> Tickets</a>
+        </li>
         <li class="list-group-item {% if activeTab == "profile.settings" %}active{% endif %}">
             <a href="/profile/settings"><i class="icon icon-cog"></i> Settings</a>
         </li>

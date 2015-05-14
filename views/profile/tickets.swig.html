@@ -1,0 +1,90 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+	{% include 'components/profile/commoncss.swig.html' %}
+	<link rel="stylesheet" href="/plugins/ladda-buttons/css/ladda.min.css">
+	<link rel="stylesheet" href="/plugins/ladda-buttons/css/custom-lada-btn.css">
+{% endblock %}
+
+{% block content %}
+	<!--=== Profile ===-->
+	<div class="container content profile">
+		<div class="row">
+			{% include 'components/flashHandler.swig.html' %}
+			{% include 'components/profile/sidebar.swig.html' %}
+			<!-- Profile Content -->
+			<div class="col-md-9">
+				<a class="btn-u btn-u-default btn-u-sm btn-block" href="/profile/tickets/create" role="button">Create
+					New Ticket</a>
+
+				<div id="noTicketsBanner" style="{% if  user.tickets.length > 0 %}display: none;{% endif %}" class="profile-body">
+					<h1 style="text-align: center;">
+						You have no tickets.</h1>
+				</div>
+
+				{% for ticket in user.tickets %}
+					<div id="ticketBody-{{ ticket.id }}" class="profile-body">
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i
+											class="icon icon-comments"></i>{{ ticket.title }}</h2>
+
+								<h2 class="panel-title heading-sm pull-right">{{ ticket.prettyStatus() }}</h2>
+							</div>
+							<div class="panel-body" id="ticketBody-{{ ticket.id }}">
+								{% for response in ticket.responses %}
+									<div class="media media-v2 margin-bottom-20">
+										<a class="pull-left">
+											<img class="media-object rounded-x"
+											     src="{{ response.user.steamProfile.photos[2].value }}">
+										</a>
+
+										<div class="media-body">
+											<h4 class="media-heading">
+												<strong><a href="#">{{ response.user.username }}</a></strong>
+												<small>{{ response.createdAt.toDateString() }}</small>
+											</h4>
+											<p>{{ response.content }}</p>
+										</div>
+									</div>
+								{% endfor %}
+
+								<div class="sky-form">
+									<fieldset>
+										<section>
+											<label class="label">Respond</label>
+											<label class="textarea">
+												<i class="icon icon-append icon-comment"></i>
+												<textarea rows="3" class="respondInput"></textarea>
+											</label>
+										</section>
+									</fieldset>
+
+									<footer>
+										<button class="btn-u btn-u-dark ladda-button respondButton"
+										        data-ticket-id="{{ ticket.id }}" data-style="zoom-out"><span
+													class="ladda-label">Respond</span><span
+													class="ladda-spinner"></span></button>
+										<button onclick="io.socket.get('/profile/tickets/{{ ticket.id }}/close');"
+										        class="btn-u btn-u-red ladda-button respondButton"
+										        data-ticket-id="{{ ticket.id }}" data-style="zoom-out"><span
+													class="ladda-label">Close</span><span
+													class="ladda-spinner"></span></button>
+									</footer>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<!-- End Profile Content -->
+		</div>
+	</div><!--/container-->
+	<!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+	<script type="text/javascript" src="/plugins/ladda-buttons/js/ladda.js"></script>
+	<script type="text/javascript" src="/plugins/ladda-buttons/js/spin.js"></script>
+	<script type="text/javascript"  src="{{ assetPrefix }}/js/pages/profile/tickets.js"></script>
+{% endblock %}

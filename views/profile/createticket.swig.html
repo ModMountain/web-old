@@ -1,0 +1,82 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+    {% include 'components/profile/commoncss.swig.html' %}
+    {#<link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css">#}
+    {#<link rel="stylesheet" href="{{ assetPrefix }}/css/bootstrap-markdown.css">#}
+{% endblock %}
+
+{% block content %}
+    <!--=== Profile ===-->
+    <div class="container content profile">
+        <div class="row">
+            {% include 'components/profile/sidebar.swig.html' %}
+            <!-- Profile Content -->
+            <div class="col-md-9">
+                <div class="profile-body margin-bottom-20">
+                    <div class="tab-v1">
+                        <ul class="nav nav-justified nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#generalContent">General</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            {# General ticket stuff #}
+                            <div id="generalContent" class="profile-edit tab-pane fade in active">
+                                <h2 class="heading-md">Create Ticket</h2>
+
+                                <p>Please specify your problem as clearly as possible so we can assist you. Please do not abuse the "emergency" priority level, it is for emergencies only.</p>
+                                <br>
+
+                                <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST" action="/profile/tickets/create">
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Title</label>
+                                            <label class="input">
+                                                <i class="icon-prepend icon icon-font"></i>
+                                                <input type="text" placeholder="Some Ticket" name="title" id="titleInput" required>
+                                                <b class="tooltip tooltip-bottom-left">This is the title of your ticket. Choose something short and descriptive.</b>
+                                            </label>
+                                        </section>
+
+                                        <section>
+                                            <label class="label">Priority</label>
+                                            <label class="select">
+                                                <select name="priority" id="priorityInput" required>
+                                                    <option value="" style="display:none">Select a Priority</option>
+                                                    <option value="low">Low</option>
+                                                    <option value="high">High</option>
+                                                    <option value="emergency">Emergency</option>
+                                                </select>
+                                                <i></i>
+                                            </label>
+                                        </section>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <section>
+                                            <label class="label">Content</label>
+                                            <label class="textarea">
+                                                <i class="icon icon-append icon-comment"></i>
+                                                <textarea rows="8" name="content"></textarea>
+                                            </label>
+                                        </section>
+                                    </fieldset>
+
+                                    <footer>
+                                        <button id='submitButton' class="button">Submit</button>
+                                    </footer>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Profile Content -->
+        </div>
+    </div><!--/container-->
+    <!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+    {#<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>#}
+    {#<script src="{{ assetPrefix }}/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>#}
+{% endblock %}

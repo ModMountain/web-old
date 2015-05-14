@@ -25,13 +25,13 @@
                                     required as we need it to review your addon. Once your addon has been accepted, you may customize its description and media.</p>
                                 <br>
 
-                                <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST" action="/profile/addons/create">
+                                <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST" action="/profile/addons/{{ addon.id }}/edit">
                                     <fieldset>
                                         <section>
                                             <label class="label">Addon Name</label>
                                             <label class="input">
                                                 <i class="icon-prepend icon icon-font"></i>
-                                                <input type="text" placeholder="Some Addon" name="name" id="nameInput" required>
+                                                <input type="text" value="{{ addon.name }}" name="name" id="nameInput" required>
                                                 <b class="tooltip tooltip-bottom-left">This is the name of your addon. Choose something short and descriptive.</b>
                                             </label>
                                         </section>
@@ -40,7 +40,7 @@
                                             <label class="label">Desired Price</label>
                                             <label class="input">
                                                 <i class="icon-prepend icon icon-usd"></i>
-                                                <input type="number" placeholder="0" name="price" id="priceInput" required>
+                                                <input type="number" value="{{ addon.price }}" name="price" id="priceInput" required>
                                                 <b class="tooltip tooltip-bottom-left">This is how much you would like your addon to sell for. If you want this to be a free addon, enter 0.</b>
                                             </label>
                                         </section>
@@ -49,7 +49,6 @@
                                             <label class="label">Gamemode</label>
                                             <label class="select">
                                                 <select name="gamemode" id="gamemodeInput" required>
-                                                    <option value="" style="display:none">Select a Gamemode</option>
                                                     <option value="0">Sandbox Based</option>
                                                     <option value="1">Dark RP</option>
                                                     <option value="2">TTT</option>
@@ -64,7 +63,6 @@
                                             <label class="label">Type</label>
                                             <label class="select">
                                                 <select name="category" id="categoryInput" required>
-                                                    <option value="" style="display:none">Select a Category</option>
                                                     <option value="0">Weapon</option>
                                                     <option value="1">Chatbox</option>
                                                     <option value="2">Utility</option>
@@ -77,16 +75,16 @@
 
                                     <fieldset>
                                         <section>
-                                            <label class="label">Explanation</label>
+                                            <label class="label">Reason for Update</label>
                                             <label class="input">
                                                 <i class="icon-prepend icon icon-question"></i>
-                                                <input type="text" placeholder="" name="explanation" id="explanationInput" required>
-                                                <b class="tooltip tooltip-bottom-left">Before your addon can be approved, we need to know what it does. Give us a short and concise explanation.</b>
+                                                <input type="text" value="" name="reasonForUpdate" id="reasonInput" required>
+                                                <b class="tooltip tooltip-bottom-left">What is the reason for updating your addon?</b>
                                             </label>
                                         </section>
                                         <section>
-                                            <label class="checkbox"><input type="checkbox" name="outsideServers" id="outsideServersInput"><i></i>Does your addon make calls to outside servers?</label>
-                                            <label class="checkbox"><input type="checkbox" name="containsDrm" id="containsDrmInput"><i></i>Does your addon contain DRM or leak protection?</label>
+                                            <label class="checkbox"><input type="checkbox" name="outsideServers" id="outsideServersInput" {% if addon.outsideServers %}checked{% endif %}><i></i>Does your addon make calls to outside servers?</label>
+                                            <label class="checkbox"><input type="checkbox" name="containsDrm" id="containsDrmInput" {% if addon.containsDrm %}checked{% endif %}><i></i>Does your addon contain DRM or leak protection?</label>
                                         </section>
                                     </fieldset>
 
@@ -116,6 +114,9 @@
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        window.addon = {{ addon|json|safe }};
+    </script>
     {#<script src="/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>#}
-    <script src="/js/pages/profile/createAddon.js"></script>
+    <script src="/js/pages/profile/editAddon.js"></script>
 {% endblock %}

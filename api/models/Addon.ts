@@ -81,6 +81,9 @@ var Addon = {
             enum: ['pending', 'approved', 'denied', 'locked', 'published'],
             defaultsTo: 'pending'
         },
+        reasonForUpdate: {
+            type: "string"
+        },
 
         views: {
             type: 'string',
@@ -120,6 +123,10 @@ var Addon = {
 
         canDownload: function (user) {
             return !!(this.author == user.id || user.permissionLevel >= 1);
+        },
+
+        canModify: function (user) {
+            return !!(this.author == user.id || user.permissionLevel >= 2);
         }
     }
 };

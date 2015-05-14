@@ -24,9 +24,25 @@
 
 module.exports.routes = {
 
-    '/': 'StaticController.home',
-    'GET /profile/createAddon': 'ProfileController.createAddon',
-    'POST /profile/createAddon': 'ProfileController.createAddonPOST',
-    'GET /profile/addons/:id': 'ProfileController.viewAddon',
-    'POST /profile/settings': 'ProfileController.settingsPOST',
+    // Static routes
+    'GET    /':                             'StaticController.home',
+
+    // Profile routes
+    'GET    /profile':                      'ProfileController.index',
+    'GET    /profile/settings':             'ProfileController.settings',
+    'POST   /profile/settings':             'ProfileController.settingsPOST',
+
+    'GET    /profile/addons':               'ProfileController.addons',
+    'GET    /profile/addons/create':        'ProfileController.createAddon',
+    'POST   /profile/addons/create':        'ProfileController.createAddonPOST',
+    'GET    /profile/addons/:id':           'ProfileController.viewAddon',
+    'GET    /profile/addons/:id/edit':      'ProfileController.editAddon',
+    'POST   /profile/addons/:id/edit':      'ProfileController.editAddonPOST',
+    'GET    /profile/addons/:id/remove':    'ProfileController.removeAddon',
+
+    'GET    /profile/tickets':              'ProfileController.tickets',
+    'GET    /profile/tickets/create':       'ProfileController.createTicket',
+    'POST   /profile/tickets/create':       'ProfileController.createTicketPOST',
+    'POST   /profile/tickets/:id/respond':  'ProfileController.respondPOST',
+    'GET    /profile/tickets/:id/close':    'ProfileController.close',
 };
