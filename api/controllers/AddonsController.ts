@@ -19,7 +19,7 @@ module.exports = {
             .then(function (addons) {
                 res.view({title: "Addons", activeTab: 'addons', breadcrumbs: [['/addons', "Addons"]], addons: addons});
             }).catch(function (err) {
-                console.error("Error occured during Addon.find().paginate() inside AddonsController.index:", err);
+                PrettyError(err, 'Error occured during Addon.find().paginate() inside AddonsController.index');
                 req.flash('error', "An error occurred. Please try again.");
                 res.redirect('/');
             });
@@ -33,7 +33,7 @@ module.exports = {
                     if (addon.canDownload(req.user)) {
                         sails.hooks.gfs.exist({_id: addon.zipFile}, function(err, found) {
                             if (err) {
-                                console.error("An error occurred during sails.hooks.gfs.exist inside AddonsController.download:", err);
+                                PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
                                 req.flash('error', "Something went wrong while downloading addon '" + addon.name + "'");
                                 res.redirect('/addons/view/' + addon.id);
                             } else if (found) {
@@ -52,7 +52,7 @@ module.exports = {
                     res.send(404);
                 }
             }).catch(function (err) {
-                console.error('Error occurred during Addon.findOne inside AddonsController.download:', err);
+                PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
                 res.send(500);
             });
     }

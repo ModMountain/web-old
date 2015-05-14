@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
             next();
         })
         .catch(function (err) {
-            console.error("An error occurred during User.findOne inside the socketUser policy:", err)
+            PrettyError(err, 'An error occurred during User.findOne inside the socketUser policy');
             next(err);
         });
 };

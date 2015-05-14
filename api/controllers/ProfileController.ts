@@ -36,7 +36,7 @@ module.exports = {
                 req.flash('success', "Your settings have been updated.");
                 res.redirect('/profile/settings');
             }).catch(function (err) {
-                console.error("An error occurred during User.update inside ProfileController.settingsPOST:", err);
+                PrettyError(err, 'An error occurred during User.update inside ProfileController.settingsPOST');
                 req.flash('error', "Something went wrong while we were updating your settings. Please try again.");
                 res.redirect('/profile/settings')
             })
@@ -85,8 +85,9 @@ module.exports = {
             req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
             res.redirect('/profile/addons')
         }).catch(function (err) {
-            console.error("An error occurred during Addon.create inside ProfileController.createAddonPOST:", err);
+            PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
             req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
+            res.redirect('/profile/addons/create');
         });
     },
 
@@ -115,7 +116,7 @@ module.exports = {
                     res.redirect('/profile/addons')
                 }
             }).catch(function (err) {
-                console.error("An error occurred during Addon.findOne inside ProfileController.viewAddon:", err);
+                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.viewAddon');
                 req.flash('error', "An error occurred while trying to view that addon. Please try again.");
                 res.redirect('/profile/addons')
             });
@@ -141,7 +142,7 @@ module.exports = {
                     res.send(404)
                 }
             }).catch(function (err) {
-                console.error("An error occurred during Addon.findOne inside ProfileController.editAddon:", err);
+                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.editAddon');
                 req.flash('error', "Something went wrong while trying to edit addon " + addonId);
                 res.redirect('/profile/addons/' + addonId);
             });
@@ -163,8 +164,8 @@ module.exports = {
                                 req.flash('success', "Addon " + addonId + " updated successfully");
                             })
                             .catch(function (err) {
-                                console.error("An error occurred during Addon.update inside ProfileController.editAddonPOST:", err);
                                 req.flash('error', "Something went wrong while trying to update addon " + addonId);
+                                PrettyError(err, 'An error occurred during Addon.update inside ProfileController.editAddonPOST')
                             }).finally(function () {
                                 res.redirect('/profile/addons/' + addonId);
                             })
@@ -175,7 +176,7 @@ module.exports = {
                     res.send(404)
                 }
             }).catch(function (err) {
-                console.error("An error occurred during Addon.findOne inside ProfileController.editAddonPOST:", err);
+                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.editAddonPOST');
                 req.flash('error', "Something went wrong while trying to update addon " + addonId);
                 res.redirect('/profile/addons/' + addonId);
             });
@@ -192,8 +193,8 @@ module.exports = {
                                 req.flash('success', "Addon " + addonId + " removed successfully");
                             })
                             .catch(function (err) {
-                                console.error("An error occurred during Addon.update inside ProfileController.removeAddonPOST:", err);
                                 req.flash('error', "Something went wrong while trying to update addon " + addonId);
+                                return PrettyError(err, 'An error occurred during Addon.update inside ProfileController.removeAddonPOST:')
                             }).finally(function () {
                                 res.redirect('/profile/addons/');
                             })
@@ -204,7 +205,7 @@ module.exports = {
                     res.send(404)
                 }
             }).catch(function (err) {
-                console.error("An error occurred during Addon.findOne inside ProfileController.removeAddonPOST:", err);
+                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.removeAddonPOST');
                 req.flash('error', "Something went wrong while trying to remove addon " + addonId);
                 res.redirect('/profile/addons/' + addonId);
             });
@@ -232,7 +233,7 @@ module.exports = {
                         activeTab: 'profile.tickets'
                     })
                 }).catch(function (err) {
-                    console.error("An error occurred during Promise.all inside ProfileController.tickets:", err);
+                    PrettyError(err, 'An error occurred during Promise.all inside ProfileController.tickets');
                     req.flash('error', "Something went wrong while displaying your tickets");
                     res.redirect('/profile');
                 })
@@ -260,7 +261,7 @@ module.exports = {
             req.flash('success', 'Ticket created successfully');
             res.redirect('/profile/tickets/')
         }).catch(function (err) {
-            console.error("An error occurred during Ticket.create inside ProfileController.createTicketPOST:", err);
+            PrettyError(err, 'An error occurred during Ticket.create inside ProfileController.createTicketPOST');
             req.flash('error', 'Something went wrong while creating your ticket');
             res.redirect('/profile/tickets/create')
         });
@@ -282,13 +283,11 @@ module.exports = {
                     );
                 }
             }).catch(function (err) {
-                PrettyError(err, 'An error occurred during Ticket.findOne inside ProfileController.respondPOST')
-                    .then(function () {
-                        req.socket.emit('notification', {
-                            type: 'error',
-                            msg: 'Something went wrong while responding to your ticket'
-                        })
-                    });
+                PrettyError(err, 'An error occurred during Ticket.findOne inside ProfileController.respondPOST');
+                req.socket.emit('notification', {
+                    type: 'error',
+                    msg: 'Something went wrong while responding to your ticket'
+                });
             });
     },
 
@@ -297,7 +296,7 @@ module.exports = {
         Ticket.findOne(ticketId)
             .then(function (ticket) {
                 if (ticket === undefined) res.send(404);
-                else if (!ticket.canClose(req.user)) res.send(403);
+                else if (!ticket.canClosed(req.user)) res.send(403);
                 else {
                     Ticket.update(ticketId, {status: 'closed'})
                         .then(Ticket.publishUpdate(ticketId, {
@@ -305,13 +304,11 @@ module.exports = {
                         }))
                 }
             }).catch(function (err) {
-                PrettyError(err, 'An error occurred during Ticket.findOne inside ProfileController.closePOST')
-                    .then(function () {
-                        req.socket.emit('notification', {
-                            type: 'error',
-                            msg: 'Something went wrong while closing your ticket'
-                        })
-                    });
+                PrettyError(err, 'An error occurred during Ticket.findOne inside ProfileController.closePOST');
+                req.socket.emit('notification', {
+                    type: 'error',
+                    msg: 'Something went wrong while closing your ticket'
+                });
             });
     }
 };

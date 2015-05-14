@@ -33,7 +33,7 @@ module.exports = {
                 }
             })
             .catch(function (err) {
-                console.error("An error occurred during Addon.update inside StaffController.approveAddon:", err);
+                PrettyError(err, 'An error occurred during Addon.update inside StaffController.approveAddon');
                 if (req.isSocket) {
                     req.socket.emit('notification', {type: 'error', msg: 'Something went wrong: ' + err});
                 } else {
@@ -55,7 +55,7 @@ module.exports = {
                 }
             })
             .catch(function (err) {
-                console.error("An error occurred during Addon.update inside StaffController.denyAddon:", err);
+                PrettyError(err, 'An error occurred during Addon.update inside StaffController.denyAddon');
                 if (req.isSocket) {
                     req.socket.emit('notification', {type: 'error', msg: 'Something went wrong: ' + err});
                 } else {
@@ -75,7 +75,7 @@ module.exports = {
                     tickets: tickets
                 })
             }).catch(function (err) {
-                console.error("An error occurred during Ticket.find inside StaffController.tickets:", err);
+                PrettyError(err, 'An error occurred during Ticket.find inside StaffController.tickets');
                 req.flash('error', 'Something went wrong: ' + err);
                 res.redirect('/');
             });
