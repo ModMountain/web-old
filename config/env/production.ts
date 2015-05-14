@@ -24,9 +24,6 @@ module.exports = {
         mongodb: {
             adapter: 'sails-mongo',
             url: 'mongodb://localhost:27017/modmountain_production'
-        },
-        localDiskDb: {
-            adapter: 'sails-disk'
         }
     },
 
@@ -39,8 +36,8 @@ module.exports = {
     },
 
     models: {
-        connection: 'localDiskDb',
-        migrate: 'alter'
+        connection: 'mongodb',
+        migrate: 'safe'
     },
 
     http: {
