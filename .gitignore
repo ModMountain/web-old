@@ -115,6 +115,7 @@ npm-debug.log
 .netbeans
 nbproject
 .idea/workspace.xml
+.idea/mongoSettings.xml
 .node_history
 
 api/**/*.js*
