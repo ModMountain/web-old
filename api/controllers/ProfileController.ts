@@ -29,7 +29,7 @@ module.exports = {
 
     settingsPOST: function (req, res) {
         if (req.body.username !== undefined && req.body.username !== '') req.user.username = req.body.username;
-        if (req.body.primaryEmail !== undefined && req.body.primaryEmail !== '') req.user.email = req.body.primaryEmail;
+        req.user.email = req.body.primaryEmail;
 
         req.user.save()
             .then(function () {
