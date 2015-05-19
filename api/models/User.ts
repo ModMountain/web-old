@@ -30,6 +30,9 @@ var User = {
             min: 0,
             max: 2
         },
+        paypalEmail: {
+            type: 'email'
+        },
 
         // Associations
         addons: {

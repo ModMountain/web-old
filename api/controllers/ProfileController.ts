@@ -30,6 +30,7 @@ module.exports = {
     settingsPOST: function (req, res) {
         if (req.body.username !== undefined && req.body.username !== '') req.user.username = req.body.username;
         req.user.email = req.body.primaryEmail;
+        req.user.paypalEmail = req.body.paypalEmail;
 
         req.user.save()
             .then(function () {
@@ -303,7 +304,7 @@ module.exports = {
                 else if (!ticket.canClose(req.user)) res.send(403);
                 else {
                     Ticket.update(ticketId, {status: 'closed'})
-                        .then(function() {
+                        .then(function () {
                             Ticket.publishUpdate(ticketId, {
                                 type: 'closed'
                             });
@@ -316,6 +317,10 @@ module.exports = {
                     msg: 'Something went wrong while closing your ticket'
                 });
             });
+    },
+
+    stripeRedirect: function (req, res) {
+
     }
 };
 
