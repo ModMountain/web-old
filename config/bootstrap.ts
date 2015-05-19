@@ -50,6 +50,8 @@ var setupPassport = function () {
 
 var setupGridFS = function (cb) {
     var Promise = require('bluebird');
+    Promise.longStackTraces();
+
     var Mapstrace = require('mapstrace');
     Promise.promisifyAll(Mapstrace);
     global.PrettyError = Promise.method(function (err, msg) {
