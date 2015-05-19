@@ -194,7 +194,7 @@ module.exports = {
                                 req.flash('success', "Addon " + addonId + " removed successfully");
                             })
                             .catch(function (err) {
-                                req.flash('error', "Something went wrong while trying to update addon " + addonId);
+                                req.flash('error', "Something went wrong while trying to remove addon " + addonId);
                                 return PrettyError(err, 'An error occurred during Addon.update inside ProfileController.removeAddonPOST:')
                             }).finally(function () {
                                 res.redirect('/profile/addons/');
