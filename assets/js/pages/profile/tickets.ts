@@ -57,7 +57,7 @@ function addNewResponse(ticketId, user, content) {
     responseHTML += "<div class=\"media-body\">";
     responseHTML += "<h4 class=\"media-heading\">";
     responseHTML += "<strong><a href=\"#\">" + user.username + "<\/a><\/strong>";
-    responseHTML += "<small>" + Date.now() + "<\/small>";
+    responseHTML += "<small>" + new Date().toDateString() + "<\/small>";
     responseHTML += "<\/h4>";
     responseHTML += "<p>" + content + "<\/p>";
     responseHTML += "<\/div>";

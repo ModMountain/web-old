@@ -278,12 +278,13 @@ module.exports = {
                 else if (!ticket.canRespond(req.user)) res.send(403);
                 else {
                     return ticket.addResponse(req.user, req.param('content'))
-                        .then(Ticket.publishUpdate(ticketId, {
-                            type: 'newResponse',
-                            user: req.user,
-                            content: req.param('content')
-                        })
-                    );
+                        .then(function () {
+                            Ticket.publishUpdate(ticketId, {
+                                type: 'newResponse',
+                                user: req.user,
+                                content: req.param('content')
+                            });
+                        });
                 }
             }).catch(function (err) {
                 PrettyError(err, 'An error occurred during Ticket.findOne inside ProfileController.respondPOST');

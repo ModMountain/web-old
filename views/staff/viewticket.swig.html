@@ -1,0 +1,72 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/page_search_inner_tables.css">
+    {% include 'components/profile/commoncss.swig.html' %}
+{% endblock %}
+
+{% block content %}
+    <!--=== Profile ===-->
+    <div class="container content profile">
+        <div class="row">
+            {% include 'components/flashhandler.swig.html' %}
+
+            <div id="ticketBody-{{ ticket.id }}" class="profile-body">
+                <div class="panel panel-profile">
+                    <div class="panel-heading overflow-h">
+                        <h2 class="panel-title heading-sm pull-left"><i
+                                    class="icon icon-comments"></i>{{ ticket.title }}</h2>
+
+                        <h2 class="panel-title heading-sm pull-right">{{ ticket.prettyStatus() }}</h2>
+                    </div>
+                    <div class="panel-body" id="ticketBody">
+                        {% for response in ticket.responses %}
+                            <div class="media media-v2 margin-bottom-20">
+                                <a class="pull-left">
+                                    <img class="media-object rounded-x"
+                                         src="{{ response.user.steamProfile.photos[2].value }}">
+                                </a>
+
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <strong><a href="#">{{ response.user.username }}</a></strong>
+                                        <small>{{ response.createdAt.toDateString() }}</small>
+                                    </h4>
+                                    <p>{{ response.content }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <hr>
+                        <div class="sky-form">
+                            <fieldset>
+                                <section>
+                                    <label class="label">Respond</label>
+                                    <label class="textarea">
+                                        <i class="icon icon-append icon-comment"></i>
+                                        <textarea rows="3" class="respondInput"></textarea>
+                                    </label>
+                                </section>
+                            </fieldset>
+
+                            <footer>
+                                <button class="btn-u btn-u-dark ladda-button respondButton"
+                                        data-ticket-id="{{ ticket.id }}" data-style="zoom-out"><span
+                                            class="ladda-label">Respond</span><span
+                                            class="ladda-spinner"></span></button>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--/container-->
+    <!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		window.ticketId = "{{ ticket.id }}";
+	</script>
+    <script src="/js/pages/staff/tickets.js"></script>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    <link rel="stylesheet" href="/css/pages/page_search_inner_tables.css">
+    <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/page_search_inner_tables.css">
 {% endblock %}
 
 {% block content %}
@@ -30,9 +30,9 @@
                                     </div>
                                 </td>
                                 <td class="td-width">
-                                    <h3><a href="#">{{ ticket.title }}</a></h3>
+                                    <h3><a href="/staff/tickets/{{ ticket.id }}">{{ ticket.title }}</a></h3>
 
-                                    {#<p>{{ ticket.responses[0].content }}</p>#}
+                                    <p>{{ ticket.responses[0].content }}</p>
                                     Created {{ ticket.createdAt.toDateString() }}
                                 </td>
                                 <td><span class="label label-success">{{ ticket.priority }}</span></td>
@@ -49,5 +49,4 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="/js/pages/staff/addons.js"></script>
 {% endblock %}

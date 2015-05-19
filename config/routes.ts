@@ -45,4 +45,10 @@ module.exports.routes = {
     'POST   /profile/tickets/create':       'ProfileController.createTicketPOST',
     'POST   /profile/tickets/:id/respond':  'ProfileController.respondPOST',
     'GET    /profile/tickets/:id/close':    'ProfileController.close',
+
+    // Staff routes
+    'GET    /staff/addons':                 'StaffController.addons',
+    'GET    /staff/tickets':                'StaffController.tickets',
+    'GET    /staff/tickets/:id':            'StaffController.viewTicket',
+    'POST   /staff/tickets/:id/respond':    'StaffController.respondToTicket',
 };

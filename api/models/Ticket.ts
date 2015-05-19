@@ -36,32 +36,30 @@ var Ticket = {
             model: 'Addon'
         },
 
-        canClose: function(user) {
+        canClose: function (user) {
             return !!(this.submitter == user.id || user.permissionLevel == 2);
         },
 
-        canRespond: function(user) {
+        canRespond: function (user) {
             return !!(this.submitter == user.id || this.handler == user.id || user.permissionLevel >= 1);
         },
 
-        addResponse: function(user, content) {
+        addResponse: function (user, content:String) {
             var _this = this;
             return TicketResponse.create({
                 user: user,
                 content: content,
                 ticket: this.id
-            }).then(function(ticketResponse) {
+            }).then(function (ticketResponse) {
                 _this.responses.add(ticketResponse);
-            }).then(function(){
+            }).then(function () {
                 if (_this.submitter === user.id) _this.status = 'submitterResponse';
                 else _this.status = 'handlerResponse';
                 return _this.save()
-            }).catch(function(err) {
-                return Promise.reject(err);
             });
         },
 
-        prettyStatus: function() {
+        prettyStatus: function () {
             switch (this.status) {
                 case 'submitterResponse':
                     return 'Response Sent';

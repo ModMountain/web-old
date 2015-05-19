@@ -79,6 +79,61 @@ module.exports = {
                 req.flash('error', 'Something went wrong: ' + err);
                 res.redirect('/');
             });
+    },
+
+    viewTicket: function (req, res) {
+        var ticketId = req.param('id');
+        if (req.isSocket) Ticket.subscribe(req.socket, ticketId);
+        else {
+            Ticket.findOne(ticketId).populateAll()
+                .then(function (ticket) {
+                    if (ticket === undefined) return res.send(404);
+
+                    var promises = []
+                    ticket.responses.forEach(function(response) {
+                        promises.push(TicketResponse.findOne(response.id).populateAll())
+                    });
+
+                    Promise.all(promises)
+                    .then(function(responses) {
+                            ticket.responses = responses;
+                            res.view({
+                                title: "Viewing Ticket " + ticketId,
+                                activeTab: 'staff.tickets',
+                                breadcrumbs: [['/staff/tickets', "Ticket Queue"], ['/staff/tickets/' + ticketId, "Viewing Ticket " + ticketId]],
+                                ticket: ticket
+                            })
+                        })
+                })
+                .catch(function (err) {
+                    PrettyError(err, "An error occurred during Ticket.findOne inside StaffController.viewTicket");
+                    req.flash('error', 'Something went wrong while trying to view ticket ' + ticketId);
+                    res.redirect('/staff/tickets')
+                })
+        }
+    },
+
+    respondToTicket: function (req, res) {
+        var ticketId = req.param('id');
+        Ticket.findOne(ticketId)
+            .then(function (ticket) {
+                if (ticket === undefined) return res.send(404);
+
+                return ticket.addResponse(req.user, req.param('content'))
+                    .then(function () {
+                        Ticket.publishUpdate(ticketId, {
+                            type: 'newResponse',
+                            user: req.user,
+                            content: req.param('content')
+                        });
+                    });
+            }).catch(function (err) {
+                PrettyError(err, 'An error occurred during Ticket.findOne inside StaffController.respondToTicket');
+                req.socket.emit('notification', {
+                    type: 'error',
+                    msg: 'Something went wrong while responding to ticket ' + ticketId
+                });
+            });
     }
 };
 
