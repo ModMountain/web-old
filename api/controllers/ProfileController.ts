@@ -303,9 +303,11 @@ module.exports = {
                 else if (!ticket.canClose(req.user)) res.send(403);
                 else {
                     Ticket.update(ticketId, {status: 'closed'})
-                        .then(Ticket.publishUpdate(ticketId, {
-                            type: 'closed'
-                        }))
+                        .then(function() {
+                            Ticket.publishUpdate(ticketId, {
+                                type: 'closed'
+                            });
+                        })
                 }
             }).catch(function (err) {
                 PrettyError(err, 'An error occurred during Ticket.findOne inside ProfileController.closePOST');
