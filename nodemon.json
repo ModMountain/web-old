@@ -1,0 +1,23 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    ".idea",
+    ".tmp",
+    "assets",
+    "UnifyHTML",
+    "views",
+    "node_modules/**/node_modules"
+  ],
+  "verbose": false,
+  "watch": [
+    "api/",
+    "config/",
+    "tasks/"
+  ],
+  "env": {
+    "NODE_ENV": "development",
+    "BLUEBIRD_DEBUG": "1"
+  },
+  "ext": "ts"
+}
