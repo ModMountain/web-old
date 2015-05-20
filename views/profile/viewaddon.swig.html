@@ -40,21 +40,6 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <!-- Downloads -->
-                        <div class="col-sm-6">
-                            <div class="panel panel-profile">
-                                <div class="panel-heading overflow-h">
-                                    <h2 class="panel-title heading-sm pull-left"><i class="fa fa-lightbulb-o"></i>
-                                        Downloads</h2>
-                                    <a href="#"><i class="fa fa-cog pull-right"></i></a>
-                                </div>
-                                <div class="panel-body">
-                                    <ul class="list-unstyled social-contacts-v3">
-                                        <li><i class=""></i> <a href="/addons/download/{{ addon.id }}">Zip File</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         {# Actions #}
                         <div class="col-sm-6">
                             <div class="panel panel-profile">
@@ -65,9 +50,10 @@
                                 </div>
                                 <div class="panel-body">
                                     <ul class="list-unstyled social-contacts-v3">
-                                        <li><i class=""></i> <a href="/profile/addons/{{ addon.id }}/edit">Edit</a></li>
-                                        <li><i class=""></i> <a href="/profile/addons/{{ addon.id }}/publish">Publish</a></li>
-                                        <li><i class=""></i> <a href="/profile/addons/{{ addon.id }}/remove">Remove</a></li>
+                                        <li><i class="icon icon-pencil"></i> <a href="/profile/addons/{{ addon.id }}/edit">Edit</a></li>
+                                        <li><i class="icon icon-check"></i> <a href="/profile/addons/{{ addon.id }}/publish">Publish</a></li>
+                                        <li><i class="icon icon-download"></i> <a href="/addons/download/{{ addon.id }}">Download</a></li>
+                                        <li><i class="icon icon-trash"></i> <a href="/profile/addons/{{ addon.id }}/remove">Remove</a></li>
                                     </ul>
                                 </div>
                             </div>
