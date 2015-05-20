@@ -39,6 +39,7 @@ module.exports.routes = {
     'GET    /profile/addons/:id/edit':      'ProfileController.editAddon',
     'POST   /profile/addons/:id/edit':      'ProfileController.editAddonPOST',
     'GET    /profile/addons/:id/remove':    'ProfileController.removeAddon',
+    'GET    /profile/addons/:id/publish':   'ProfileController.publishAddon',
 
     'GET    /profile/tickets':              'ProfileController.tickets',
     'GET    /profile/tickets/create':       'ProfileController.createTicket',
