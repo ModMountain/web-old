@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-md-7">
                                 <h2>{{ addon.name }}</h2>
-                                <span><strong>Status:</strong> {{ addon.status }}</span>
+                                <span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
                                 <span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
                                 <hr>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eget massa nec
@@ -66,6 +66,7 @@
                                 <div class="panel-body">
                                     <ul class="list-unstyled social-contacts-v3">
                                         <li><i class=""></i> <a href="/profile/addons/{{ addon.id }}/edit">Edit</a></li>
+                                        <li><i class=""></i> <a href="/profile/addons/{{ addon.id }}/publish">Publish</a></li>
                                         <li><i class=""></i> <a href="/profile/addons/{{ addon.id }}/remove">Remove</a></li>
                                     </ul>
                                 </div>

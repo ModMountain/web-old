@@ -127,6 +127,21 @@ var AddonModel = {
 
             canModify: function (user) {
                 return !!(this.author == user.id || user.permissionLevel >= 2);
+            },
+
+            prettyStatus: function () {
+                switch (this.status) {
+                    case 'pending':
+                        return 'Pending';
+                    case 'approved':
+                        return 'Approved';
+                    case 'denied':
+                        return 'Denied';
+                    case 'locked':
+                        return 'Locked';
+                    case 'published':
+                        return 'Published';
+                }
             }
         },
 
