@@ -206,8 +206,38 @@ module.exports = {
                     res.send(404)
                 }
             }).catch(function (err) {
-                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.removeAddonPOST');
+                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.removeAddon');
                 req.flash('error', "Something went wrong while trying to remove addon " + addonId);
+                res.redirect('/profile/addons/' + addonId);
+            });
+    },
+
+    publishAddon: function (req, res) {
+        var addonId = req.param('id');
+        Addon.findOne(addonId)
+            .then(function (addon) {
+                if (addon !== undefined) {
+                    if (addon.canModify(req.user)) {
+                        if (addon.status === 'approved') {
+                            addon.status = 'published';
+                            addon.save()
+                                .then(function () {
+                                    req.flash('success', "Addon '" + addon.name + "' has been published");
+                                    res.redirect('/profile/addons/' + addonId);
+                                });
+                        } else {
+                            req.flash('error', "You cannot publish an addon that is not approved.")
+                            res.redirect('/profile/addons/' + addonId);
+                        }
+                    } else {
+                        res.send(403)
+                    }
+                } else {
+                    res.send(404)
+                }
+            }).catch(function (err) {
+                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.publishAddon');
+                req.flash('error', "Something went wrong while trying to publish addon " + addonId);
                 res.redirect('/profile/addons/' + addonId);
             });
     },
