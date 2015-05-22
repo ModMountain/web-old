@@ -52,4 +52,9 @@ module.exports.routes = {
     'GET    /staff/tickets':                'StaffController.tickets',
     'GET    /staff/tickets/:id':            'StaffController.viewTicket',
     'POST   /staff/tickets/:id/respond':    'StaffController.respondToTicket',
+
+    // Public addons routes
+    'GET    /addons':                       'AddonsController.index',
+    'GET    /addons/:id':                   'AddonsController.viewAddon',
+    'GET    /addons/:id/download':          'AddonsController.download',
 };

@@ -2,6 +2,7 @@
 
 {% block css %}
     {% include 'components/profile/commoncss.swig.html' %}
+	<link rel='stylesheet' href='{{ assetPrefix }}/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css'>
 {% endblock %}
 
 {% block content %}
@@ -64,7 +65,7 @@
                                         <section>
                                             <label class="label">Type</label>
                                             <label class="select">
-                                                <select name="category" id="categoryInput" required>
+                                                <select name="type" id="typeInput" required>
                                                     <option value="" style="display:none">Select a Category</option>
                                                     <option value="0">Weapon</option>
                                                     <option value="1">Chatbox</option>
@@ -74,17 +75,26 @@
                                                 <i></i>
                                             </label>
                                         </section>
+
+	                                    <section>
+		                                    <label class="label">Tags</label>
+		                                    <label class="input">
+			                                    <i class="icon-prepend icon icon-comment"></i>
+			                                    <input type="text" placeholder="" name="tags" required>
+			                                    <b class="tooltip tooltip-bottom-left">A comma separated list of tags that describe your addon.</b>
+		                                    </label>
+	                                    </section>
                                     </fieldset>
 
                                     <fieldset>
-                                        <section>
-                                            <label class="label">Explanation</label>
-                                            <label class="input">
-                                                <i class="icon-prepend icon icon-question"></i>
-                                                <input type="text" placeholder="" name="explanation" id="explanationInput" required>
-                                                <b class="tooltip tooltip-bottom-left">Before your addon can be approved, we need to know what it does. Give us a short and concise explanation.</b>
-                                            </label>
-                                        </section>
+	                                    <section>
+		                                    <label class="label">Explanation</label>
+		                                    <label class="input">
+			                                    <i class="icon-prepend icon icon-question"></i>
+			                                    <input type="text" placeholder="" name="explanation" id="explanationInput" required>
+			                                    <b class="tooltip tooltip-bottom-left">Before your addon can be approved, we need to know what it does. Give us a short and concise explanation.</b>
+		                                    </label>
+	                                    </section>
                                         <section>
                                             <label class="checkbox"><input type="checkbox" name="outsideServers" id="outsideServersInput"><i></i>Does your addon make calls to outside servers?</label>
                                             <label class="checkbox"><input type="checkbox" name="containsDrm" id="containsDrmInput"><i></i>Does your addon contain DRM or leak protection?</label>
@@ -100,6 +110,32 @@
                                             </label>
                                         </section>
                                     </fieldset>
+
+	                                <fieldset>
+		                                <section>
+			                                <label class="label">Short Description</label>
+			                                <label class="input">
+				                                <i class="icon-prepend icon icon-comment"></i>
+				                                <input type="text" placeholder="" name="shortDescription" required>
+				                                <b class="tooltip tooltip-bottom-left">This short blurb will be displayed near the top of your addon's store page. Aim for two sentences.</b>
+			                                </label>
+		                                </section>
+		                                <section>
+			                                <label class="label">Long Description</label>
+			                                <label class="textarea">
+				                                <textarea id="descriptionEditor" rows="10" name="description"></textarea>
+			                                </label>
+		                                </section>
+
+		                                <section>
+			                                <label class="label">Youtube Embeddable Link</label>
+			                                <label class="input">
+				                                <i class="icon-prepend icon icon-youtube"></i>
+				                                <input type="text" name="youtubeLink">
+				                                <b class="tooltip tooltip-bottom-left">This youtube video will be displayed on your addon's store page, near the bottom. Please use the embeddable link.</b>
+			                                </label>
+		                                </section>
+	                                </fieldset>
 
                                     <footer>
                                         <button id='submitButton' class="button">Submit</button>
@@ -118,5 +154,12 @@
 
 {% block scripts %}
     {#<script src="/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>#}
-    <script src="/js/pages/profile/createAddon.js"></script>
+    <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
+    <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
+    <script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
+    <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+	<script>
+		$("#descriptionEditor").markdown({autofocus: false, savable: false, fullscreen: false})
+	</script>
+    <script src="{{ assetPrefix }}/js/pages/profile/createAddon.js"></script>
 {% endblock %}

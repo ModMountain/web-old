@@ -250,7 +250,7 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<a href="/addons/{{ addon.id }}"><img class="img-responsive sm-margin-bottom-20"
-									                                      src="/img/blog/16.jpg" alt=""></a>
+									                                      src="https://placehold.it/973x1196&text=TODO" alt=""></a>
 								</div>
 								<div class="col-sm-8 product-description">
 									<div class="overflow-h margin-bottom-5">
@@ -261,13 +261,13 @@
 											<li><span class="gender text-uppercase">{{ addon.author.username }}</span>
 											</li>
 											{#<li class="pull-right">#}
-												{#<ul class="list-inline product-ratings">#}
-													{#<li><i class="rating-selected icon icon-star"></i></li>#}
-													{#<li><i class="rating-selected icon icon-star"></i></li>#}
-													{#<li><i class="rating-selected icon icon-star"></i></li>#}
-													{#<li><i class="rating icon icon-star"></i></li>#}
-													{#<li><i class="rating icon icon-star"></i></li>#}
-												{#</ul>#}
+											{#<ul class="list-inline product-ratings">#}
+											{#<li><i class="rating-selected icon icon-star"></i></li>#}
+											{#<li><i class="rating-selected icon icon-star"></i></li>#}
+											{#<li><i class="rating-selected icon icon-star"></i></li>#}
+											{#<li><i class="rating icon icon-star"></i></li>#}
+											{#<li><i class="rating icon icon-star"></i></li>#}
+											{#</ul>#}
 											{#</li>#}
 										</ul>
 										<div class="margin-bottom-10">
@@ -278,18 +278,18 @@
 												<span class="title-price margin-right-10">${{ addon.price }}</span>
 											{% endif %}
 										</div>
-										<p class="margin-bottom-20">{{ addon.description }}</p>
+										<p class="margin-bottom-20">{{ addon.shortDescription }}</p>
 										<ul class="list-inline add-to-wishlist margin-bottom-20">
 											{#<li class="wishlist-in">#}
-												{#<i class="icon icon-heart"></i>#}
-												{#<a href="#">Add to Wishlist</a>#}
+											{#<i class="icon icon-heart"></i>#}
+											{#<a href="#">Add to Wishlist</a>#}
 											{#</li>#}
 											{#<li class="compare-in">#}
-												{#<i class="icon icon-exchange"></i>#}
-												{#<a href="#">Add to Compare</a>#}
+											{#<i class="icon icon-exchange"></i>#}
+											{#<a href="#">Add to Compare</a>#}
 											{#</li>#}
 										</ul>
-										<button type="button" class="btn-u btn-u-sea-shop">View</button>
+										<button type="button" class="btn-u btn-u-sea-shop" onclick="window.location.href = '/addons/{{ addon.id }}';">View</button>
 									</div>
 								</div>
 							</div>
@@ -300,11 +300,19 @@
 
 				<div class="text-center">
 					<ul class="pagination pagination-v2">
-						<li><a href="#"><i class="icon icon-angle-left"></i></a></li>
-						<li class="active"><a href="#">1</a></li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#"><i class="icon icon-angle-right"></i></a></li>
+						{% if totalAddons > 5 %}
+							{% set array = Array(totalAddons / 5)  %}
+
+							<li><a href="#"><i class="icon icon-angle-left"></i></a></li>
+							{% for i,x in array %}
+								{% if loop.first %}
+									<li class="active"><a href="#">{{ i }}</a></li>
+								{% else %}
+									<li><a href="#">{{ i }}</a></li>
+								{% endif %}
+							{% endfor %}
+							<li><a href="#"><i class="icon icon-angle-right"></i></a></li>
+						{% endif %}
 					</ul>
 				</div>
 				<!--/end pagination-->

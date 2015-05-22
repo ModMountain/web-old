@@ -66,10 +66,14 @@ module.exports = {
             name: req.body.name,
             price: req.body.price,
             gamemode: req.body.gamemode,
-            category: req.body.category,
+            type: req.body.type,
             zipFile: req.files.zipFile.objectId.toString(), //FIXME zip file does not need to be uploaded for form to
-                                                            // submit
+            size: req.files.zipFile.size,
+
+            youtubeLink: req.body.youtubeLink,
+            shortDescription: req.body.shortDescription,
             description: req.body.description,
+            tags: req.body.tags,
             instructions: req.body.instructions,
             explanation: req.body.explanation,
             outsideServers: (req.body.outsideServers !== undefined),
@@ -158,7 +162,10 @@ module.exports = {
                         req.body.outsideServers = req.body.outsideServers !== undefined;
                         req.body.containsDrm = req.body.containsDrm !== undefined;
                         req.body.status = 'pending';
-                        req.body.zipFile = req.files.zipFile.objectId.toString();
+                        if (req.files.zipFile !== undefined) {
+                            req.body.zipFile = req.files.zipFile.objectId.toString();
+                            req.body.size = req.files.zipFile.size;
+                        }
 
                         Addon.update(addonId, req.body)
                             .then(function () {

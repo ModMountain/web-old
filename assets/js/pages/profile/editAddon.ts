@@ -3,7 +3,7 @@
 
 $(function () {
     $('select[name^="gamemode"] option[value=' + window.addon.gamemode + ']').attr("selected","selected");
-    $('select[name^="category"] option[value=' + window.addon.type + ']').attr("selected","selected");
+    $('select[name^="type"] option[value=' + window.addon.type + ']').attr("selected","selected");
 
-    $('select[name^="category"]').attr("selected","selected");
+    //$('select[name^="type"]').attr("selected","selected");
 });

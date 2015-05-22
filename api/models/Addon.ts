@@ -17,7 +17,7 @@ var AddonModel = {
                 type: "string",
                 required: true
             },
-            category: {
+            type: {
                 type: "string",
                 required: true
             },
@@ -27,6 +27,15 @@ var AddonModel = {
             },
             description: {
                 type: 'text'
+            },
+            shortDescription: {
+                type: 'string'
+            },
+            tags: {
+                type: 'string'
+            },
+            size: {
+                type: 'integer'
             },
             instructions: {
                 type: 'text'
@@ -49,7 +58,7 @@ var AddonModel = {
             galleryImagePaths: {
                 type: 'string',
             },
-            youtubeVideos: {
+            youtubeLink: {
                 type: 'string',
             },
             autoUpdaterEnabled: {
@@ -68,14 +77,12 @@ var AddonModel = {
                 type: 'boolean',
                 defaultsTo: false
             },
-
             discount: {
                 type: "float",
                 defaultsTo: 0.0,
                 max: 0.99,
                 min: 0.0
             },
-
             status: {
                 type: "string",
                 enum: ['pending', 'approved', 'denied', 'locked', 'published'],
@@ -84,7 +91,6 @@ var AddonModel = {
             reasonForUpdate: {
                 type: "string"
             },
-
             views: {
                 type: 'string',
                 defaultsTo: 0,
@@ -141,6 +147,25 @@ var AddonModel = {
                         return 'Locked';
                     case 'published':
                         return 'Published';
+                }
+            },
+
+            prettyGamemode: function() {
+                switch (this.gamemode) {
+                    case '0': return 'Sandbox Based';
+                    case '1': return 'Dark RP';
+                    case '2': return 'TTT';
+                    case '3': return 'Murder';
+                    case '4': return 'Other';
+                }
+            },
+
+            prettyType: function() {
+                switch (this.type) {
+                    case '0': return 'Weapon';
+                    case '1': return 'Chatbox';
+                    case '2': return 'Utility';
+                    case '3': return 'Other';
                 }
             }
         },
