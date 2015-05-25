@@ -12,7 +12,7 @@
 module.exports = function(req, res, next) {
   if (req.isSocket) {
     if (req.session.passport.user !== undefined) return next();
-    else return req.socket.emit('error', {type: 'Authentication Error', message: "You must be logged in to do that!"});
+    else return req.socket.emit('notification', {type: 'error', message: "You must be logged in to do that!"});
   } else {
     if (req.user !== undefined) return next();
     else {
