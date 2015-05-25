@@ -17,7 +17,7 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'info'
+        level: 'silly'
     },
 
     connections: {
