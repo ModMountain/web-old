@@ -1,13 +1,10 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/stripe/stripe-node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
 
-/**
- * StaticController
- *
- * @description :: Server-side logic for managing Statics
- * @help        :: See http://links.sailsjs.org/docs/controllers
- */
+var Promise = require('bluebird');
+var Stripe = require("stripe")("***REMOVED***");
 
-var Promise = require('bluebird')
 module.exports = {
     _config: {
         actions: true,
@@ -86,6 +83,64 @@ module.exports = {
                 PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
                 res.send(500);
             });
+    },
+
+    purchasePOST: function(req, res) {
+        console.log('Got purchase POST');
+        if (req.user === undefined) {
+            req.socket.emit('notification', {type: 'error', msg: 'You must be logged in to make purchases.'})
+        } else {
+            var addonId:String = req.param('addonId');
+            Addon.findOne(addonId).populateAll()
+                .then(function(addon) {
+                    if (addon === undefined) return res.send(404);
+                    else {
+                        var chargeAmount:Number;
+                        var description:String;
+
+                        // Free addons are set to a $5 donation
+                        if (addon.price === 0) {
+                            chargeAmount = 500;
+                            description = "Donation to '" + addon.name + "'";
+                        } else {
+                            chargeAmount = addon.price * 100;
+                            description = "Purchase '" + addon.name + "'";
+                        }
+
+                        var charge = Stripe.charges.create({
+                            amount: chargeAmount, // amount in cents, again
+                            currency: "usd",
+                            source: req.param('tokenId'),
+                            description: description
+                        }, function(err, charge) {
+                            if (err && err.type === 'StripeCardError') {
+                                req.socket.emit('notification', {type: 'error', msg: "Your card was declined."})
+                            } else {
+                                Transaction.create({
+                                    sender: req.user,
+                                    receiver: addon.author,
+                                    senderType: 'purchase',
+                                    receiverType: 'sale',
+                                    addon: addon,
+                                    rawData: charge
+                                }).then(function(transaction) {
+                                    req.user.sentTransactions.add(transaction);
+                                    addon.author.receivedTransactions.add(transaction);
+                                    // If the user bought a paid addon we need to track the purchase
+                                    if (addon.price > 0) {
+                                        req.user.purchases.add(addon);
+                                        addon.purchasers.add(req.user);
+                                    }
+                                    return [req.user.save(), addon.author.save()]
+                                }).spread(function() {
+                                    if (addon.price === 0) req.socket.emit('notification', {type: 'success', msg: "Donation successful!"});
+                                    else req.socket.emit('notification', {type: 'success', msg: "Purchase successful!"});
+                                });
+                            }
+                        });
+                    }
+                });
+        }
     }
 };
 

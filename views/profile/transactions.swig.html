@@ -1,0 +1,64 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+	{% include 'components/profile/commoncss.swig.html' %}
+{% endblock %}
+
+{% block content %}
+	<!--=== Profile ===-->
+	<div class="container content profile">
+		<div class="row">
+			{% include 'components/flashhandler.swig.html' %}
+			{% include 'components/profile/sidebar.swig.html' %}
+			<!-- Profile Content -->
+			<div class="col-md-9">
+				<div class="profile-body">
+					{% if user.transactions.length == 0 %}
+						<h1 style="text-align: center;">You have no addons.</h1>
+					{% else %}
+						<div class="table-search-v1 margin-bottom-20">
+							<div class="table-responsive">
+								<table class="table table-hover table-bordered table-striped">
+									<thead>
+									<tr>
+										<th>Type</th>
+										<th>Addon</th>
+										<th>Amount</th>
+										<th>Date</th>
+									</tr>
+									</thead>
+									<tbody>
+
+									{% for transaction in user.transactions %}
+										<tr>
+											<td>
+												{# If this user sent the transaction #}
+												{% if transaction.sender.id == user.id %}
+													{{ transaction.prettySenderType() }}
+												{% else %}
+													{{ transaction.prettyReceiverType() }}
+												{% endif %}
+											</td>
+											<td>
+												<a href="/addons/{{ transaction.addon.id }}">{{ transaction.addon.name }}</a>
+											</td>
+											<td>${{ transaction.rawData.amount / 100 }}</td>
+											<td>{{ transaction.createdAt.toDateString() }}</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<!-- End Profile Content -->
+		</div>
+	</div><!--/container-->
+	<!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

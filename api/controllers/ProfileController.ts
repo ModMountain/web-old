@@ -1,4 +1,5 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
 
 var Promise = require('bluebird');
 module.exports = {
@@ -379,7 +380,21 @@ module.exports = {
             });
     },
 
-    stripeRedirect: function (req, res) {
+    transactions: function(req, res) {
+        var populatePromiseArray = [];
+        req.user.transactions.forEach(function(transaction) {
+            populatePromiseArray.push(Transaction.findOne(transaction.id).populateAll());
+        });
+
+        Promise.all(populatePromiseArray)
+        .then(function(populatedTransactions) {
+                req.user.transactions = populatedTransactions;
+                res.view({
+                    title: 'Your Transactions',
+                    breadcrumbs: [["/profile", "Your Profile"]],
+                    activeTab: 'profile.transactions'
+                })
+            });
 
     }
 };

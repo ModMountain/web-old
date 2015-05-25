@@ -136,7 +136,14 @@ var AddonModel = {
             },
 
             canDownload: function (user) {
-                return !!(this.author === user.id || user.permissionLevel >= 1 || this.price === 0);
+                if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
+                    return true;
+                } else {
+                    this.purchasers.forEach(function(purchaser) {
+                        if (purchaser.id === user.id) return true;
+                    });
+                    return false;
+                }
             },
 
             canModify: function (user) {

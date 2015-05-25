@@ -31,6 +31,7 @@ module.exports.routes = {
     'GET    /profile':                      'ProfileController.index',
     'GET    /profile/settings':             'ProfileController.settings',
     'POST   /profile/settings':             'ProfileController.settingsPOST',
+    'GET    /profile/transactions':         'ProfileController.transactions',
 
     'GET    /profile/addons':               'ProfileController.addons',
     'GET    /profile/addons/create':        'ProfileController.createAddon',
@@ -57,4 +58,5 @@ module.exports.routes = {
     'GET    /addons':                       'AddonsController.index',
     'GET    /addons/:id':                   'AddonsController.viewAddon',
     'GET    /addons/:id/download':          'AddonsController.download',
+    'POST   /addons/:id/purchase':          'AddonsController.purchasePOST',
 };

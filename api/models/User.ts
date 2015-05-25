@@ -55,10 +55,6 @@ var User = {
             collection: 'Job',
             via: 'worker'
         },
-        transactions: {
-            collection: 'Transaction',
-            via: 'user'
-        },
         comments: {
             collection: 'Comment',
             via: 'author'
@@ -70,6 +66,14 @@ var User = {
         receivedTickets: {
             collection: 'Ticket',
             via: 'handler'
+        },
+        sentTransactions: {
+            collection: 'Transaction',
+            via: 'sender'
+        },
+        receivedTransactions: {
+            collection: 'Transaction',
+            via: 'receiver'
         },
 
         // Instance methods
