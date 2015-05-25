@@ -7,50 +7,50 @@
 <html lang="en"> <!--<![endif]-->
 
 <head>
-    {% if title %}
-        <title>ModMtn - {{ title }}</title>
-    {% else %}
-        <title>ModMtn</title>
-    {% endif %}
+	{% if title %}
+		<title>ModMtn - {{ title }}</title>
+	{% else %}
+		<title>ModMtn</title>
+	{% endif %}
 
-    <!-- Meta -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-    <!-- Web Fonts -->
-    <link rel='stylesheet' href='{{ assetPrefix }}/css/googlefonts.css'>
+	<!-- Web Fonts -->
+	<link rel='stylesheet' href='{{ assetPrefix }}/css/googlefonts.css'>
 
-    <!-- CSS Global Compulsory -->
-    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap-3.3.4/css/bootstrap.css">
-    <link rel="stylesheet" href="{{ assetPrefix }}/css/style.css">
-    <link rel="stylesheet" href="{{ assetPrefix }}/css/shop.style.css">
+	<!-- CSS Global Compulsory -->
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap-3.3.4/css/bootstrap.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/css/style.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/css/shop.style.css">
 
-    <!-- CSS Header and Footer -->
-    <link rel="stylesheet" href="{{ assetPrefix }}/css/headers/header-v5.css">
-    <link rel="stylesheet" href="{{ assetPrefix }}/css/footers/footer-v3.css">
+	<!-- CSS Header and Footer -->
+	<link rel="stylesheet" href="{{ assetPrefix }}/css/headers/header-v5.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/css/footers/footer-v3.css">
 
-    <!-- CSS Implementing Plugins -->
-    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/animate.css">
-    <link rel="stylesheet" href="{{ assetPrefix }}/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
-    <script src="//use.fonticons.com/b63071a6.js"></script>
+	<!-- CSS Implementing Plugins -->
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/animate.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
+	<script src="//use.fonticons.com/b63071a6.js"></script>
 
-    <!-- CSS Customization -->
-    <link rel="stylesheet" href="{{ assetPrefix }}/css/custom.css">
-    {% block css %}{% endblock %}
+	<!-- CSS Customization -->
+	<link rel="stylesheet" href="{{ assetPrefix }}/css/custom.css">
+	{% block css %}{% endblock %}
 </head>
 
-<body>
+<body class="header-fixed">
 <div class="wrapper">
-    {% include 'components/navigation.swig.html' %}
-    {% if breadcrumbs %}
-        {% include 'components/breadcrumbs.swig.html' %}
-    {% endif %}
+	{% include 'components/navigation.swig.html' %}
+	{% if breadcrumbs %}
+		{% include 'components/breadcrumbs.swig.html' %}
+	{% endif %}
 
-    {% block content %}{% endblock %}
+	{% block content %}{% endblock %}
 
-    {% include 'components/footer.swig.html' %}
+	{% include 'components/footer.swig.html' %}
 </div>
 <!--/wrapper-->
 
@@ -69,13 +69,20 @@
 <script src="{{ assetPrefix }}/plugins/html5shiv.js"></script>
 <script src="{{ assetPrefix }}/js/plugins/placeholder-IE-fixes.js"></script>
 <![endif]-->
+
+<script src="{{ assetPrefix }}/js/shop.app.js"></script>
 <script src="{{ assetPrefix }}/plugins/sails.io.js"></script>
 <script>
-    io.socket.on('connect', function() {
-        io.socket.on('notification', function (data) {
-            console.log(data)
-        });
-    });
+	jQuery(document).ready(function () {
+		App.init();
+		App.initScrollBar();
+	});
+
+	io.socket.on('connect', function () {
+		io.socket.on('notification', function (data) {
+			console.log(data)
+		});
+	});
 </script>
 {% block scripts %}{% endblock %}
 </body>
