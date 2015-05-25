@@ -15,8 +15,8 @@ module.exports = {
                 res.view({
                     title: "Unapproved Addons",
                     activeTab: 'staff.addons',
-                    breadcrumbs: [['/staff/addons', "Unapproved Addons"]],
-                    addons: addons
+                    addons: addons,
+                    breadcrumbs: true
                 })
             });
     },
@@ -71,8 +71,8 @@ module.exports = {
                 res.view({
                     title: "Ticket Queue",
                     activeTab: 'staff.tickets',
-                    breadcrumbs: [['/staff/tickets', "Ticket Queue"]],
-                    tickets: tickets
+                    tickets: tickets,
+                    breadcrumbs: true
                 })
             }).catch(function (err) {
                 PrettyError(err, 'An error occurred during Ticket.find inside StaffController.tickets');
@@ -100,7 +100,7 @@ module.exports = {
                             res.view({
                                 title: "Viewing Ticket " + ticketId,
                                 activeTab: 'staff.tickets',
-                                breadcrumbs: [['/staff/tickets', "Ticket Queue"], ['/staff/tickets/' + ticketId, "Viewing Ticket " + ticketId]],
+                                breadcrumbs: [['/staff/tickets', "Ticket Queue"]],
                                 ticket: ticket
                             })
                         })

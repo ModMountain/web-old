@@ -24,9 +24,9 @@ module.exports = {
                 res.view({
                     title: "Addons",
                     activeTab: 'addons',
-                    breadcrumbs: [['/addons', "Addons"]],
                     totalAddons: totalAddons[0],
                     addons: totalAddons[1],
+                    breadcrumbs: true
                 });
             }).catch(function (err) {
                 PrettyError(err, 'Error occured during Addon.find().paginate() inside AddonsController.index');
@@ -46,7 +46,7 @@ module.exports = {
                     res.view({
                         title: addon.name,
                         activeTab: 'addons',
-                        breadcrumbs: [['/addons', "Addons"], ['/addons/' + addonId, addon.name]],
+                        breadcrumbs: [['/addons', "Addons"]],
                         addon: addon
                     })
                 }

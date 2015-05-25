@@ -8,13 +8,13 @@ module.exports = {
     },
 
     index: function (req, res) {
-        res.view({title: "Your Profile", breadcrumbs: [["/profile", "Your profile"]], activeTab: 'profile.index'});
+        res.view({title: "Your Profile", activeTab: 'profile.index', breadcrumbs: true});
     },
 
     addons: function (req, res) {
         res.view({
             title: "Your Addons",
-            breadcrumbs: [["/profile", "Your Profile"], ["/profile/addons", "Your Addons"]],
+            breadcrumbs: [["/profile", "Your Profile"]],
             activeTab: 'profile.addons'
         })
     },
@@ -22,7 +22,7 @@ module.exports = {
     settings: function (req, res) {
         res.view({
             title: "Your Settings",
-            breadcrumbs: [["/profile", "Your Profile"], ["/profile/jobs", "Your Settings"]],
+            breadcrumbs: [["/profile", "Your Profile"]],
             activeTab: 'profile.settings'
         })
     },
@@ -46,7 +46,7 @@ module.exports = {
     jobs: function (req, res) {
         res.view({
             title: "Your Jobs",
-            breadcrumbs: [["/profile", "Your Profile"], ["/profile/jobs", "Your Jobs"]],
+            breadcrumbs: [["/profile", "Your Profile"]],
             activeTab: 'profile.jobs'
         })
     },
@@ -55,7 +55,7 @@ module.exports = {
         res.view({
             title: "Create Addon",
             subtitle: "Create and Upload a New Addon",
-            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/createAddon', 'Create Addon']],
+            breadcrumbs: [['/profile', 'Your Profile']],
             activeTab: 'profile.createAddon'
         })
     },
@@ -136,7 +136,7 @@ module.exports = {
                             //res.view('/profile/viewAddon', {
                             title: "View Addon",
                             subtitle: "Viewing Addon '" + addon.name + "'",
-                            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon']],
+                            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons']],
                             activeTab: 'profile.addons',
                             addon: addon
                         })
@@ -164,7 +164,7 @@ module.exports = {
                         res.view({
                             title: "Edit Addon",
                             subtitle: "Editing Addon '" + addon.name + "'",
-                            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon'], ['/profile/addons/' + addonId + '/edit', 'Edit Addon']],
+                            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon']],
                             activeTab: 'profile.addons',
                             addon: addon
                         })
@@ -295,7 +295,7 @@ module.exports = {
                     res.view({
                         title: "Tickets",
                         subtitle: "Manage Your Tickets",
-                        breadcrumbs: [['/profile', 'Your Profile'], ['/profile/tickets', 'Tickets']],
+                        breadcrumbs: [['/profile', 'Your Profile']],
                         activeTab: 'profile.tickets'
                     })
                 }).catch(function (err) {
@@ -310,7 +310,7 @@ module.exports = {
         res.view({
             title: "Create Ticket",
             subtitle: "Create a New Ticket",
-            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/tickets', 'Tickets'], ['/profile/tickets/create', 'Create Ticket']],
+            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/tickets', 'Tickets']],
             activeTab: 'profile.tickets'
         })
     },

@@ -6,12 +6,9 @@
         <ul class="pull-right breadcrumb">
             <li><a href="/">Home</a></li>
             {% for breadcrumb in breadcrumbs %}
-                {% if loop.last %}
-                    <li class="active">{{ breadcrumb[1] }}</li>
-                {% else %}
-                    <li><a href="{{ breadcrumb[0] }}">{{ breadcrumb[1] }}</a></li>
-                {% endif %}
+	            <li><a href="{{ breadcrumb[0] }}">{{ breadcrumb[1] }}</a></li>
             {% endfor %}
+	        <li class="active">{{ title }}</li>
         </ul>
     </div>
 </div>
