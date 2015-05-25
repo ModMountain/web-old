@@ -270,16 +270,16 @@
 		<div class="row margin-bottom-50">
 			{% include 'components/flashhandler.swig.html' %}
 
-			{% if popularTags %}
+			{% if popularTags.length > 0 %}
 				{% include 'components/home/populartags.swig.html' %}
 			{% endif %}
 		</div>
 
-		{% if featuredAddons %}
+		{% if featuredAddons.length > 0 %}
 			{% include 'components/home/featuredaddons.swig.html' %}
 		{% endif %}
 
-		{% if latestAddons %}
+		{% if latestAddons.length > 0 %}
 			{% include 'components/home/latestaddons.swig.html' %}
 		{% endif %}
 	</div>
