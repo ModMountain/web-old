@@ -154,16 +154,18 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        window.addon = {{ addon|json|safe }};
-    </script>
 	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
 	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
 	<script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
 	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
 	<script>
-		$("#descriptionEditor").val(window.addon.description);
-		$("#descriptionEditor").markdown({autofocus: false, savable: false, fullscreen: false})
+		// Attach the addon to the window so it can be accessed from client-side Javascript
+		window.addon = {{ addon|json|safe }};
+
+		// Setup the description editor
+		var $descriptionEditor = $("#descriptionEditor");
+		$descriptionEditor.val(window.addon.description);
+		$descriptionEditor.markdown({autofocus: false, savable: false, fullscreen: false})
 	</script>
-    <script src="/js/pages/profile/editAddon.js"></script>
+    <script src="{{ assetPrefix }}/js/pages/profile/editAddon.js"></script>
 {% endblock %}
