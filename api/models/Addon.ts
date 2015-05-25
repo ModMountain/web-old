@@ -136,11 +136,11 @@ var AddonModel = {
             },
 
             canDownload: function (user) {
-                return !!(this.author == user.id || user.permissionLevel >= 1);
+                return !!(this.author === user.id || user.permissionLevel >= 1 || this.price === 0);
             },
 
             canModify: function (user) {
-                return !!(this.author == user.id || user.permissionLevel >= 2);
+                return !!(this.author === user.id || user.permissionLevel >= 2);
             },
 
             prettyStatus: function () {

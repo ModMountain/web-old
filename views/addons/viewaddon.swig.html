@@ -58,6 +58,7 @@
 						{% if addon.price > 0.0 %}
 							<button type="button" class="btn-u btn-u-sea-shop btn-u-lg">Purchase</button>
 						{% else %}
+							<button type="button" class="btn-u btn-u-sea-shop btn-u-lg" onclick="window.location.href = '/addons/{{ addon.id}}/download'">Download</button>
 							<button type="button" class="btn-u btn-u-sea-shop btn-u-lg">Donate</button>
 						{% endif %}
 					</div><!--/end product quantity-->
