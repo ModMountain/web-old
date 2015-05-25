@@ -1,42 +1,16 @@
-<div class="col-md-4 md-margin-bottom-30">
-	<div class="overflow-h">
-		<a class="illustration-v3 illustration-img1" href="#">
+{% for tag in popularTags %}
+	<div class="col-md-4 md-margin-bottom-30">
+		<div class="overflow-h">
+			<a class="illustration-v3 illustration-img1" href="#">
                         <span class="illustration-bg">
                             <span class="illustration-ads">
                                 <span class="illustration-v3-category">
-                                    <span class="product-category">{{ popularTags[0].name }}</span>
-                                    <span class="product-amount">{{ popularTags[0].totalAddons }} Addons</span>
+                                    <span class="product-category">{{ tag.name }}</span>
+                                    <span class="product-amount">{{ tag.totalAddons }} Addons</span>
                                 </span>
                             </span>
                         </span>
-		</a>
+			</a>
+		</div>
 	</div>
-</div>
-<div class="col-md-4 md-margin-bottom-30">
-	<div class="overflow-h">
-		<a class="illustration-v3 illustration-img2" href="#">
-                        <span class="illustration-bg">
-                            <span class="illustration-ads">
-                                <span class="illustration-v3-category">
-                                    <span class="product-category">{{ popularTags[1].name }}</span>
-                                    <span class="product-amount">{{ popularTags[1].totalAddons }} Addons</span>
-                                </span>
-                            </span>
-                        </span>
-		</a>
-	</div>
-</div>
-<div class="col-md-4">
-	<div class="overflow-h">
-		<a class="illustration-v3 illustration-img3" href="#">
-                        <span class="illustration-bg">
-                            <span class="illustration-ads">
-                                <span class="illustration-v3-category">
-                                    <span class="product-category">{{ popularTags[2].name }}</span>
-                                    <span class="product-amount">{{ popularTags[2].totalAddons }} Addons</span>
-                                </span>
-                            </span>
-                        </span>
-		</a>
-	</div>
-</div>
+{% endfor %}
