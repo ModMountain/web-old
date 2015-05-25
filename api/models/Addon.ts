@@ -188,12 +188,12 @@ var AddonModel = {
 
             prettyTags: function () {
                 var returnString = "";
-                this.tags.forEach(function (tag) {
+                this.rawTags.forEach(function (tag) {
                     returnString += tag.name;
                     returnString += ", ";
                 });
                 // Remove the extra comma before returning
-                return returnString.slice(0, -1);
+                return returnString.slice(0, -2);
             },
 
             incrementTags: function(cb) {
