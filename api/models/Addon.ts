@@ -102,6 +102,9 @@ var AddonModel = {
                 type: 'boolean',
                 defaultsTo: true
             },
+            rawTags: {
+                type: 'string',
+            },
 
             // Associations
             author: {
@@ -191,6 +194,50 @@ var AddonModel = {
                 });
                 // Remove the extra comma before returning
                 return returnString.slice(0, -1);
+            },
+
+            incrementTags: function(cb) {
+                // Get the addon's tags in raw format and then parse them into models
+                var tagArray:Array<String> = this.rawTags.split(',');
+                var findPromises = [];
+                tagArray.forEach(function (tag) {
+                    findPromises.push(Tag.findOrCreate({name: tag.trim()}));
+                });
+                // Wait for all of our queries to complete
+                Promise.all(findPromises)
+                    .then(function(tags) {
+                        // Update every tag with the new addon total
+                        var updatePromises = [];
+                        tags.forEach(function (tag) {
+                            tag.totalAddons++;
+                            updatePromises.push(tag.save());
+                        });
+                        // When the updates complete, fire our callback
+                        Promise.all(updatePromises).then(cb);
+                    });
+            },
+
+            decrementTags: function(cb) {
+                // Get the addon's tags in raw format and then parse them into models
+                var tagArray:Array<String> = this.rawTags.split(',');
+                var findPromises = [];
+                tagArray.forEach(function (tag) {
+                    findPromises.push(Tag.findOne({name: tag.trim()}));
+                });
+                // Wait for all of our queries to complete
+                Promise.all(findPromises)
+                    .then(function(tags) {
+                        // Update every tag with the new addon total
+                        var updatePromises = [];
+                        tags.forEach(function (tag) {
+                            if (tag !== undefined) {
+                                tag.totalAddons--;
+                                updatePromises.push(tag.save());
+                            }
+                        });
+                        // When the updates complete, fire our callback
+                        Promise.all(updatePromises).then(cb);
+                    });
             }
         },
 

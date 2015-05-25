@@ -1,5 +1,6 @@
 /// <reference path='../../typings/node/node.d.ts' />
 
+var Promise = require('bluebird');
 module.exports = {
     _config: {
         actions: false,
@@ -74,53 +75,38 @@ module.exports = {
             req.flash('error', 'You must specify tags with your addon!');
             res.redirect('/profile/addons/create');
         } else {
-            var tagArray:Array<String> = req.body.tags.split(',');
-            var promiseArray = [];
-            tagArray.forEach(function (tag) {
-                promiseArray.push(Tag.findOrCreate({name: tag.trim()}));
+            Addon.create({
+                // General tab
+                name: req.body.name,
+                price: req.body.price,
+                gamemode: req.body.gamemode,
+                type: req.body.type,
+                zipFile: req.files.zipFile.objectId.toString(),
+                size: req.files.zipFile.size,
+                youtubeLink: req.body.youtubeLink,
+                shortDescription: req.body.shortDescription,
+                description: req.body.description,
+                instructions: req.body.instructions,
+                explanation: req.body.explanation,
+                outsideServers: (req.body.outsideServers !== undefined),
+                containsDrm: (req.body.containsDrm !== undefined),
+                // Associations
+                author: req.session.passport.user,
+                rawTags: req.body.tags
+            }).then(function (addon) {
+                return [addon, User.findOne(req.session.passport.user).populate('addons')];
+            }).spread(function (addon, user) {
+                user.addons.add(addon);
+                return [user.save(), addon]
+            }).spread(function (save, addon) {
+                console.log("New addon was submitted and is awaiting approval:", addon);
+                req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
+                res.redirect('/profile/addons')
+            }).catch(function (err) {
+                PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
+                req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
+                res.redirect('/profile/addons/create');
             });
-
-            Promise.all(promiseArray)
-                .then(function (tags) {
-                    Addon.create({
-                        // General tab
-                        name: req.body.name,
-                        price: req.body.price,
-                        gamemode: req.body.gamemode,
-                        type: req.body.type,
-                        zipFile: req.files.zipFile.objectId.toString(),
-                        size: req.files.zipFile.size,
-                        youtubeLink: req.body.youtubeLink,
-                        shortDescription: req.body.shortDescription,
-                        description: req.body.description,
-                        instructions: req.body.instructions,
-                        explanation: req.body.explanation,
-                        outsideServers: (req.body.outsideServers !== undefined),
-                        containsDrm: (req.body.containsDrm !== undefined),
-                        // Associations
-                        author: req.session.passport.user,
-                        tags: tags
-                    }).then(function (addon) {
-                        return [addon, User.findOne(req.session.passport.user).populate('addons')];
-                    }).spread(function (addon, user) {
-                        user.addons.add(addon);
-                        return [user.save(), addon]
-                    }).spread(function (save, addon) {
-                        // We're not waiting for this to return as it's a lazy sort of thing
-                        tags.forEach(function (tag) {
-                            tag.totalAddons++;
-                            tag.save();
-                        });
-
-                        console.log("New addon was submitted and is awaiting approval:", addon);
-                        req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
-                        res.redirect('/profile/addons')
-                    }).catch(function (err) {
-                        PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
-                        req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
-                        res.redirect('/profile/addons/create');
-                    });
-                })
         }
     },
 
@@ -195,9 +181,16 @@ module.exports = {
                             req.body.size = req.files.zipFile.size;
                         }
 
+                        var oldStatus = addon.status;
                         Addon.update(addonId, req.body)
                             .then(function () {
-                                req.flash('success', "Addon " + addonId + " updated successfully");
+                                if (oldStatus === 'published') {
+                                    addon.decrementTags(function () {
+                                        req.flash('success', "Addon " + addonId + " updated successfully");
+                                    })
+                                } else {
+                                    req.flash('success', "Addon " + addonId + " updated successfully");
+                                }
                             })
                             .catch(function (err) {
                                 req.flash('error', "Something went wrong while trying to update addon " + addonId);
@@ -257,11 +250,13 @@ module.exports = {
                             addon.status = 'published';
                             addon.save()
                                 .then(function () {
-                                    req.flash('success', "Addon '" + addon.name + "' has been published");
-                                    res.redirect('/profile/addons/' + addonId);
+                                    addon.incrementTags(function () {
+                                        req.flash('success', "Addon '" + addon.name + "' has been published");
+                                        res.redirect('/profile/addons/' + addonId);
+                                    });
                                 });
                         } else {
-                            req.flash('error', "You cannot publish an addon that is not approved.")
+                            req.flash('error', "You cannot publish an addon that is not approved.");
                             res.redirect('/profile/addons/' + addonId);
                         }
                     } else {

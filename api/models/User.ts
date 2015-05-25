@@ -33,6 +33,10 @@ var User = {
         paypalEmail: {
             type: 'email'
         },
+        balance: {
+            type: 'integer',
+            defaultsTo: 0
+        },
 
         // Associations
         addons: {
