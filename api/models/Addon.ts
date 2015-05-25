@@ -31,9 +31,6 @@ var AddonModel = {
             shortDescription: {
                 type: 'string'
             },
-            tags: {
-                type: 'string'
-            },
             size: {
                 type: 'integer'
             },
@@ -101,6 +98,10 @@ var AddonModel = {
                 defaultsTo: 0,
                 min: 0
             },
+            featured: {
+                type: 'boolean',
+                defaultsTo: true
+            },
 
             // Associations
             author: {
@@ -126,6 +127,10 @@ var AddonModel = {
                 collection: 'Comment',
                 via: 'addon'
             },
+            tags: {
+                collection: 'Tag',
+                via: 'addons'
+            },
 
             canDownload: function (user) {
                 return !!(this.author == user.id || user.permissionLevel >= 1);
@@ -150,23 +155,42 @@ var AddonModel = {
                 }
             },
 
-            prettyGamemode: function() {
+            prettyGamemode: function () {
                 switch (this.gamemode) {
-                    case '0': return 'Sandbox Based';
-                    case '1': return 'Dark RP';
-                    case '2': return 'TTT';
-                    case '3': return 'Murder';
-                    case '4': return 'Other';
+                    case '0':
+                        return 'Sandbox Based';
+                    case '1':
+                        return 'Dark RP';
+                    case '2':
+                        return 'TTT';
+                    case '3':
+                        return 'Murder';
+                    case '4':
+                        return 'Other';
                 }
             },
 
-            prettyType: function() {
+            prettyType: function () {
                 switch (this.type) {
-                    case '0': return 'Weapon';
-                    case '1': return 'Chatbox';
-                    case '2': return 'Utility';
-                    case '3': return 'Other';
+                    case '0':
+                        return 'Weapon';
+                    case '1':
+                        return 'Chatbox';
+                    case '2':
+                        return 'Utility';
+                    case '3':
+                        return 'Other';
                 }
+            },
+
+            prettyTags: function () {
+                var returnString = "";
+                this.tags.forEach(function (tag) {
+                    returnString += tag.name;
+                    returnString += ", ";
+                });
+                // Remove the extra comma before returning
+                return returnString.slice(0, -1);
             }
         },
 

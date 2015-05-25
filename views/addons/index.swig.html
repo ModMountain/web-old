@@ -271,11 +271,15 @@
 											{#</li>#}
 										</ul>
 										<div class="margin-bottom-10">
-											{% if addon.discount > 0.0 %}
-												<span class="title-price margin-right-10">${{ addon.price * (1.0 - addon.discount) }}</span>
-												<span class="title-price line-through">${{ addon.price }}</span>
+											{% if addon.price > 0.0 %}
+												{% if addon.discount > 0.0 %}
+													<span class="title-price margin-right-10">${{ addon.price * (1.0 - addon.discount) }}</span>
+													<span class="title-price line-through">${{ addon.price }}</span>
+												{% else %}
+													<span class="title-price margin-right-10">${{ addon.price }}</span>
+												{% endif %}
 											{% else %}
-												<span class="title-price margin-right-10">${{ addon.price }}</span>
+												<span class="title-price margin-right-10">Free</span>
 											{% endif %}
 										</div>
 										<p class="margin-bottom-20">{{ addon.shortDescription }}</p>

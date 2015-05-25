@@ -60,8 +60,8 @@ var setupGridFS = function (cb) {
             console.error(err.toString() + ':\n' + Mapstrace.stringify(result));
         })
     });
-    process.on("unhandledRejection", function (reason, promise) {
-        console.error('Unhandled Rejection:', reason)
+    process.on("unhandledRejection", function (error, promise) {
+        PrettyError(error, '[Bluebird]Unhandled rejection:');
     });
 
     var Mongo = require('mongodb');

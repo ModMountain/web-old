@@ -36,7 +36,7 @@ module.exports = {
 
     viewAddon: function (req, res) {
         var addonId = req.param('id');
-        Addon.findOne(addonId)
+        Addon.findOne(addonId).populateAll()
             .then(function (addon) {
                 if (addon === undefined) res.send(404);
                 else if (addon.status !== 'published') {

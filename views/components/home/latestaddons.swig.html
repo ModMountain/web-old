@@ -1,0 +1,53 @@
+<div class="heading heading-v1 margin-bottom-20">
+	<h2>Latest Addons</h2>
+</div>
+
+<div class="illustration-v2">
+	<div class="customNavigation margin-bottom-25">
+		<a class="owl-btn prev rounded-x"><i class="icon icon-angle-left"></i></a>
+		<a class="owl-btn next rounded-x"><i class="icon icon-angle-right"></i></a>
+	</div>
+
+	<ul class="list-inline owl-slider">
+		{% for addon in latestAddons %}
+			<li class="item">
+				<div class="product-img">
+					<a href="/addons/{{ addon.id }}"><img class="full-width img-responsive" src="/img/blog/09.jpg"
+					                                      alt=""></a>
+					{#<a class="product-review" href="/addons/{{ addon.id }}">Quick review</a>#}
+					{#<a class="add-to-cart" href="#"><i class="icon icon-shopping-cart"></i>Add to cart</a>#}
+				</div>
+				<div class="product-description product-description-brd">
+					<div class="overflow-h margin-bottom-5">
+						<div class="pull-left">
+							<h4 class="title-price"><a href="/addons/{{ addon.id }}">{{ addon.name }}</a></h4>
+							<span class="gender text-uppercase">{{ addon.prettyGamemode() }}</span>
+						</div>
+						<div class="product-price">
+							{% if addon.price > 0.0 %}
+								{% if addon.discount > 0.0 %}
+									<span class="title-price">${{ addon.price * (1.0 - addon.discount) }}</span>
+									<span class="title-price line-through">${{ addon.price }}</span>
+								{% else %}
+									<span class="title-price">${{ addon.price }}</span>
+								{% endif %}
+							{% else %}
+								<span class="title-price">Free</span>
+							{% endif %}
+						</div>
+					</div>
+					{#<ul class="list-inline product-ratings">#}
+						{#<li><i class="rating-selected icon icon-star"></i></li>#}
+						{#<li><i class="rating-selected icon icon-star"></i></li>#}
+						{#<li><i class="rating-selected icon icon-star"></i></li>#}
+						{#<li><i class="rating icon icon-star"></i></li>#}
+						{#<li><i class="rating icon icon-star"></i></li>#}
+						{#<li class="like-icon"><a data-original-title="Add to wishlist" data-toggle="tooltip"#}
+						                         {#data-placement="left" class="tooltips" href="#"><i#}
+										{#class="icon icon-heart"></i></a></li>#}
+					{#</ul>#}
+				</div>
+			</li>
+		{% endfor %}
+	</ul>
+</div>

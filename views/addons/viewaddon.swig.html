@@ -63,7 +63,7 @@
 					</div><!--/end product quantity-->
 
 					{# Addon tags #}
-					<p class="wishlist-category"><strong>Tags:</strong> {{ addon.tags }}</p>
+					<p class="wishlist-category"><strong>Tags:</strong> {{ addon.prettyTags() }}</p>
 				</div>
 			</div><!--/end row-->
 		</div>
@@ -89,6 +89,7 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<ul class="list-unstyled specifies-list">
+										<li><i class="icon icon-user"></i>Author: <span>{{ addon.author.username }}</span></li>
 										<li><i class="icon icon-caret-right"></i>Gamemode: <span>{{ addon.prettyGamemode() }}</span></li>
 										<li><i class="icon icon-caret-right"></i>Type: <span>{{ addon.prettyType() }}</span></li>
 										<li><i class="icon icon-caret-right"></i>Contains DRM: <span>{% if addon.containsDrm %}Yes{% else %}No{% endif %}</span></li>

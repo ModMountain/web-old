@@ -61,39 +61,67 @@ module.exports = {
     },
 
     createAddonPOST: function (req, res) {
-        Addon.create({
-            // General tab
-            name: req.body.name,
-            price: req.body.price,
-            gamemode: req.body.gamemode,
-            type: req.body.type,
-            zipFile: req.files.zipFile.objectId.toString(), //FIXME zip file does not need to be uploaded for form to
-            size: req.files.zipFile.size,
-
-            youtubeLink: req.body.youtubeLink,
-            shortDescription: req.body.shortDescription,
-            description: req.body.description,
-            tags: req.body.tags,
-            instructions: req.body.instructions,
-            explanation: req.body.explanation,
-            outsideServers: (req.body.outsideServers !== undefined),
-            containsDrm: (req.body.containsDrm !== undefined),
-            // Associations
-            author: req.session.passport.user
-        }).then(function (addon) {
-            return [addon, User.findOne(req.session.passport.user).populate('addons')];
-        }).spread(function (addon, user) {
-            user.addons.add(addon);
-            return [user.save(), addon]
-        }).spread(function (save, addon) {
-            console.log("New addon was submitted and is awaiting approval:", addon);
-            req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
-            res.redirect('/profile/addons')
-        }).catch(function (err) {
-            PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
-            req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
+        if (req.files.zipFile === undefined) {
+            req.flash('error', 'You must attach a file with your addon!');
             res.redirect('/profile/addons/create');
-        });
+        } else if (req.body.price < 0) {
+            req.flash('error', 'You cannot enter a negative price!');
+            res.redirect('/profile/addons/create');
+        } else if (req.body.explanation === undefined) {
+            req.flash('error', 'You must provide an explanation with your addon!');
+            res.redirect('/profile/addons/create');
+        } else if (req.body.tags === undefined) {
+            req.flash('error', 'You must specify tags with your addon!');
+            res.redirect('/profile/addons/create');
+        } else {
+            var tagArray:Array<String> = req.body.tags.split(',');
+            var promiseArray = [];
+            tagArray.forEach(function (tag) {
+                promiseArray.push(Tag.findOrCreate({name: tag.trim()}));
+            });
+
+            Promise.all(promiseArray)
+                .then(function (tags) {
+                    Addon.create({
+                        // General tab
+                        name: req.body.name,
+                        price: req.body.price,
+                        gamemode: req.body.gamemode,
+                        type: req.body.type,
+                        zipFile: req.files.zipFile.objectId.toString(),
+                        size: req.files.zipFile.size,
+                        youtubeLink: req.body.youtubeLink,
+                        shortDescription: req.body.shortDescription,
+                        description: req.body.description,
+                        instructions: req.body.instructions,
+                        explanation: req.body.explanation,
+                        outsideServers: (req.body.outsideServers !== undefined),
+                        containsDrm: (req.body.containsDrm !== undefined),
+                        // Associations
+                        author: req.session.passport.user,
+                        tags: tags
+                    }).then(function (addon) {
+                        return [addon, User.findOne(req.session.passport.user).populate('addons')];
+                    }).spread(function (addon, user) {
+                        user.addons.add(addon);
+                        return [user.save(), addon]
+                    }).spread(function (save, addon) {
+                        // We're not waiting for this to return as it's a lazy sort of thing
+                        tags.forEach(function (tag) {
+                            tag.totalAddons++;
+                            tag.save();
+                        });
+
+                        console.log("New addon was submitted and is awaiting approval:", addon);
+                        req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
+                        res.redirect('/profile/addons')
+                    }).catch(function (err) {
+                        PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
+                        req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
+                        res.redirect('/profile/addons/create');
+                    });
+                })
+        }
     },
 
     viewAddon: function (req, res) {
