@@ -27,7 +27,7 @@ $(function () {
             name: 'Mod Mountain',
             description: "Donation to '" + window.addon.name + "'",
             currency: "usd",
-            amount: 500,
+            amount: chargeAmount,
             bitcoin: true
         });
         event.preventDefault();
