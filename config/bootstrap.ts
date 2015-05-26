@@ -12,6 +12,21 @@
  */
 
 var setGlobals = function () {
+    var Promise = require('bluebird');
+    Promise.longStackTraces();
+
+    var Mapstrace = require('mapstrace');
+    Promise.promisifyAll(Mapstrace);
+    global.PrettyError = Promise.method(function (err, msg) {
+        return Mapstrace.build(err, true, function (result) {
+            console.error(msg);
+            console.error(err.toString() + ':\n' + Mapstrace.stringify(result));
+        })
+    });
+    process.on("unhandledRejection", function (error, promise) {
+        PrettyError(error, '[Bluebird]Unhandled rejection:');
+    });
+
     if (sails.config.environment === 'production') {
         sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets-jessesavary.netdna-ssl.com'
     } else {
@@ -49,21 +64,6 @@ var setupPassport = function () {
 };
 
 var setupGridFS = function (cb) {
-    var Promise = require('bluebird');
-    Promise.longStackTraces();
-
-    var Mapstrace = require('mapstrace');
-    Promise.promisifyAll(Mapstrace);
-    global.PrettyError = Promise.method(function (err, msg) {
-        return Mapstrace.build(err, true, function (result) {
-            console.error(msg);
-            console.error(err.toString() + ':\n' + Mapstrace.stringify(result));
-        })
-    });
-    process.on("unhandledRejection", function (error, promise) {
-        PrettyError(error, '[Bluebird]Unhandled rejection:');
-    });
-
     var Mongo = require('mongodb');
     var Grid = require('gridfs-stream');
 
