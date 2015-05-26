@@ -23,13 +23,16 @@ var NotificationService = {
             priority: priority,
             message: message
         }).then(function (notification) {
+            // Don't try sending an email if the user has no email specified
+            if (user.email === undefined) return;
+
             // Use Swig to compile the email template to HTML
             Swig.renderFile(process.cwd() + '/views/emails/notification.swig.html', {
                 priority: priority,
                 priorityColor: "#ff0000",
                 body: message
             }, function(swigError, output) {
-                if (swigError) return console.error(swigError);
+                if (swigError) return PrettyError(swigError, "Swig compilation error");
                 // Create the raw MIME email that Mailgun will send
                 var msg = new MailComposer();
                 msg.addHeader('x-mailer', 'ModMountain 1.0');
@@ -41,12 +44,14 @@ var NotificationService = {
                 });
                 // Compile the message and then send it off
                 msg.buildMessage(function (msgCompileError, compiledMessage) {
-                    if (msgCompileError) return console.error(msgCompileError);
+                    if (msgCompileError) return PrettyError(msgCompileError, "MailComposer error");
                     mg.sendRaw('admin@modmountain.com', user.email, compiledMessage, function (mailgunError) {
                         if (mailgunError) return PrettyError(mailgunError, "Something went wrong while sending a notification")
                     });
                 });
             });
+        }).catch(function(error) {
+            PrettyError(error, "Something went wrong while calling Notification.create inside NotificationService.sendUserNotification:")
         });
     }
 };
