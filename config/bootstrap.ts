@@ -17,14 +17,17 @@ var setGlobals = function () {
 
     var Mapstrace = require('mapstrace');
     Promise.promisifyAll(Mapstrace);
-    global.PrettyError = Promise.method(function (err, msg) {
+    global.PrettyError = Promise.method(function (err, msg, cb) {
         return Mapstrace.build(err, true, function (result) {
             console.error(msg);
             console.error(err.toString() + ':\n' + Mapstrace.stringify(result));
+            if (cb) cb();
         })
     });
     process.on("unhandledRejection", function (error, promise) {
-        PrettyError(error, '[Bluebird]Unhandled rejection:');
+        PrettyError(error, '[Bluebird]Unhandled rejection:', function() {
+            console.error('From promise:', promise)
+        });
     });
 
     if (sails.config.environment === 'production') {
