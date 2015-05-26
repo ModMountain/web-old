@@ -51,32 +51,28 @@ module.exports = {
 
     download: function (req, res) {
         var addonId = req.param('id');
-        Addon.findOne(addonId)
+        Addon.findOne(addonId).populateAll()
             .then(function (addon) {
-                if (addon !== undefined) {
-                    if (addon.canDownload(req.user)) {
-                        sails.hooks.gfs.exist({_id: addon.zipFile}, function (err, found) {
-                            if (err) {
-                                PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
-                                req.flash('error', "Something went wrong while downloading addon '" + addon.name + "'");
-                                res.redirect('/addons/view/' + addon.id);
-                            } else if (found) {
-                                var filename = addon.name + '.zip';
-                                res.setHeader('Content-disposition', 'attachment; filename=' + filename);
-                                sails.hooks.gfs.createReadStream({
-                                    _id: addon.zipFile,
-                                    chunkSize: 1024 * 1024
-                                }).pipe(res);
-                            } else {
-                                req.flash('error', "Addon '" + addon.name + "' is still uploading.");
-                                res.redirect('/addons/view/' + addon.id);
-                            }
-                        });
-                    } else {
-                        res.send(403)
-                    }
-                } else {
-                    res.send(404);
+                if (addon === undefined) res.send(404);
+                else if (!addon.canDownload(req.user)) res.send(403);
+                else {
+                    sails.hooks.gfs.exist({_id: addon.zipFile}, function (err, found) {
+                        if (err) {
+                            PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
+                            req.flash('error', "Something went wrong while downloading addon '" + addon.name + "'");
+                            res.redirect('/addons/view/' + addon.id);
+                        } else if (found) {
+                            var filename = addon.name + '.zip';
+                            res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+                            sails.hooks.gfs.createReadStream({
+                                _id: addon.zipFile,
+                                chunkSize: 1024 * 1024
+                            }).pipe(res);
+                        } else {
+                            req.flash('error', "Addon '" + addon.name + "' is still uploading.");
+                            res.redirect('/addons/view/' + addon.id);
+                        }
+                    });
                 }
             }).catch(function (err) {
                 PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
@@ -85,7 +81,6 @@ module.exports = {
     },
 
     purchasePOST: function (req, res) {
-        console.log('Got purchase POST');
         if (req.user === undefined) {
             req.socket.emit('notification', {type: 'error', msg: 'You must be logged in to make purchases.'})
         } else {
@@ -94,6 +89,10 @@ module.exports = {
                 .then(function (addon) {
                     if (addon === undefined) return res.send(404);
                     else {
+                        if (addon.canDownload(req.user)) {
+                            return req.socket.emit('notification', {type: 'error', msg: "You have already purchased this addon."})
+                        }
+
                         var chargeAmount:Number;
                         var description:String;
 
@@ -112,8 +111,12 @@ module.exports = {
                             source: req.param('tokenId'),
                             description: description
                         }, function (err, charge) {
-                            if (err && err.type === 'StripeCardError') {
-                                req.socket.emit('notification', {type: 'error', msg: "Your card was declined."})
+                            if (err) {
+                                if (err.type === 'StripeCardError') req.socket.emit('notification', {type: 'error', msg: "Your card was declined."})
+                                else {
+                                    PrettyError(err);
+                                    req.socket.emit('notification', {type: 'error', msg: "Something went wrong."})
+                                }
                             } else {
                                 Transaction.create({
                                     sender: req.user,
@@ -122,6 +125,8 @@ module.exports = {
                                     receiverType: 'sale',
                                     addon: addon,
                                     rawData: charge
+                                }).catch(function(error) {
+                                    PrettyError(error, "Something went wrong while calling Transaction.create inside AddonsController.purchasePOST:")
                                 }).then(function (transaction) {
                                     req.user.sentTransactions.add(transaction);
                                     addon.author.receivedTransactions.add(transaction);
@@ -132,15 +137,23 @@ module.exports = {
                                     }
                                     return [req.user.save(), addon.author.save()]
                                 }).spread(function () {
-                                    if (addon.price === 0) req.socket.emit('notification', {
-                                        type: 'success',
-                                        msg: "Donation successful!"
-                                    });
-                                    else req.socket.emit('notification', {
-                                        type: 'success',
-                                        msg: "Purchase successful!"
-                                    });
-                                });
+                                    if (addon.price === 0) {
+                                        NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " donated $5 to your addon, '" + addon.name);
+                                        req.socket.emit('notification', {
+                                            type: 'success',
+                                            msg: "Donation successful!"
+                                        });
+                                    }
+                                    else {
+                                        NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " purchased your addon, '" + addon.name + "' for $" + addon.price);
+                                        req.socket.emit('notification', {
+                                            type: 'success',
+                                            msg: "Purchase successful!"
+                                        });
+                                    }
+                                }).catch(function(error) {
+                                    PrettyError(error, "Something went wrong while saving transactions to users inside AddonsController.purchasePOST:")
+                                })
                             }
                         });
                     }
