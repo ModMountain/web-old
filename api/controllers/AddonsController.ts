@@ -21,7 +21,7 @@ module.exports = {
                 title: "Addons",
                 activeTab: 'addons',
                 totalAddons: totalAddons,
-                addons: totalAddons,
+                addons: addons,
                 breadcrumbs: true
             });
         }).catch(function (err) {
