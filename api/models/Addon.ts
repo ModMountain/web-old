@@ -139,9 +139,9 @@ var AddonModel = {
                 if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
                     return true;
                 } else {
-                    this.purchasers.forEach(function(purchaser) {
-                        if (purchaser.id === user.id) return true;
-                    });
+                    for (var i = 0; i < this.purchasers.length; i++) {
+                        if (this.purchasers[i].id === user.id) return true;
+                    }
                     return false;
                 }
             },
