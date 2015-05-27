@@ -24,8 +24,8 @@ declare class Model {
 
     static create(criteria:Object):Promise<Model>;
 
-    static update(id:string, updateCriteria:Object):Model;
-    static update(criteria:Object, updateCriteria:Object):Model;
+    static update(id:string, updateCriteria:Object):Promise<void>;
+    static update(criteria:Object, updateCriteria:Object):Promise<void>;
 
     static destroy(id:string);
     static destroy(criteria:Object);
@@ -44,6 +44,11 @@ declare class Model {
     static endsWith();
 
     static contains();
+
+	// Instance variables
+	id: String;
+	createdAt: Date;
+	updatedAt: Date;
 
     // Instance methods
     save():Promise<void>;
@@ -137,6 +142,9 @@ declare class Tag extends Model {
 }
 
 declare class Ticket extends Model {
+	static findOne(id:string):Promise<Ticket>;
+	static findOne(criteria:Object):Promise<Ticket>;
+
     title:string;
     priority:TicketPriority;
     status:TicketStatus;
