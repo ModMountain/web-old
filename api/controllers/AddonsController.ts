@@ -1,8 +1,8 @@
 /// <reference path='../../typings/node/node.d.ts' />
-/// <reference path='../../typings/stripe/stripe-node.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/stripe/stripe-node.d.ts' />
 
-var Promise = require('bluebird');
 var Stripe = require("stripe")("***REMOVED***");
 
 module.exports = {
