@@ -1,7 +1,6 @@
 /// <reference path='../../typings/node/node.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
-
-//var Promise = require('bluebird');
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
 /**
  * Provides the database model for Addons.
@@ -9,15 +8,24 @@
 var AddonModel = {
     schema: true,
     attributes: {
+        // The formal name of the addon. This will show up in notifications and transactions.
         name: {
             type: "string",
             required: true
         },
+        // A price of 0.0 implies that the addon is free.
         price: {
             type: "float",
             required: true,
             min: 0.0,
             max: 1000.0
+        },
+        // How much the addon is discounted. This is a percentage from 1% to 99%.
+        discount: {
+            type: "float",
+            defaultsTo: 0.0,
+            max: 0.99,
+            min: 0.0
         },
         gamemode: {
             type: "string",
@@ -27,131 +35,146 @@ var AddonModel = {
             type: "string",
             required: true
         },
+        // Contains the ObjectID of the addon's zip file record in GridFS
         zipFile: {
             type: 'string',
             required: true
         },
-        description: {
-            type: 'text'
-        },
-        shortDescription: {
-            type: 'string'
-        },
+        // The file size of the addon in bytes. Populated by Multer (see config/http.ts) when the addon is created.
         size: {
-            type: 'integer'
+            type: 'integer',
+            required: true
         },
-        instructions: {
-            type: 'text'
+        // One to two sentences quickly describing the addon.
+        shortDescription: {
+            type: 'string',
+            required: true
         },
+        // The full description for the addon in Markdown format.
+        description: {
+            type: 'text',
+            required: true
+        },
+        // The addon described in a few sentences. This is only seen by staff and is used during the approval process.
         explanation: {
             type: 'text',
             required: true
         },
+        // When the addon is updated by the author, this field will be populated. It tells staff why it was updated.
+        reasonForUpdate: {
+            type: "string"
+        },
+        // Whether or not the addon makes calls to outside servers. Shown to users to keep them informed.
         outsideServers: {
             type: 'boolean',
             required: true
         },
+        // Whether or not the addon contains DRM or any sort of tracker. Shown to users to keep them informed.
         containsDrm: {
             type: 'boolean',
             required: true
         },
-        bannerPath: {
-            type: 'string',
-        },
+        // A link to Youtube video showcasing the addon. The video will be embedded on the addon's store page.
         youtubeLink: {
             type: 'string',
         },
+        // Whether or not Mod Mountain should automatically update this addon, if possible.
         autoUpdaterEnabled: {
             type: 'boolean',
             defaultsTo: false
         },
+        // Whether or not the Mod Mountain configurator is enabled for this addon.
         configuratorEnabled: {
             type: 'boolean',
             defaultsTo: false
         },
+        // Whether or not Mod Mountain leak protection (unique obfuscation) is enabled for this addon.
         leakProtectionEnabled: {
             type: 'boolean',
             defaultsTo: false
         },
+        // Whether or not the Mod Mountain stat tracking is enabled for this addon.
         statTrackerEnabled: {
             type: 'boolean',
             defaultsTo: false
         },
-        discount: {
-            type: "float",
-            defaultsTo: 0.0,
-            max: 0.99,
-            min: 0.0
-        },
+        // The status of this addon. Prettified using prettyStatus().
         status: {
             type: "string",
             enum: ['pending', 'approved', 'denied', 'locked', 'published'],
             defaultsTo: 'pending'
         },
-        reasonForUpdate: {
-            type: "string"
-        },
+        // How many pageviews this addon has received
         views: {
             type: 'string',
             defaultsTo: 0,
             min: 0
         },
+        // How many times this addon has been downloaded
         downloads: {
             type: 'string',
             defaultsTo: 0,
             min: 0
         },
+        // Whether or not this addon is featured on the home page
         featured: {
             type: 'boolean',
             defaultsTo: true
         },
+        // The addon's tags in raw (comma separated) format
         rawTags: {
             type: 'string',
         },
-
-        // Associations
+        // The user that created this addon
         author: {
             model: 'User'
         },
+        // The users that have purchased this addon
         purchasers: {
             collection: 'User',
             via: 'purchases'
         },
+        // All transactions related to this addon (purchases, donations, and refunds)
         transactions: {
             collection: 'Transaction',
             via: 'addon'
         },
+        // What addons this addon needs installed to function
         dependencies: {
             collection: 'Addon',
             via: 'dependents'
         },
+        // What addons require this addon to function
         dependents: {
             collection: 'Addon',
             via: 'dependencies'
         },
+        // The comments by users on this addon
         comments: {
             collection: 'Comment',
             via: 'addon'
         },
+        // The addon's tags
         tags: {
             collection: 'Tag',
             via: 'addons'
         },
-
-        // Four different types of images. Gallery (store page), thin card (home page), wide card (addons page), banner
-        // (home page slider)
+        // The images shown on the addon's store page, stored as an array of GridFS ObjectIDs
         galleryImages: {
             type: 'array',
             defaultsTo: []
         },
+        // The image shown on the home page (featured or latest addon), stored as a GridFS ObjectID
         thinCardImage: {
             type: 'string',
             required: true
         },
+        // The image shown on the addons page, stored as a GridFS ObjectID
         wideCardImage: {
             type: 'string',
             required: true
         },
+        // The image shown on the home page slider, stored as a GridFS ObjectID
         bannerImage: {
             type: 'string'
         },
@@ -309,6 +332,12 @@ var AddonModel = {
         }
     },
 
+    /**
+     * Waterline lifecycle method. Ensures that all files attached to this addon are removed from GridFS when the addon
+     * is destroyed.
+     * @param criteria
+     * @param cb
+     */
     beforeDestroy: function (criteria, cb:Function) {
         Addon.findOne(criteria.where.id)
             .then(function (addon) {
