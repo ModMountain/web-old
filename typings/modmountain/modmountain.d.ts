@@ -2,15 +2,11 @@
 /// <reference path="../gridfs-stream/gridfs-stream.d.ts" />
 /// <reference path="../bluebird/bluebird.d.ts" />
 
-declare
-function PrettyError(error:Error, message:string, callback?:Function):void;
+declare function PrettyError(error:Error, message:string, callback?:Function):void;
 
-import gridFS = require('gridfs-stream');
-
-declare
-var sails:{
+declare var sails:{
     hooks: {
-        gfs:gridFS.Grid
+        gfs:g.Grid;
     };
 };
 
@@ -18,8 +14,7 @@ var sails:{
 Waterline ORM models
  */
 
-declare
-class Model {
+declare class Model {
     // Basic methods
     static findOne(id:string):Promise<Model>;
     static findOne(criteria:Object):Promise<Model>;
@@ -60,8 +55,7 @@ class Model {
     toJSON():JSON;
 }
 
-declare
-class Addon extends Model {
+declare class Addon extends Model {
     name:string;
     price:number;
     discount:number;
@@ -107,8 +101,7 @@ class Addon extends Model {
     decrementTags(callback:Function):void;
 }
 
-declare
-class Job extends Model {
+declare class Job extends Model {
     title:string;
     description:string;
     budget:number;
@@ -118,37 +111,32 @@ class Job extends Model {
     worker:User;
 }
 
-declare
-class Notification extends Model {
+declare class Notification extends Model {
     receiver:User;
     priority:NotificationPriority;
     message:string;
 }
 
-declare
-class Review extends Model {
+declare class Review extends Model {
     body:string;
     author:User;
     addon:User;
     children:Array<ReviewComment>;
 }
 
-declare
-class ReviewComment extends Model {
+declare class ReviewComment extends Model {
     body:string;
     author:User;
     parent:Review;
 }
 
-declare
-class Tag extends Model {
+declare class Tag extends Model {
     name:string;
     totalAddons:number;
     addons:Array<Addon>;
 }
 
-declare
-class Ticket extends Model {
+declare class Ticket extends Model {
     title:string;
     priority:TicketPriority;
     status:TicketStatus;
@@ -166,15 +154,13 @@ class Ticket extends Model {
     prettyStatus():string;
 }
 
-declare
-class TicketResponse extends Model {
+declare class TicketResponse extends Model {
     user:User;
     content:string;
     ticket:Ticket;
 }
 
-declare
-class Transaction extends Model {
+declare class Transaction extends Model {
     sender:User;
     receiver:User;
     senderType:TransactionType;
@@ -186,8 +172,7 @@ class Transaction extends Model {
     prettyReceiverType:string;
 }
 
-declare
-class User extends Model {
+declare class User extends Model {
     username:string;
     email:string;
     steamIdentifier:string;
