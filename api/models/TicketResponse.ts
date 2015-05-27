@@ -1,6 +1,8 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var TicketResponse = {
+var TicketResponseModel = {
     schema: true,
     attributes: {
         user: {
@@ -18,4 +20,4 @@ var TicketResponse = {
     }
 };
 
-module.exports = TicketResponse;
+module.exports = TicketResponseModel;

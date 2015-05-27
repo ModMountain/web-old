@@ -1,14 +1,14 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var Comment = {
+var ReviewModel = {
     schema: true,
     attributes: {
         body: {
             type: "string",
             required: true
         },
-
-        // Associations
         author: {
             model: 'User',
             required: true
@@ -17,18 +17,11 @@ var Comment = {
             model: 'Addon',
             required: true
         },
-        parent: {
-            model: 'Comment',
-        },
         children: {
-            collection: 'Comment',
+            collection: 'ReviewComment',
             via: 'parent'
-        },
-
-        isTopLevel: function () {
-            return (this.parent === undefined || this.parent === null);
         }
     }
 };
 
-module.exports = Comment;
+module.exports = ReviewModel;

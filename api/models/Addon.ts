@@ -125,6 +125,25 @@ var AddonModel = {
         rawTags: {
             type: 'string',
         },
+        // The images shown on the addon's store page, stored as an array of GridFS ObjectIDs
+        galleryImages: {
+            type: 'array',
+            defaultsTo: []
+        },
+        // The image shown on the home page (featured or latest addon), stored as a GridFS ObjectID
+        thinCardImage: {
+            type: 'string',
+            required: true
+        },
+        // The image shown on the addons page, stored as a GridFS ObjectID
+        wideCardImage: {
+            type: 'string',
+            required: true
+        },
+        // The image shown on the home page slider, stored as a GridFS ObjectID
+        bannerImage: {
+            type: 'string'
+        },
         // The user that created this addon
         author: {
             model: 'User'
@@ -150,33 +169,14 @@ var AddonModel = {
             via: 'dependencies'
         },
         // The comments by users on this addon
-        comments: {
-            collection: 'Comment',
+        reviews: {
+            collection: 'Reviews',
             via: 'addon'
         },
         // The addon's tags
         tags: {
             collection: 'Tag',
             via: 'addons'
-        },
-        // The images shown on the addon's store page, stored as an array of GridFS ObjectIDs
-        galleryImages: {
-            type: 'array',
-            defaultsTo: []
-        },
-        // The image shown on the home page (featured or latest addon), stored as a GridFS ObjectID
-        thinCardImage: {
-            type: 'string',
-            required: true
-        },
-        // The image shown on the addons page, stored as a GridFS ObjectID
-        wideCardImage: {
-            type: 'string',
-            required: true
-        },
-        // The image shown on the home page slider, stored as a GridFS ObjectID
-        bannerImage: {
-            type: 'string'
         },
 
         /**
@@ -268,7 +268,7 @@ var AddonModel = {
         prettyTags: function ():String {
             var returnString = "";
             var splitTags = this.rawTags.split(',');
-            splitTags.forEach(function (tag) {
+            splitTags.forEach(function (tag:String):void {
                 returnString += tag;
                 returnString += ", ";
             });
@@ -279,19 +279,16 @@ var AddonModel = {
         /**
          * Increments the total addon count for each tag attached to this addon.
          * Intended to be used when an addon is published.
-         * @param cb The callback to run once the tags have been incremented.
+         * @param callback The callback to run once the tags have been incremented.
          */
-        incrementTags: function (cb) {
+        incrementTags: function (callback) {
             // Get the addon's tags in raw format and then parse them into models
             var tagArray:Array<String> = this.rawTags.split(',');
             var findPromises = [];
-            tagArray.forEach(function (tag) {
-                findPromises.push(Tag.findOrCreate({name: tag.trim()}));
-            });
-            console.log(Promise);
+            tagArray.forEach(tag => findPromises.push(Tag.findOrCreate({name: tag.trim()})));
             // Wait for all of our queries to complete
             Promise.all(findPromises)
-                .then(function (tags) {
+                .then(function (tags:Array<Tag>):void {
                     // Update every tag with the new addon total
                     var updatePromises = [];
                     tags.forEach(function (tag) {
@@ -299,16 +296,16 @@ var AddonModel = {
                         updatePromises.push(tag.save());
                     });
                     // When the updates complete, fire our callback
-                    Promise.all(updatePromises).then(cb);
+                    Promise.all(updatePromises).then(callback);
                 });
         },
 
         /**
          * Decrements the total addon count for each tag attached to this addon.
          * Intended to be used when an addon is unpublished.
-         * @param cb The callback to run once the tags have been decremented.
+         * @param callback The callback to run once the tags have been decremented.
          */
-        decrementTags: function (cb) {
+        decrementTags: function (callback) {
             // Get the addon's tags in raw format and then parse them into models
             var tagArray:Array<String> = this.rawTags.split(',');
             var findPromises = [];
@@ -327,7 +324,7 @@ var AddonModel = {
                         }
                     });
                     // When the updates complete, fire our callback
-                    Promise.all(updatePromises).then(cb);
+                    Promise.all(updatePromises).then(callback);
                 });
         }
     },

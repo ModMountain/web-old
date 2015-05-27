@@ -2,23 +2,22 @@
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var NotificationModel = {
+var ReviewCommentModel = {
     schema: true,
     attributes: {
-        receiver: {
-            model: 'User',
-            required: true,
-            via: 'Notifications'
-        },
-        priority: {
-            enum: ['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY'],
-            required: true
-        },
-        message: {
+        body: {
             type: 'string',
             required: true
+        },
+        author: {
+            model: 'User',
+            required: true
+        },
+        parent: {
+            collection: 'Review',
+            via: 'children'
         }
     }
 };
 
-module.exports = NotificationModel;
+module.exports = ReviewCommentModel;

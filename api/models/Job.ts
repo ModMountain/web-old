@@ -1,6 +1,8 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var User = {
+var JobModel = {
     schema: true,
     attributes: {
         title: {
@@ -35,4 +37,4 @@ var User = {
     }
 };
 
-module.exports = User;
+module.exports = JobModel;

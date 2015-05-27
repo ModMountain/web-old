@@ -1,6 +1,8 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var Transaction = {
+var TransactionModel = {
     schema: true,
     attributes: {
         sender: {
@@ -25,14 +27,13 @@ var Transaction = {
             type: 'json',
             required: true
         },
-
         addon: {
             model: 'Addon',
             required: true,
             via: 'Transactions'
         },
 
-        prettySenderType: function() {
+        prettySenderType: function () {
             switch (this.senderType) {
                 case 'donation':
                     return 'Donation';
@@ -40,8 +41,7 @@ var Transaction = {
                     return 'Purchase';
             }
         },
-
-        prettyReceiverType: function() {
+        prettyReceiverType: function () {
             switch (this.receiverType) {
                 case 'income':
                     return 'Income';
@@ -52,4 +52,4 @@ var Transaction = {
     }
 };
 
-module.exports = Transaction;
+module.exports = TransactionModel;

@@ -1,6 +1,8 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var User = {
+var UserModel = {
     schema: true,
     attributes: {
         username: {
@@ -55,8 +57,12 @@ var User = {
             collection: 'Job',
             via: 'worker'
         },
-        comments: {
-            collection: 'Comment',
+        reviews: {
+            collection: 'Review',
+            via: 'author'
+        },
+        reviewComments: {
+            collection: 'ReviewComment',
             via: 'author'
         },
         sentTickets: {
@@ -77,13 +83,13 @@ var User = {
         },
 
         // Instance methods
-        isModerator: function() {
+        isModerator: function () {
             return this.permissionLevel >= 1
         },
-        isAdministrator: function() {
+        isAdministrator: function () {
             return this.permissionLevel >= 2
         }
     }
 };
 
-module.exports = User;
+module.exports = UserModel;

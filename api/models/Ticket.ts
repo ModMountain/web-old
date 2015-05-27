@@ -1,8 +1,8 @@
 /// <reference path='../../typings/node/node.d.ts' />
+/// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var Promise = require('bluebird');
-
-var Ticket = {
+var TicketModel = {
     schema: true,
     attributes: {
         title: {
@@ -19,8 +19,6 @@ var Ticket = {
             enum: ['submitterResponse', 'handlerResponse', 'closed'],
             defaultsTo: 'submitterResponse'
         },
-
-        // Associations
         submitter: {
             model: 'User',
             required: true
@@ -39,11 +37,9 @@ var Ticket = {
         canClose: function (user) {
             return !!(this.submitter == user.id || user.permissionLevel == 2);
         },
-
         canRespond: function (user) {
             return !!(this.submitter == user.id || this.handler == user.id || user.permissionLevel >= 1);
         },
-
         addResponse: function (user, content:String) {
             var _this = this;
             return TicketResponse.create({
@@ -72,4 +68,4 @@ var Ticket = {
     }
 };
 
-module.exports = Ticket;
+module.exports = TicketModel;
