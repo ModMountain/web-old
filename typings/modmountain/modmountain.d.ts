@@ -208,17 +208,29 @@ declare class User extends Model {
 /*
 Enumerations
 */
+declare module Addon {
+	export enum Status {
+		PENDING = 0,
+		APPROVED = 1,
+		DENIED = 2,
+		LOCKED = 3,
+		PUBLISHED = 4
+	}
 
-declare enum AddonGamemode {
-    SANDBOX_BASED, DARK_RP, TTT, MURDER, OTHER
-}
+	export enum Gamemode {
+		SANDBOX_BASED = 0,
+		DARK_RP = 1,
+		TTT = 2,
+		MURDER = 3,
+		OTHER = 4
+	}
 
-declare enum AddonStatus {
-    PENDING, APPROVED, DENIED, LOCKED, PUBLISHED
-}
-
-declare enum AddonType {
-    WEAPON, CHATBOX, UTILITY, OTHER
+	export enum Type {
+		WEAPON = 0,
+		CHATBOX = 1,
+		UTILITY = 2,
+		OTHER = 3
+	}
 }
 
 declare enum NotificationPriority {
