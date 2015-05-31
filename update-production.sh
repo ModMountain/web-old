@@ -4,7 +4,7 @@
 git pull
 
 # Compile Typescript files into Javascript files
-find . -name "*.ts" | xargs tsc
+find . -name "*.ts" | xargs tsc --module "commonjs"
 
 # Remove packages we no longer need and then recursively update our packages
 npm prune
