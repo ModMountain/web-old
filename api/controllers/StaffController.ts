@@ -10,7 +10,7 @@ module.exports = {
     },
 
     addons: function (req, res) {
-        Addon.find({status: 'pending'}).populateAll()
+        Addon.find({status: Addon.Status.PENDING}).populateAll()
             .then(function (addons) {
                 res.view({
                     title: "Unapproved Addons",
@@ -23,7 +23,7 @@ module.exports = {
 
     approveAddon: function (req, res) {
         var addonId = req.param('addonId');
-        Addon.update(addonId, {status: 'approved'})
+        Addon.update(addonId, {status: Addon.Status.APPROVED})
             .then(function (addon) {
                 if (req.isSocket) {
                     req.socket.emit('notification', {type: 'success', msg: 'Addon approved.'});
@@ -45,7 +45,7 @@ module.exports = {
 
     denyAddon: function (req, res) {
         var addonId = req.param('addonId');
-        Addon.update(addonId, {status: 'denied'})
+        Addon.update(addonId, {status: Addon.Status.DENIED})
             .then(function (addon) {
                 if (req.isSocket) {
                     req.socket.emit('notification', {type: 'success', msg: 'Addon denied.'});
@@ -66,7 +66,7 @@ module.exports = {
     },
 
     tickets: function (req, res) {
-        Ticket.find({status: 'submitterResponse'}).populateAll()
+        Ticket.find({status: TicketStatus.SUBMITTER_RESPONSE}).populateAll()
             .then(function (tickets) {
                 res.view({
                     title: "Ticket Queue",
@@ -89,7 +89,7 @@ module.exports = {
                 .then(function (ticket) {
                     if (ticket === undefined) return res.send(404);
 
-                    var promises = []
+                    var promises = [];
                     ticket.responses.forEach(function(response) {
                         promises.push(TicketResponse.findOne(response.id).populateAll())
                     });

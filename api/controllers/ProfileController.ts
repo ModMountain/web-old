@@ -171,7 +171,7 @@ module.exports = {
     editAddonPOST: function (req, res) {
         var addonId = req.param('id');
         Addon.findOne(addonId)
-            .then(function (addon) {
+            .then(function (addon:Addon) {
                 if (addon !== undefined) {
                     if (addon.canModify(req.user)) {
                         req.body.outsideServers = req.body.outsideServers !== undefined;
@@ -185,7 +185,7 @@ module.exports = {
                         var oldStatus = addon.status;
                         Addon.update(addonId, req.body)
                             .then(function () {
-                                if (oldStatus === 'published') {
+                                if (oldStatus === Addon.Status.PUBLISHED) {
                                     addon.decrementTags(function () {
                                         req.flash('success', "Addon " + addonId + " updated successfully");
                                     })
@@ -244,11 +244,11 @@ module.exports = {
     publishAddon: function (req, res) {
         var addonId = req.param('id');
         Addon.findOne(addonId)
-            .then(function (addon) {
+            .then(function (addon:Addon) {
                 if (addon !== undefined) {
                     if (addon.canModify(req.user)) {
-                        if (addon.status === 'approved') {
-                            addon.status = 'published';
+                        if (addon.status === Addon.Status.APPROVED) {
+                            addon.status = Addon.Status.PUBLISHED;
                             addon.save()
                                 .then(function () {
                                     addon.incrementTags(function () {
@@ -364,7 +364,7 @@ module.exports = {
                 if (ticket === undefined) res.send(404);
                 else if (!ticket.canClose(req.user)) res.send(403);
                 else {
-                    Ticket.update(ticketId, {status: 'closed'})
+                    Ticket.update(ticketId, {status: TicketStatus.CLOSED})
                         .then(function () {
                             Ticket.publishUpdate(ticketId, {
                                 type: 'closed'
