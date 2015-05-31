@@ -11,4 +11,4 @@ npm prune
 npm --depth 9999 update
 
 # Restart the application
-pm2 gracefulReload 3
+pm2 gracefulReload modmtn
