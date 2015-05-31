@@ -59,9 +59,16 @@ var setupPassport = function () {
         User.findOrCreate({steamIdentifier: profile.id}, {
             username: profile.displayName,
             steamIdentifier: profile.id,
-            steamProfile: profile
-        }).then(function (user) {
-            done(null, user)
+	        steamProfile: profile
+        }).then(function (user:User) {
+	        // Check for undefined in case the user pressed the "Sync Steam Profile" button on their settings page
+	        if (user.steamProfile.provider === undefined) {
+		        user.steamProfile = profile;
+		        user.username = profile.displayName
+	        }
+	        return [user, user.save()];
+        }).spread(function(user) {
+	        done(null, user)
         }).catch(function (err) {
             done(err)
         });

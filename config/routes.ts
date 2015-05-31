@@ -32,6 +32,7 @@ module.exports.routes = {
     'GET    /profile/settings':             'ProfileController.settings',
     'POST   /profile/settings':             'ProfileController.settingsPOST',
     'GET    /profile/transactions':         'ProfileController.transactions',
+    'GET    /profile/syncSteam':            'ProfileController.syncSteam',
 
     'GET    /profile/addons':               'ProfileController.addons',
     'GET    /profile/addons/create':        'ProfileController.createAddon',

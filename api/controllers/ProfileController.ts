@@ -396,6 +396,15 @@ module.exports = {
                 })
             });
 
-    }
+    },
+
+	syncSteam: function(req, res) {
+		req.user.steamProfile = {};
+		req.user.save()
+		.then(function() {
+				req.logout();
+				res.redirect('/auth/login');
+			});
+	}
 };
 
