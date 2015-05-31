@@ -207,22 +207,20 @@ var AddonModel = {
 		 * @returns {string} This addon's prettified status.
 		 */
 		prettyStatus: function ():String {
-			return Addon.Status[this.status];
-
-			//switch (this.status) {
-			//	case 'pending':
-			//		return 'Pending';
-			//	case 'approved':
-			//		return 'Approved';
-			//	case 'denied':
-			//		return 'Denied';
-			//	case 'locked':
-			//		return 'Locked';
-			//	case 'published':
-			//		return 'Published';
-			//	default:
-			//		return "Invalid Status '" + this.status + "'"
-			//}
+			switch (this.status) {
+				case Addon.Status.PENDING:
+					return 'Pending';
+				case Addon.Status.APPROVED:
+					return 'Approved';
+				case Addon.Status.DENIED:
+					return 'Denied';
+				case Addon.Status.LOCKED:
+					return 'Locked';
+				case Addon.Status.PUBLISHED:
+					return 'Published';
+				default:
+					return "Invalid Status '" + this.status + "'"
+			}
 		},
 
 		/**
@@ -230,15 +228,15 @@ var AddonModel = {
 		 */
 		prettyGamemode: function ():String {
 			switch (this.gamemode) {
-				case 0:
+				case Addon.Gamemode.SANDBOX_BASED:
 					return 'Sandbox Based';
-				case 1:
+				case Addon.Gamemode.DARK_RP:
 					return 'Dark RP';
-				case 2:
+				case Addon.Gamemode.TTT:
 					return 'TTT';
-				case 3:
+				case Addon.Gamemode.MURDER:
 					return 'Murder';
-				case 4:
+				case Addon.Gamemode.OTHER:
 					return 'Other';
 				default:
 					return "Invalid Gamemode '" + this.gamemode + "'";
@@ -250,13 +248,13 @@ var AddonModel = {
 		 */
 		prettyType: function ():String {
 			switch (this.type) {
-				case 0:
+				case Addon.Type.WEAPON:
 					return 'Weapon';
-				case 1:
+				case Addon.Type.CHATBOX:
 					return 'Chatbox';
-				case 2:
+				case Addon.Type.UTILITY:
 					return 'Utility';
-				case 3:
+				case Addon.Type.OTHER:
 					return 'Other';
 				default:
 					return "Invalid Type '" + this.type + "'"
