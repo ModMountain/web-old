@@ -2,11 +2,16 @@
   <dictionary name="Jesse">
     <words>
       <w>addon's</w>
+      <w>chatbox</w>
       <w>expressjs</w>
       <w>gamemode</w>
       <w>gridfs</w>
       <w>gruntjs</w>
+      <w>modmountain</w>
       <w>mongo</w>
+      <w>multer</w>
+      <w>pageviews</w>
+      <w>typings</w>
     </words>
   </dictionary>
 </component>
