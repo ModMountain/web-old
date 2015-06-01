@@ -16,6 +16,7 @@ module.exports = function(req, res, next) {
   } else {
     if (req.user !== undefined) return next();
     else {
+	  res.status(401);
       req.flash('error', "You must be logged in to do that!");
       res.redirect('/auth/login')
     }
