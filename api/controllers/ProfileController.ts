@@ -30,12 +30,17 @@ module.exports = {
     },
 
     settingsPOST: function (req, res) {
+	    var oldEmail = req.user.email;
+
         if (req.body.username !== undefined && req.body.username !== '') req.user.username = req.body.username;
         req.user.email = req.body.primaryEmail;
         req.user.paypalEmail = req.body.paypalEmail;
 
         req.user.save()
             .then(function () {
+		        // If the user updated their email, invite them to Slack
+		        if (oldEmail !== req.user.email) SlackService.inviteUserToSlack(req.user);
+
                 req.flash('success', "Your settings have been updated.");
                 res.redirect('/profile/settings');
             }).catch(function (err) {

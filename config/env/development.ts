@@ -17,7 +17,7 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'info'
+        level: 'silly'
     },
 
     connections: {
@@ -80,5 +80,10 @@ module.exports = {
 		clientId: '***REMOVED***',
 		secret: '***REMOVED***',
 		urlRoot: 'http://modmtn.com:1337'
+	},
+
+	slack: {
+		communityName: 'modmountain',
+		token: '***REMOVED***'
 	}
 };

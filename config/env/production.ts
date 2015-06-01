@@ -93,5 +93,10 @@ module.exports = {
 		clientId: '***REMOVED***',
 		secret: '***REMOVED***',
 		urlRoot: 'https://modmountain.com'
+	},
+
+	slack: {
+		communityName: 'modmountain',
+		token: '***REMOVED***'
 	}
 };
