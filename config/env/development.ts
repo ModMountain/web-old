@@ -72,7 +72,8 @@ module.exports = {
 
 	stripe: {
 		secretKey: '***REMOVED***',
-		publicKey: '***REMOVED***'
+		publicKey: '***REMOVED***',
+		clientId: '***REMOVED***'
 	},
 
 	paypal: {

@@ -84,11 +84,14 @@ module.exports = {
     },
 
 	stripe: {
-
+		secretKey: '***REMOVED***',
+		publicKey: '***REMOVED***',
+		clientId: '***REMOVED***'
 	},
 
 	paypal: {
 		clientId: '***REMOVED***',
-		secret: '***REMOVED***'
+		secret: '***REMOVED***',
+		urlRoot: 'https://modmountain.com'
 	}
 };
