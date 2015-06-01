@@ -279,7 +279,7 @@ module.exports = {
             var promises = [];
             req.user.tickets.forEach(function (ticket) {
                 promises.push(
-                    TicketResponse.find({ticket: ticket.id}).populateAll()
+                    TicketResponse.find({ticket: ticket.id}).populate('responses')
                         .then(function (responses) {
                             ticket.responses = responses;
                         })
@@ -383,7 +383,7 @@ module.exports = {
     transactions: function(req, res) {
         var populatePromiseArray = [];
         req.user.transactions.forEach(function(transaction) {
-            populatePromiseArray.push(Transaction.findOne(transaction.id).populateAll());
+            populatePromiseArray.push(Transaction.findOne(transaction.id).populate('sender').populate('receiver').populate('addon'));
         });
 
         Promise.all(populatePromiseArray)
@@ -427,7 +427,7 @@ module.exports = {
 			req.flash('error', 'You have specified an invalid coupon type, please try again.');
 			res.redirect('/profile/addons/' + addonId);
 		} else {
-			Addon.findOne(addonId).populateAll()
+			Addon.findOne(addonId).populate('tags').populate('reviews').populate('purchasers')
 			.then(function(addon:Addon) {
 					if (addon === undefined) res.notFound();
 					else if (!addon.canModify(req.user)) res.forbidden();
@@ -450,7 +450,7 @@ module.exports = {
 		var addonId = req.param('id');
 		var code:String = req.param('code');
 
-		Addon.findOne(addonId).populateAll()
+		Addon.findOne(addonId)
 			.then(function(addon:Addon) {
 				if (addon === undefined) res.notFound();
 				else if (!addon.canModify(req.user)) res.forbidden();

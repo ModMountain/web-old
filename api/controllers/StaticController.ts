@@ -15,6 +15,14 @@ module.exports = {
             Addon.find({status: Addon.Status.PUBLISHED, featured: true}).limit(4),
             Addon.find({status: Addon.Status.PUBLISHED}).sort({createdAt: 'asc'}).limit(10)
             , function (popularTags, featuredAddons, latestAddons) {
+
+		        featuredAddons.forEach(function(addon) {
+			        addon.coupons = undefined;
+		        });
+		        latestAddons.forEach(function(addon) {
+			        addon.coupons = undefined;
+		        });
+
                 res.view({
                     title: 'Mod Mountain',
                     activeTab: 'home',

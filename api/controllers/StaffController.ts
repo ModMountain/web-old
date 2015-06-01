@@ -10,7 +10,7 @@ module.exports = {
     },
 
     addons: function (req, res) {
-        Addon.find({status: Addon.Status.PENDING}).populateAll()
+        Addon.find({status: Addon.Status.PENDING}).populate('author')
             .then(function (addons) {
                 res.view({
                     title: "Unapproved Addons",
@@ -66,7 +66,7 @@ module.exports = {
     },
 
     tickets: function (req, res) {
-        Ticket.find({status: TicketStatus.SUBMITTER_RESPONSE}).populateAll()
+        Ticket.find({status: TicketStatus.SUBMITTER_RESPONSE}).populate('submitter').populate('handler').populate('affectedAddon')
             .then(function (tickets) {
                 res.view({
                     title: "Ticket Queue",
@@ -85,13 +85,13 @@ module.exports = {
         var ticketId = req.param('id');
         if (req.isSocket) Ticket.subscribe(req.socket, ticketId);
         else {
-            Ticket.findOne(ticketId).populateAll()
+            Ticket.findOne(ticketId).populate('submitter').populate('handler').populate('responses').populate('affectedAddon')
                 .then(function (ticket) {
                     if (ticket === undefined) return res.send(404);
 
                     var promises = [];
                     ticket.responses.forEach(function(response) {
-                        promises.push(TicketResponse.findOne(response.id).populateAll())
+                        promises.push(TicketResponse.findOne(response.id).populate('user'))
                     });
 
                     Promise.all(promises)

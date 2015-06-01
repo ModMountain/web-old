@@ -23,7 +23,15 @@ module.exports = {
 		Promise.join(Addon.count({status: Addon.Status.PUBLISHED}), Addon.find({status: Addon.Status.PUBLISHED}).paginate({
 			page: 0,
 			limit: 10
-		}).populateAll(), function (totalAddons, addons) {
+		}).populate('author').populate('tags'), function (totalAddons, addons) {
+			addons.forEach(function(addon) {
+				addon.author = {
+					id: addon.author.id,
+					username: addon.author.username
+				};
+				addon.coupons = undefined;
+			});
+
 			res.view({
 				title: "Addons",
 				activeTab: 'addons',
@@ -39,13 +47,21 @@ module.exports = {
 
 	viewAddon: function (req, res) {
 		var addonId:String = req.param('id');
-		Addon.findOne(addonId).populateAll()
+		Addon.findOne(addonId).populate('author').populate('reviews').populate('tags').populate('purchasers')
 			.then(function (addon:Addon) {
 				if (addon === undefined) res.send(404);
 				else if (addon.status !== Addon.Status.PUBLISHED) {
 					req.flash('error', "Addon '" + addon.name + "' is not published");
 					res.redirect('/addons')
 				} else {
+					addon.author = {
+						id: addon.author.id,
+						username: addon.author.username
+					};
+					addon.coupons = undefined;
+					addon.purchasers = _.map(addon.purchasers, function(user) {
+						return {id: user.id};
+					});
 					res.view({
 						title: addon.name,
 						activeTab: 'addons',
@@ -58,7 +74,7 @@ module.exports = {
 
 	download: function (req, res) {
 		var addonId:String = req.param('id');
-		Addon.findOne(addonId).populateAll()
+		Addon.findOne(addonId).populate('purchasers')
 			.then(function (addon:Addon) {
 				if (addon === undefined) res.send(404);
 				else if (!addon.canDownload(req.user)) res.send(403);
@@ -117,7 +133,7 @@ module.exports = {
 			req.socket.emit('notification', {type: 'error', msg: 'You must be logged in to make purchases.'})
 		} else {
 			var addonId:String = req.param('addonId');
-			Addon.findOne(addonId).populateAll()
+			Addon.findOne(addonId).populate('author').populate('purchasers')
 				.then(function (addon:Addon) {
 					if (addon === undefined) return res.notFound();
 					else if (addon.canDownload(req.user)) {
@@ -210,7 +226,7 @@ module.exports = {
 
 	paypalCheckout: function (req, res) {
 		var addonId:String = req.param('addonId');
-		Addon.findOne(addonId).populateAll()
+		Addon.findOne(addonId).populate('author').populate('purchasers')
 			.then(function (addon:Addon) {
 				if (addon === undefined) return res.notFound();
 				else if (addon.canDownload(req.user)) {
@@ -368,7 +384,7 @@ module.exports = {
 
 	stripeCheckout: function (req, res) {
 		var addonId:String = req.param('addonId');
-		Addon.findOne(addonId).populateAll()
+		Addon.findOne(addonId).populate('author').populate('purchasers')
 			.then(function (addon:Addon) {
 				if (addon === undefined) return res.notFound();
 				else if (addon.canDownload(req.user)) {
