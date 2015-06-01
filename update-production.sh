@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Flush the temporary direct so the Typescript compiler doesn't shit itself
+rm -rf .tmp
+
 # Update our code from Git
 git pull
 
