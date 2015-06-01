@@ -11,9 +11,7 @@
   ],
   "verbose": false,
   "watch": [
-    "api/",
-    "config/",
-    "tasks/"
+    "config/"
   ],
   "env": {
     "NODE_ENV": "development",
