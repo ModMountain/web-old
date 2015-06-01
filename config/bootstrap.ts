@@ -16,6 +16,7 @@
 var setGlobals = function () {
     var Promise = require('bluebird');
     Promise.longStackTraces();
+	global.Promise = Promise;
 
     var Mapstrace = require('mapstrace');
     Promise.promisifyAll(Mapstrace);
