@@ -106,7 +106,7 @@ declare class Addon extends Model {
     decrementTags(callback:Function):void;
 	addCoupon(code:String, amount:Number, type:Number):Promise<void>;
 	couponExists(code:String):boolean;
-	validCoupon(code:String):boolean;
+	isValidCoupon(code:String):boolean;
 	incrementCoupon(code:String):Promise<void>;
 	decrementCoupon(code:String):Promise<void>;
 	deactivateCoupon(code:String):Promise<void>;
@@ -236,6 +236,14 @@ declare module Addon {
 		CHATBOX = 1,
 		UTILITY = 2,
 		OTHER = 3
+	}
+}
+
+declare module User {
+	export enum Status {
+		ACTIVE = 0,
+		SUSPENDED = 1,
+		BANNED = 2
 	}
 }
 

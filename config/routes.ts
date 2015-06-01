@@ -61,5 +61,8 @@ module.exports.routes = {
     'GET    /addons':                                           'AddonsController.index',
     'GET    /addons/:id':                                       'AddonsController.viewAddon',
     'GET    /addons/:id/download':                              'AddonsController.download',
-    'POST   /addons/:id/purchase':                              'AddonsController.purchasePOST',
+    'POST   /addons/:id/accountBalanceCheckout':                'AddonsController.accountBalanceCheckout',
+    'POST   /addons/:id/paypalCheckout':                        'AddonsController.paypalCheckout',
+    'POST   /addons/:id/stripeCheckout':                        'AddonsController.stripeCheckout',
+    'POST   /addons/:id/validateCoupon':                        'AddonsController.validateCoupon',
 };

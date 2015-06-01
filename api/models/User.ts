@@ -22,10 +22,10 @@ var UserModel = {
             type: 'json',
             required: true
         },
-        banned: {
-            type: 'boolean',
-            defaultsTo: false
-        },
+	    status: {
+		    type: 'number',
+		    defaultsTo: User.Status.ACTIVE
+	    },
         permissionLevel: { // 0 is user, 1 is moderator, 2 is administrator
             type: 'integer',
             defaultsTo: 0,

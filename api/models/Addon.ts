@@ -188,14 +188,14 @@ var AddonModel = {
 		 * @returns {boolean} Whether or not the user can download the addon.
 		 */
 		canDownload: function (user):Boolean {
-			if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
-				return true;
-			} else {
+			//if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
+			//	return true;
+			//} else {
 				for (var i = 0; i < this.purchasers.length; i++) {
 					if (this.purchasers[i].id === user.id) return true;
 				}
 				return false;
-			}
+			//}
 		},
 
 		/**
@@ -365,7 +365,7 @@ var AddonModel = {
 			return exists;
 		},
 
-		validCoupon: function(code:String):boolean {
+		isValidCoupon: function(code:String):boolean {
 			var valid = false;
 			this.coupons.forEach(function (coupon) {
 				if (coupon.code === code.toUpperCase() && coupon.expired === false) valid = true;
@@ -401,6 +401,16 @@ var AddonModel = {
 					return this.save();
 				}
 			}
+		},
+
+		getCoupon: function(code:String):Object {
+			for (var i = 0; i < this.coupons.length; i++) {
+				var coupon = this.coupons[i];
+				if (coupon.code === code.toUpperCase()) {
+					return coupon;
+				}
+			}
+			return null;
 		}
 	},
 

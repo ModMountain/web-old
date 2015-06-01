@@ -7,6 +7,8 @@
 	      href="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/style/masterslider.css">
 	<link rel="stylesheet"
 	      href="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/skins/default/style.css">
+
+	{% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
@@ -208,6 +210,61 @@
 		</div>
 	</div><!--/end container-->
 	<!--=== End Content Medium ===-->
+
+	<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+	     aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+								aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Checkout</h4>
+				</div>
+				<div class="modal-body sky-form">
+					<section>
+						<label class="label">Choose Payment Method</label>
+
+						<div class="inline-group">
+							<label class="radio"><input type="radio" name="radio-inline" checked
+							                            id="payWithAccountBalance"><i></i>Account Balance</label>
+							<label class="radio"><input type="radio" name="radio-inline" id="payWithPayPal"><i></i>PayPal</label>
+							<label class="radio"><input type="radio" name="radio-inline" id="payWithCreditCard"><i></i>Credit
+								Card</label>
+						</div>
+					</section>
+
+					{% if addon.price == 0 %}
+						<section>
+							<label class="label">Donation Amount</label>
+							<label class="input">
+								<input type="number" id="donationInput">
+							</label>
+						</section>
+					{% else %}
+						<section>
+							<label class="label">Coupon Code</label>
+							<label class="input" id="couponLabel">
+								<input type="text" id="couponInput">
+							</label>
+
+							<div class="note" id="couponNote"></div>
+						</section>
+					{% endif %}
+					<p>Total Bill: <span id="totalBill">${{ addon.price }} USD</span></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					{% if addon.price == 0 %}
+						<button type="button" class="btn btn-primary" id="checkoutButton">Donate</button>
+					{% else %}
+						<button type="button" class="btn btn-primary" id="checkoutButton">Purchase</button>
+					{% endif %}
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 {% endblock %}
 
 {% block scripts %}

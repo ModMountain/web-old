@@ -457,7 +457,7 @@ module.exports = {
 				else if (!addon.couponExists(code)) {
 					req.flash('error', "That coupon does not exist.");
 					res.redirect('/profile/addons/' + addonId);
-				} else if (!addon.validCoupon(code)) {
+				} else if (!addon.isValidCoupon(code)) {
 					req.flash('error', "That coupon has already expired.");
 					res.redirect('/profile/addons/' + addonId);
 				} else {
