@@ -25,7 +25,7 @@ module.exports = function serverError(data, options) {
     // Log error to console
     if (data !== undefined) {
         sails.log.error('Sending 500 ("Server Error") response: \n');
-        PrettyError(data);
+        PrettyError(data, "PrettyError occurred during Server Error, this should never happen!");
     }
     else sails.log.error('Sending empty 500 ("Server Error") response');
 
