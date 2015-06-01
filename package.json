@@ -37,6 +37,7 @@
     "sails": "~0.11.1",
     "sails-disk": "~0.10.0",
     "sails-hook-autoreload": "^0.11.5",
+    "sails-hook-newrelic": "^0.2.2",
     "sails-mongo": "^0.10.6",
     "socket.io-redis": "^0.1.4",
     "streamifier": "^0.1.1",
