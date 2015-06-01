@@ -16,7 +16,7 @@ $(function () {
 
 	// Coupon logic
 	var couponTimer;
-	var coupon;
+	var coupon = {code: ''};
 	$couponInput.on('change keydown paste input', function() {
 		if (couponTimer !== null) clearTimeout(couponTimer);
 		couponTimer = setTimeout(function() {
@@ -101,7 +101,17 @@ $(function () {
 	};
 
 	var checkoutWithPayPal = function() {
+		// Set the description
+		var description;
+		if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
+		else description = "License for '" + window.addon.name + "'";
 
+		post('/addons/' + window.addon.id + '/paypalCheckout', {
+			addonId: window.addon.id,
+			finalBill: finalBill * 100,
+			coupon: coupon.code,
+			description: description
+		});
 	};
 
 	var checkoutWithStripe = function() {
@@ -112,14 +122,14 @@ $(function () {
 
 		// Configure Stripe
 		var handler = StripeCheckout.configure({
-			key: '***REMOVED***',
+			key: window.stripePublicKey,
 			token: function (token) {
 				post('/addons/' + window.addon.id + '/stripeCheckout', {
 					tokenId: token.id,
 					type: token.type,
 					addonId: window.addon.id,
 					finalBill: finalBill * 100,
-					coupon: coupon.CODE,
+					coupon: coupon.code,
 					description: description
 				});
 			}

@@ -180,7 +180,8 @@ var AddonModel = {
 		},
 		// The addon's coupons
 		coupons: {
-			type: 'array'
+			type: 'array',
+			defaultsTo: []
 		},
 
 		/**
@@ -309,7 +310,7 @@ var AddonModel = {
 		 * Intended to be used when an addon is unpublished.
 		 * @param callback The callback to run once the tags have been decremented.
 		 */
-		decrementTags: function (callback) {
+		decrementTags: function decrementTags(callback) {
 			// Get the addon's tags in raw format and then parse them into models
 			var tagArray:Array<String> = this.rawTags.split(',');
 			var findPromises = [];
@@ -332,9 +333,7 @@ var AddonModel = {
 				});
 		},
 
-		addCoupon: function(code:String, amount:Number, type:Number):Promise<void> {
-			if (this.coupons === undefined) this.coupons = [];
-
+		addCoupon: function addCoupon(code:String, amount:Number, type:Number):Promise<void> {
 			var prettyType;
 			switch(type) {
 				case 0:
@@ -358,7 +357,7 @@ var AddonModel = {
 			return this.save();
 		},
 
-		couponExists: function(code:String):boolean {
+		couponExists: function couponExists(code:String):boolean {
 			var exists = false;
 			this.coupons.forEach(function (coupon) {
 				if (code.toUpperCase() === coupon.code) exists = true;
@@ -366,7 +365,7 @@ var AddonModel = {
 			return exists;
 		},
 
-		isValidCoupon: function(code:String):boolean {
+		isValidCoupon: function isValidCoupon(code:String):boolean {
 			var valid = false;
 			this.coupons.forEach(function (coupon) {
 				if (coupon.code === code.toUpperCase() && coupon.expired === false) valid = true;
@@ -374,7 +373,7 @@ var AddonModel = {
 			return valid;
 		},
 
-		incrementCoupon: function(code:String):Promise<void> {
+		incrementCoupon: function incrementCoupon(code:String):Promise<void> {
 			for (var i = 0; i < this.coupons.length; i++) {
 				var coupon = this.coupons[i];
 				if (coupon.code === code.toUpperCase()) {
@@ -384,7 +383,7 @@ var AddonModel = {
 			}
 		},
 
-		decrementCoupon: function(code:String):Promise<void> {
+		decrementCoupon: function decrementCoupon(code:String):Promise<void> {
 			for (var i = 0; i < this.coupons.length; i++) {
 				var coupon = this.coupons[i];
 				if (coupon.code === code.toUpperCase()) {
@@ -394,7 +393,7 @@ var AddonModel = {
 			}
 		},
 
-		deactivateCoupon: function(code:String):Promise<void> {
+		deactivateCoupon: function deactivateCoupon(code:String):Promise<void> {
 			for (var i = 0; i < this.coupons.length; i++) {
 				var coupon = this.coupons[i];
 				if (coupon.code === code.toUpperCase()) {
@@ -404,7 +403,7 @@ var AddonModel = {
 			}
 		},
 
-		getCoupon: function(code:String):Object {
+		getCoupon: function getCoupon(code:String):Object {
 			for (var i = 0; i < this.coupons.length; i++) {
 				var coupon = this.coupons[i];
 				if (coupon.code === code.toUpperCase()) {

@@ -30,6 +30,19 @@ var TransactionModel = {
         stripeData: {
             type: 'json'
         },
+	    inProgress: {
+		    type: 'boolean',
+		    defaultsTo: false
+	    },
+	    paypalId: {
+		    type: 'string'
+	    },
+	    paypalExecuteUrl: {
+		    type: 'string'
+	    },
+	    couponCode: {
+		    type: 'string'
+	    },
         addon: {
             model: 'Addon',
             required: true,

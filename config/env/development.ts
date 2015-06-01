@@ -68,5 +68,16 @@ module.exports = {
             realm: 'http://modmtn.com:1337/',
             apiKey: '***REMOVED***'
         }
-    }
+    },
+
+	stripe: {
+		secretKey: '***REMOVED***',
+		publicKey: '***REMOVED***'
+	},
+
+	paypal: {
+		clientId: '***REMOVED***',
+		secret: '***REMOVED***',
+		urlRoot: 'http://modmtn.com:1337'
+	}
 };

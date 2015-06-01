@@ -274,6 +274,7 @@
 	<script>
 		// Attach the addon to the window so it can be accessed from client-side Javascript
 		window.addon = {{ addon|json|safe }};
+		window.stripePublicKey = '{{ sails.config.stripe.publicKey }}';
 
 		var MasterSliderShowcase2 = function () {
 

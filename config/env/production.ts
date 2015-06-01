@@ -82,4 +82,13 @@ module.exports = {
             }
         }
     },
+
+	stripe: {
+
+	},
+
+	paypal: {
+		clientId: '***REMOVED***',
+		secret: '***REMOVED***'
+	}
 };
