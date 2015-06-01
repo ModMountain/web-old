@@ -39,6 +39,12 @@ var UserModel = {
             type: 'integer',
             defaultsTo: 0
         },
+	    suspensionReason: {
+		    type: 'string'
+	    },
+	    bannedReason: {
+		    type: 'string'
+	    },
 
         // Associations
         addons: {
@@ -89,7 +95,12 @@ var UserModel = {
         isAdministrator: function () {
             return this.permissionLevel >= 2
         }
-    }
+    },
+
+	beforeValidate: function(user, cb) {
+		if (typeof user.status === 'string') user.status = parseInt(user.status);
+		cb();
+	}
 };
 
 module.exports = UserModel;

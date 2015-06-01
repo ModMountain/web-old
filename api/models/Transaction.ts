@@ -23,9 +23,12 @@ var TransactionModel = {
             enum: ['income', 'sale'],
             required: true
         },
-        rawData: {
-            type: 'json',
-            required: true
+	    amount: {
+		    type: 'number',
+		    required: true
+	    },
+        stripeData: {
+            type: 'json'
         },
         addon: {
             model: 'Addon',
@@ -49,7 +52,12 @@ var TransactionModel = {
                     return 'Sale';
             }
         }
-    }
+    },
+
+	beforeValidate: function(transaction, cb) {
+		if (typeof transaction.amount === 'string') transaction.amount = parseInt(transaction.amount);
+		cb();
+	}
 };
 
 module.exports = TransactionModel;

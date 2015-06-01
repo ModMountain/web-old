@@ -8,7 +8,7 @@ $(function () {
 	var $couponNote = $("#couponNote");
 	var $totalBill = $("#totalBill");
 	var $checkoutButton = $("#checkoutButton");
-	var finalBill = addon.price;
+	var finalBill = window.addon.price;
 
 	var $payWithAccountBalanceCheckbox = $("#payWithAccountBalance");
 	var $payWithPayPalCheckbox = $("#payWithPayPal");
@@ -93,7 +93,11 @@ $(function () {
 	});
 
 	var checkoutWithAccountBalance = function() {
-
+		post('/addons/' + window.addon.id + '/accountBalanceCheckout', {
+			addonId: window.addon.id,
+			finalBill: finalBill * 100,
+			coupon: coupon.code
+		});
 	};
 
 	var checkoutWithPayPal = function() {
@@ -110,12 +114,12 @@ $(function () {
 		var handler = StripeCheckout.configure({
 			key: '***REMOVED***',
 			token: function (token) {
-				io.socket.post('/addons/' + window.addon.id + '/stripeCheckout', {
+				post('/addons/' + window.addon.id + '/stripeCheckout', {
 					tokenId: token.id,
 					type: token.type,
 					addonId: window.addon.id,
 					finalBill: finalBill * 100,
-					coupon: coupon,
+					coupon: coupon.CODE,
 					description: description
 				});
 			}
@@ -133,5 +137,29 @@ $(function () {
 			currency: "usd",
 			amount: finalBill * 100
 		});
-	}
+	};
+
+	// Post to the provided URL with the specified parameters.
+	function post(path, parameters) {
+		var form = $('<form></form>');
+
+		form.attr("method", "post");
+		form.attr("action", path);
+		form.attr("enctype", "multipart/form-data");
+
+		$.each(parameters, function(key, value) {
+			var field = $('<input></input>');
+
+			field.attr("type", "hidden");
+			field.attr("name", key);
+			field.attr("value", value);
+
+			form.append(field);
+		});
+
+		// The form needs to be a part of the document in
+		// order for us to be able to submit it.
+		$(document.body).append(form);
+		form.submit();
+	};
 });

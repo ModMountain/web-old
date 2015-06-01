@@ -15,7 +15,7 @@ var AddonModel = {
 		},
 		// A price of 0.0 implies that the addon is free.
 		price: {
-			type: 'float',
+			type: 'number',
 			required: true,
 			min: 0.0,
 			max: 1000.0
@@ -441,34 +441,36 @@ var AddonModel = {
 
 	},
 
+	beforeCreate: function(addon, cb) {
+		switch (addon.status.toUpperCase()) {
+			case "PENDING":
+				addon.status = Addon.Status.PENDING;
+				break;
+			case "APPROVED":
+				addon.status = Addon.Status.APPROVED;
+				break;
+			case "DENIED":
+				addon.status = Addon.Status.DENIED;
+				break;
+			case "LOCKED":
+				addon.status = Addon.Status.LOCKED;
+				break;
+			case "PUBLISHED":
+				addon.status = Addon.Status.PUBLISHED;
+				break;
+			default:
+				throw new Error("Invalid addon status.");
+				break;
+		}
+		cb()
+	},
+
 	beforeValidate: function (addon, cb) {
 		addon.gamemode = parseInt(addon.gamemode);
 		addon.type = parseInt(addon.type);
 		addon.size = parseInt(addon.size);
-
-		if (typeof addon.status === 'String') {
-			switch (addon.status.toUpperCase()) {
-				case "PENDING":
-					addon.status = Addon.Status.PENDING;
-					break;
-				case "APPROVED":
-					addon.status = Addon.Status.APPROVED;
-					break;
-				case "DENIED":
-					addon.status = Addon.Status.DENIED;
-					break;
-				case "LOCKED":
-					addon.status = Addon.Status.LOCKED;
-					break;
-				case "PUBLISHED":
-					addon.status = Addon.Status.PUBLISHED;
-					break;
-				default:
-					throw new Error("Invalid addon status.");
-					break;
-			}
-		}
 		addon.status = parseInt(addon.status);
+		addon.price = parseInt(addon.price);
 
 		cb();
 	}

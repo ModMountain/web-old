@@ -80,116 +80,6 @@ module.exports = {
 			});
 	},
 
-	stripeCheckout: function (req, res) {
-		if (req.user === undefined) {
-			req.socket.emit('notification', {type: 'error', msg: 'You must be logged in to make purchases.'})
-		} else {
-			var addonId:String = req.param('addonId');
-			Addon.findOne(addonId).populateAll()
-				.then(function (addon:Addon) {
-					if (addon === undefined) return res.notFound();
-					else if (addon.canDownload(req.user)) {
-						return req.socket.emit('notification', {
-							type: 'error',
-							msg: "You have already purchased this addon."
-						})
-					} else {
-						var tokenId = req.param('tokenId');
-						var finalBill = req.param('finalBill');
-						var coupon = req.param('coupon');
-						var description = req.param('description');
-						var amountToCharge = addon.price * 100;
-
-						// A coupon is being used in this transaction
-						if (coupon !== undefined && coupon !== null) {
-							coupon = addon.getCoupon(coupon.code);
-							if (coupon === undefined || coupon === null || coupon.expired) {
-								req.user.status = User.Status.SUSPENDED;
-								req.user.save()
-									.then(function () {
-										req.flash('error', "Fraudulent coupon detected, your account has been suspended. Please contact support for more information.");
-										res.redirect('/contact');
-									})
-							} else {
-								if (coupon.type === 0) amountToCharge = addon.price * (1.0 - coupon.amount / 100) * 100;
-								else amountToCharge = (addon.price - coupon.amount) * 100;
-								if (amountToCharge < 0) amountToCharge = 0;
-							}
-						}
-
-						// Uh-oh, someone is trying to commit fraud!
-						if (amountToCharge !== finalBill) {
-							req.user.status = User.Status.SUSPENDED;
-							req.user.save()
-								.then(function () {
-									req.flash('error', "Fraudulent transaction detected, your account has been suspended. Please contact support for more information.");
-									res.redirect('/contact');
-								})
-						} else {
-							Stripe.charges.create({
-								amount: amountToCharge,
-								currency: 'usD',
-								source: tokenId,
-								description: description
-							}, function (err, charge) {
-								if (err) {
-									if (err.type === 'StripeCardError') req.socket.emit('notification', {
-										type: 'error',
-										msg: "Your card was declined."
-									});
-									else {
-										PrettyError(err, "Something went wrong while processing a Stripe transaction");
-										req.socket.emit('notification', {type: 'error', msg: "Something went wrong."})
-									}
-								} else {
-									// Lazy increment, no need to wait for user feedback or anything
-									addon.incrementCoupon(coupon.code);
-
-									// Persist this transaction to the database
-									Transaction.create({
-										sender: req.user,
-										receiver: addon.author,
-										senderType: 'purchase',
-										receiverType: 'sale',
-										addon: addon,
-										rawData: charge
-									}).catch(function (error) {
-										PrettyError(error, "Something went wrong while calling Transaction.create inside AddonsController.purchasePOST:")
-									}).then(function (transaction) {
-										req.user.sentTransactions.add(transaction);
-										addon.author.receivedTransactions.add(transaction);
-										// If the user bought a paid addon we need to track the purchase
-										if (addon.price > 0) {
-											req.user.purchases.add(addon);
-											addon.purchasers.add(req.user);
-										}
-										return [req.user.save(), addon.author.save()]
-									}).spread(function () {
-										if (addon.price === 0) {
-											NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " donated $" + amountToCharge / 100 + " USD to your addon, '" + addon.name);
-											req.socket.emit('notification', {
-												type: 'success',
-												msg: "Donation successful!"
-											});
-										}
-										else {
-											NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " purchased your addon, '" + addon.name + "' for $" + amountToCharge / 100);
-											req.socket.emit('notification', {
-												type: 'success',
-												msg: "Purchase successful!"
-											});
-										}
-									}).catch(function (error) {
-										PrettyError(error, "Something went wrong while saving transactions to users inside AddonsController.purchasePOST:")
-									})
-								}
-							});
-						}
-					}
-				});
-		}
-	},
-
 	validateCoupon: function (req, res) {
 		if (!req.isSocket) {
 			req.flash('error', 'Only sockets may validate coupons');
@@ -213,5 +103,200 @@ module.exports = {
 			}).catch(function (err) {
 				PrettyError(err, "Something went wrong during Addon.findOne inside AddonsController.validateCoupon:")
 			});
-	}
+	},
+
+	accountBalanceCheckout: function (req, res) {
+		if (req.user === undefined) {
+			req.socket.emit('notification', {type: 'error', msg: 'You must be logged in to make purchases.'})
+		} else {
+			var addonId:String = req.param('addonId');
+			Addon.findOne(addonId).populateAll()
+				.then(function (addon:Addon) {
+					if (addon === undefined) return res.notFound();
+					else if (addon.canDownload(req.user)) {
+						return req.socket.emit('notification', {
+							type: 'error',
+							msg: "You have already purchased this addon."
+						})
+					} else {
+						var finalBill = parseInt(req.param('finalBill'));
+						var coupon = req.param('coupon');
+						var amountToCharge = addon.price * 100;
+
+						// A coupon is being used in this transaction
+						if (coupon !== undefined && coupon !== null) {
+							coupon = addon.getCoupon(coupon);
+							if (coupon === undefined || coupon === null || coupon.expired) {
+								req.user.status = User.Status.SUSPENDED;
+								req.user.save()
+									.then(function () {
+										req.flash('error', "Fraudulent coupon detected, your account has been suspended. Please contact support for more information.");
+										res.redirect('/contact');
+									})
+							} else {
+								if (coupon.type === 0) amountToCharge = addon.price * (1.0 - coupon.amount / 100) * 100;
+								else amountToCharge = (addon.price - coupon.amount) * 100;
+								if (amountToCharge < 0) amountToCharge = 0;
+							}
+						}
+
+						// Uh-oh, someone is trying to commit fraud!
+						if (amountToCharge !== finalBill) {
+							req.user.status = User.Status.SUSPENDED;
+							req.user.save()
+								.then(function () {
+									req.flash('error', "Fraudulent transaction detected, your account has been suspended. Please contact support for more information.");
+									res.redirect('/contact');
+								})
+						} else {
+							if (req.user.balance - amountToCharge < 0) {
+								req.flash('error', "You do not have the required funds to cover the transaction.");
+								res.redirect('/addons/' + addonId);
+							} else {
+								req.user.balance = req.user.balance - amountToCharge;
+								req.user.save()
+									.catch(function (err) {
+										PrettyError(err, "Something went wrong while calling req.user.save() inside AddonsController.accountBalanceCheckout:")
+									})
+									.then(function () {
+										return Transaction.create({
+											sender: req.user,
+											receiver: addon.author,
+											senderType: 'purchase',
+											receiverType: 'sale',
+											addon: addon,
+											amount: amountToCharge
+										})
+									}).catch(function (error) {
+										PrettyError(error, "Something went wrong while calling Transaction.create inside AddonsController.accountBalanceCheckout:")
+									}).then(function(transaction){
+										req.user.sentTransactions.add(transaction);
+										addon.author.receivedTransactions.add(transaction);
+										// If the user bought a paid addon we need to track the purchase
+										if (addon.price > 0) {
+											req.user.purchases.add(addon);
+											addon.purchasers.add(req.user);
+										}
+										return [req.user.save(), addon.author.save()]
+									}).spread(function() {
+										if (addon.price === 0) {
+											NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " donated $" + amountToCharge / 100 + " USD to your addon, '" + addon.name);
+											req.flash('success', 'Donation success');
+										} else {
+											NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " purchased your addon, '" + addon.name + "' for $" + amountToCharge / 100);
+											req.flash('success', 'Purchase success');
+										}
+										res.redirect('/addons/' + addonId);
+
+										// Lazy increment, no need to wait for user feedback or anything
+										if (coupon !== undefined) return addon.incrementCoupon(coupon.code)
+									}).catch(function(err) {
+										PrettyError(err, "Something went wrong while calling addon.incrementCoupon inside AddonsController.accountBalanceCheckout:")
+									});
+							}
+						}
+					}
+				});
+		}
+	},
+
+	stripeCheckout: function (req, res) {
+		var addonId:String = req.param('addonId');
+		Addon.findOne(addonId).populateAll()
+			.then(function (addon:Addon) {
+				if (addon === undefined) return res.notFound();
+				else if (addon.canDownload(req.user)) {
+					req.flash('error', "You have already purchased this addon.")
+				} else {
+					var tokenId = req.param('tokenId');
+					var finalBill = parseInt(req.param('finalBill'));
+					var coupon = req.param('coupon');
+					var description = req.param('description');
+					var amountToCharge = addon.price * 100;
+
+					// A coupon is being used in this transaction
+					if (coupon !== undefined && coupon !== null) {
+						coupon = addon.getCoupon(coupon);
+						if (coupon === undefined || coupon === null || coupon.expired) {
+							req.user.status = User.Status.SUSPENDED;
+							req.user.save()
+								.then(function () {
+									req.flash('error', "Fraudulent coupon detected, your account has been suspended. Please contact support for more information.");
+									res.redirect('/contact');
+								})
+						} else {
+							if (coupon.type === 0) amountToCharge = addon.price * (1.0 - coupon.amount / 100) * 100;
+							else amountToCharge = (addon.price - coupon.amount) * 100;
+							if (amountToCharge < 0) amountToCharge = 0;
+						}
+					}
+
+					// Uh-oh, someone is trying to commit fraud!
+					if (amountToCharge !== finalBill) {
+						req.user.status = User.Status.SUSPENDED;
+						req.user.save()
+							.then(function () {
+								req.flash('error', "Fraudulent transaction detected, your account has been suspended. Please contact support for more information.");
+								res.redirect('/contact');
+							})
+					} else {
+						Stripe.charges.create({
+							amount: amountToCharge,
+							currency: 'usD',
+							source: tokenId,
+							description: description
+						}, function (err, charge) {
+							if (err) {
+								if (err.type === 'StripeCardError') req.socket.emit('notification', {
+									type: 'error',
+									msg: "Your card was declined."
+								});
+								else {
+									PrettyError(err, "Something went wrong while processing a Stripe transaction");
+									req.socket.emit('notification', {type: 'error', msg: "Something went wrong."})
+								}
+							} else {
+								// Persist this transaction to the database
+								Transaction.create({
+									sender: req.user,
+									receiver: addon.author,
+									senderType: 'purchase',
+									receiverType: 'sale',
+									addon: addon,
+									amount: amountToCharge,
+									stripeData: charge
+								}).catch(function (error) {
+									PrettyError(error, "Something went wrong while calling Transaction.create inside AddonsController.purchasePOST:")
+								}).then(function (transaction) {
+									req.user.sentTransactions.add(transaction);
+									addon.author.receivedTransactions.add(transaction);
+									// If the user bought a paid addon we need to track the purchase
+									if (addon.price > 0) {
+										req.user.purchases.add(addon);
+										addon.purchasers.add(req.user);
+									}
+									return [req.user.save(), addon.author.save()]
+								}).spread(function () {
+									if (addon.price === 0) {
+										NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " donated $" + amountToCharge / 100 + " USD to your addon, '" + addon.name);
+										req.flash('success', 'Donation success');
+									} else {
+										NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " purchased your addon, '" + addon.name + "' for $" + amountToCharge / 100);
+										req.flash('success', 'Purchase success');
+									}
+									res.redirect('/addons/' + addonId);
+
+									// Lazy increment, no need to wait for user feedback or anything
+									if (coupon !== undefined) return addon.incrementCoupon(coupon.code);
+								}).catch(function (error) {
+									PrettyError(error, "Something went wrong while saving transactions to users inside AddonsController.stripeCheckout:")
+								})
+							}
+						});
+					}
+				}
+			}).catch(function(err) {
+				PrettyError(err, "Something went wrong inside AddonsController.stripeCheckout:")
+			});
+	},
 };
