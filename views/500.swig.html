@@ -10,7 +10,8 @@
     <div class="container content">
         <!--Error Block-->
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+	        {% include 'components/flashhandler.swig.html' %}
+	        <div class="col-md-8 col-md-offset-2">
                 <div class="error-v1">
                     <span class="error-v1-title">500</span>
                     <span>That's an error!</span>
