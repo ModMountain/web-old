@@ -914,7 +914,7 @@
                     name: 'cmdBold',
                     hotkey: 'Ctrl+B',
                     title: 'Bold',
-                    icon: { glyph: 'glyphicon glyphicon-bold', fa: 'fa fa-bold', 'fa-3': 'icon-bold' },
+                    icon: { glyph: 'glyphicon glyphicon-bold', fa: 'fa fa-bold', 'fa-3': 'icon-bold', 'mm': 'icon icon-bold'},
                     callback: function(e){
                         // Give/remove ** surround the selection
                         var chunk, cursor, selected = e.getSelection(), content = e.getContent();
@@ -944,7 +944,7 @@
                     name: 'cmdItalic',
                     title: 'Italic',
                     hotkey: 'Ctrl+I',
-                    icon: { glyph: 'glyphicon glyphicon-italic', fa: 'fa fa-italic', 'fa-3': 'icon-italic' },
+                    icon: { glyph: 'glyphicon glyphicon-italic', fa: 'fa fa-italic', 'fa-3': 'icon-italic', 'mm': 'icon icon-italic' },
                     callback: function(e){
                         // Give/remove * surround the selection
                         var chunk, cursor, selected = e.getSelection(), content = e.getContent();
@@ -974,7 +974,7 @@
                     name: 'cmdHeading',
                     title: 'Heading',
                     hotkey: 'Ctrl+H',
-                    icon: { glyph: 'glyphicon glyphicon-header', fa: 'fa fa-header', 'fa-3': 'icon-font' },
+                    icon: { glyph: 'glyphicon glyphicon-header', fa: 'fa fa-header', 'fa-3': 'icon-font', 'mm': 'icon icon-font' },
                     callback: function(e){
                         // Append/remove ### surround the selection
                         var chunk, cursor, selected = e.getSelection(), content = e.getContent(), pointer, prevChar;
@@ -1011,7 +1011,7 @@
                     name: 'cmdUrl',
                     title: 'URL/Link',
                     hotkey: 'Ctrl+L',
-                    icon: { glyph: 'glyphicon glyphicon-link', fa: 'fa fa-link', 'fa-3': 'icon-link' },
+                    icon: { glyph: 'glyphicon glyphicon-link', fa: 'fa fa-link', 'fa-3': 'icon-link', 'mm': 'icon icon-link' },
                     callback: function(e){
                         // Give [] surround the selection and prepend the link
                         var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link;
@@ -1040,7 +1040,7 @@
                     name: 'cmdImage',
                     title: 'Image',
                     hotkey: 'Ctrl+G',
-                    icon: { glyph: 'glyphicon glyphicon-picture', fa: 'fa fa-picture-o', 'fa-3': 'icon-picture' },
+                    icon: { glyph: 'glyphicon glyphicon-picture', fa: 'fa fa-picture-o', 'fa-3': 'icon-picture', 'mm': 'icon icon-picture-o' },
                     callback: function(e){
                         // Give ![] surround the selection and prepend the image link
                         var chunk, cursor, selected = e.getSelection(), content = e.getContent(), link;
@@ -1075,7 +1075,7 @@
                     name: 'cmdList',
                     hotkey: 'Ctrl+U',
                     title: 'Unordered List',
-                    icon: { glyph: 'glyphicon glyphicon-list', fa: 'fa fa-list', 'fa-3': 'icon-list-ul' },
+                    icon: { glyph: 'glyphicon glyphicon-list', fa: 'fa fa-list', 'fa-3': 'icon-list-ul', 'mm': 'icon icon-list' },
                     callback: function(e){
                         // Prepend/Give - surround the selection
                         var chunk, cursor, selected = e.getSelection(), content = e.getContent();
@@ -1121,7 +1121,7 @@
                         name: 'cmdListO',
                         hotkey: 'Ctrl+O',
                         title: 'Ordered List',
-                        icon: { glyph: 'glyphicon glyphicon-th-list', fa: 'fa fa-list-ol', 'fa-3': 'icon-list-ol' },
+                        icon: { glyph: 'glyphicon glyphicon-th-list', fa: 'fa fa-list-ol', 'fa-3': 'icon-list-ol', 'mm': 'icon icon-list-ol' },
                         callback: function(e) {
 
                             // Prepend/Give - surround the selection
@@ -1167,7 +1167,7 @@
                         name: 'cmdCode',
                         hotkey: 'Ctrl+K',
                         title: 'Code',
-                        icon: { glyph: 'glyphicon glyphicon-asterisk', fa: 'fa fa-code', 'fa-3': 'icon-code' },
+                        icon: { glyph: 'glyphicon glyphicon-asterisk', fa: 'fa fa-code', 'fa-3': 'icon-code', 'mm': 'icon icon-code' },
                         callback: function(e) {
                             // Give/remove ** surround the selection
                             var chunk, cursor, selected = e.getSelection(), content = e.getContent();
@@ -1206,7 +1206,7 @@
                         name: 'cmdQuote',
                         hotkey: 'Ctrl+Q',
                         title: 'Quote',
-                        icon: { glyph: 'glyphicon glyphicon-comment', fa: 'fa fa-quote-left', 'fa-3': 'icon-quote-left' },
+                        icon: { glyph: 'glyphicon glyphicon-comment', fa: 'fa fa-quote-left', 'fa-3': 'icon-quote-left', 'mm': 'icon icon-quote-left' },
                         callback: function(e) {
                             // Prepend/Give - surround the selection
                             var chunk, cursor, selected = e.getSelection(), content = e.getContent();
@@ -1258,7 +1258,7 @@
                     title: 'Preview',
                     btnText: 'Preview',
                     btnClass: 'btn btn-primary btn-sm',
-                    icon: { glyph: 'glyphicon glyphicon-search', fa: 'fa fa-search', 'fa-3': 'icon-search' },
+                    icon: { glyph: 'glyphicon glyphicon-search', fa: 'fa fa-search', 'fa-3': 'icon-search' , 'mm': 'icon icon-search'},
                     callback: function(e){
                         // Check the preview mode and toggle based on this flag
                         var isPreview = e.$isPreview,content;
