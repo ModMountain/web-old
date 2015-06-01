@@ -100,7 +100,7 @@ module.exports = {
                 user.addons.add(addon);
                 return [user.save(), addon]
             }).spread(function (save, addon) {
-                console.log("New addon was submitted and is awaiting approval:", addon);
+                console.verbose("New addon was submitted and is awaiting approval:", addon);
                 req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
                 res.redirect('/profile/addons')
             }).catch(function (err) {
@@ -404,6 +404,69 @@ module.exports = {
 		.then(function() {
 				req.logout();
 				res.redirect('/auth/login');
+			});
+	},
+
+	couponsPOST: function(req, res) {
+		var addonId = req.param('id');
+
+		var code:String = req.param('code');
+		var amount:Number = parseInt(req.param('amount'));
+		var type:Number = parseInt(req.param('type'));
+
+		if (amount === undefined || code === undefined || type === undefined) { // If they forgot to enter a parameter
+			req.flash('error', "You failed to completely fill out the coupon form, please try again.");
+			res.redirect('/profile/addons/' + addonId);
+		} else if (amount <= 0 || amount >= 100) { // If the amount is invalid
+			req.flash('error', 'You entered an invalid amount, please try again.');
+			res.redirect('/profile/addons/' + addonId);
+		} else if (code.length > 16) { // If the length of the code is too long
+			req.flash('error', 'The maximum coupon code length is 16 characters, please try again.');
+			res.redirect('/profile/addons/' + addonId);
+		} else if (type !== 0 && type !== 1) { // If the type is invalid
+			req.flash('error', 'You have specified an invalid coupon type, please try again.');
+			res.redirect('/profile/addons/' + addonId);
+		} else {
+			Addon.findOne(addonId).populateAll()
+			.then(function(addon:Addon) {
+					if (addon === undefined) res.notFound();
+					else if (!addon.canModify(req.user)) res.forbidden();
+					else if (addon.couponExists(code)) {
+						req.flash('error', "You have already created a coupon with that code.");
+						res.redirect('/profile/addons/' + addonId);
+					} else {
+						code = code.toUpperCase();
+						return addon.addCoupon(code, amount, type)
+					}
+				})
+				.then(function() {
+					req.flash('success', "Coupon '" + code + "' has been created.");
+					res.redirect('/profile/addons/' + addonId)
+				});
+		}
+	},
+
+	deactivateCoupon: function(req, res) {
+		var addonId = req.param('id');
+		var code:String = req.param('code');
+
+		Addon.findOne(addonId).populateAll()
+			.then(function(addon:Addon) {
+				if (addon === undefined) res.notFound();
+				else if (!addon.canModify(req.user)) res.forbidden();
+				else if (!addon.couponExists(code)) {
+					req.flash('error', "That coupon does not exist.");
+					res.redirect('/profile/addons/' + addonId);
+				} else if (!addon.validCoupon(code)) {
+					req.flash('error', "That coupon has already expired.");
+					res.redirect('/profile/addons/' + addonId);
+				} else {
+					return addon.deactivateCoupon(code);
+				}
+			})
+			.then(function() {
+				req.flash('success', "Coupon '" + code + "' has been deactivated.");
+				res.redirect('/profile/addons/' + addonId)
 			});
 	}
 };

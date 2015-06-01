@@ -104,6 +104,12 @@ declare class Addon extends Model {
     prettyTags():string;
     incrementTags(callback:Function):void;
     decrementTags(callback:Function):void;
+	addCoupon(code:String, amount:Number, type:Number):Promise<void>;
+	couponExists(code:String):boolean;
+	validCoupon(code:String):boolean;
+	incrementCoupon(code:String):Promise<void>;
+	decrementCoupon(code:String):Promise<void>;
+	deactivateCoupon(code:String):Promise<void>;
 }
 
 declare class Job extends Model {

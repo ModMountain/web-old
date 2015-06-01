@@ -1,64 +1,122 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    {% include 'components/profile/commoncss.swig.html' %}
+	{% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
-    <!--=== Profile ===-->
-    <div class="container content profile">
-        <div class="row">
-            {% include 'components/flashhandler.swig.html' %}
-            {% include 'components/profile/sidebar.swig.html' %}
+<!--=== Profile ===-->
+<div class="container content profile">
+	<div class="row">
+		{% include 'components/flashhandler.swig.html' %}
+		{% include 'components/profile/sidebar.swig.html' %}
 
-            <!-- Profile Content -->
-            <div class="col-md-9">
-                <div class="profile-body">
-                    <div class="profile-bio">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <img class="img-responsive md-margin-bottom-10"
-                                     src="https://placehold.it/350x350&text=TODO" alt="">
-                                <a class="btn-u btn-u-sm" href="#">Change Picture</a>
-                            </div>
-                            <div class="col-md-7">
-                                <h2>{{ addon.name }}</h2>
-                                <span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
-                                <span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
-                                <hr>
-                                <p>{{ addon.shortDescription }}</p>
-                            </div>
-                        </div>
+		<!-- Profile Content -->
+		<div class="col-md-9">
+			<div class="profile-body">
+				<div class="profile-bio">
+					<div class="row">
+						<div class="col-md-5">
+							<img class="img-responsive md-margin-bottom-10"
+							     src="https://placehold.it/350x350&text=TODO" alt="">
+							<a class="btn-u btn-u-sm" href="#">Change Picture</a>
+						</div>
+						<div class="col-md-7">
+							<h2>{{ addon.name }}</h2>
+							<span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
+							<span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
+							<hr>
+							<p>{{ addon.shortDescription }}</p>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					{# Actions #}
+					<div class="col-sm-6">
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-lightbulb-o"></i>
+									Actions</h2>
+								<a href="#"><i class="fa fa-cog pull-right"></i></a>
+							</div>
+							<div class="panel-body">
+								<ul class="list-unstyled social-contacts-v3">
+									<li><i class="icon icon-pencil"></i> <a
+												href="/profile/addons/{{ addon.id }}/edit">Edit</a></li>
+									<li><i class="icon icon-check"></i> <a
+												href="/profile/addons/{{ addon.id }}/publish">Publish</a></li>
+									<li><i class="icon icon-download"></i> <a
+												href="/addons/download/{{ addon.id }}">Download</a></li>
+									<li><i class="icon icon-trash"></i> <a
+												href="/profile/addons/{{ addon.id }}/remove">Remove</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="table-search-v1 margin-bottom-20">
+					{% if addon.coupons !== undefined || addon.coupons.length > 0 %}
+					<div class="table-responsive">
+						<table class="table table-hover table-bordered table-striped">
+							<thead>
+							<tr>
+								<th>Code</th>
+								<th>Amount</th>
+								<th>Type</th>
+								<th>Uses</th>
+								<th>Deactivate</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for coupon in addon.coupons %}
+							<tr>
+								<td>{{ coupon.code }} {% if coupon.expired %}(Expired){% endif %}</td>
+								<td>{{ coupon.amount }}</td>
+								<td>{{ coupon.prettyType }}</td>
+								<td>{{ coupon.uses }}</td>
+								<td>
+									{% if !coupon.expired %}
+									<a href="/profile/addons/{{ addon.id }}/coupons/{{ coupon.code }}/deactivate">Deactivate</a>
+									{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					{% endif %}
+					<h2>New Coupon</h2>
 
-                    </div>
-                    <hr>
-                    <div class="row">
-                        {# Actions #}
-                        <div class="col-sm-6">
-                            <div class="panel panel-profile">
-                                <div class="panel-heading overflow-h">
-                                    <h2 class="panel-title heading-sm pull-left"><i class="fa fa-lightbulb-o"></i>
-                                        Actions</h2>
-                                    <a href="#"><i class="fa fa-cog pull-right"></i></a>
-                                </div>
-                                <div class="panel-body">
-                                    <ul class="list-unstyled social-contacts-v3">
-                                        <li><i class="icon icon-pencil"></i> <a href="/profile/addons/{{ addon.id }}/edit">Edit</a></li>
-                                        <li><i class="icon icon-check"></i> <a href="/profile/addons/{{ addon.id }}/publish">Publish</a></li>
-                                        <li><i class="icon icon-download"></i> <a href="/addons/download/{{ addon.id }}">Download</a></li>
-                                        <li><i class="icon icon-trash"></i> <a href="/profile/addons/{{ addon.id }}/remove">Remove</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--/end row-->
-            </div>
-            <!-- End Profile Content -->
-        </div>
-    </div>
-    <!--=== End Profile ===-->
+					<form class="form-inline" method="POST" action="/profile/addons/{{ addon.id }}/coupons"
+					      enctype="multipart/form-data">
+						<div class="form-group">
+							<label for="codeInput">Code</label>
+							<input type="text" class="form-control" name="code" id="codeInput" required>
+						</div>
+						<div class="form-group">
+							<label for="amountInput">Amount</label>
+							<input type="number" class="form-control" id="amountInput" name="amount" required>
+						</div>
+						<div class="form-group">
+							<label for="typeInput">Type</label>
+							<select name="type" id="typeInput" class="form-control" required>
+								<option value="" style="display:none">Select Type</option>
+								<option value="0">Percentage</option>
+								<option value="1">Fixed</option>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-green">Create</button>
+					</form>
+				</div>
+			</div>
+			<!--/end row-->
+		</div>
+		<!-- End Profile Content -->
+	</div>
+</div>
+<!--=== End Profile ===-->
 {% endblock %}
 
 {% block scripts %}

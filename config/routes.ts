@@ -25,39 +25,41 @@
 module.exports.routes = {
 
     // Static routes
-    'GET    /':                             'StaticController.home',
+    'GET    /':                                                 'StaticController.home',
 
     // Profile routes
-    'GET    /profile':                      'ProfileController.index',
-    'GET    /profile/settings':             'ProfileController.settings',
-    'POST   /profile/settings':             'ProfileController.settingsPOST',
-    'GET    /profile/transactions':         'ProfileController.transactions',
-    'GET    /profile/syncSteam':            'ProfileController.syncSteam',
+    'GET    /profile':                                          'ProfileController.index',
+    'GET    /profile/settings':                                 'ProfileController.settings',
+    'POST   /profile/settings':                                 'ProfileController.settingsPOST',
+    'GET    /profile/transactions':                             'ProfileController.transactions',
+    'GET    /profile/syncSteam':                                'ProfileController.syncSteam',
 
-    'GET    /profile/addons':               'ProfileController.addons',
-    'GET    /profile/addons/create':        'ProfileController.createAddon',
-    'POST   /profile/addons/create':        'ProfileController.createAddonPOST',
-    'GET    /profile/addons/:id':           'ProfileController.viewAddon',
-    'GET    /profile/addons/:id/edit':      'ProfileController.editAddon',
-    'POST   /profile/addons/:id/edit':      'ProfileController.editAddonPOST',
-    'GET    /profile/addons/:id/remove':    'ProfileController.removeAddon',
-    'GET    /profile/addons/:id/publish':   'ProfileController.publishAddon',
+    'GET    /profile/addons':                                   'ProfileController.addons',
+    'GET    /profile/addons/create':                            'ProfileController.createAddon',
+    'POST   /profile/addons/create':                            'ProfileController.createAddonPOST',
+    'GET    /profile/addons/:id':                               'ProfileController.viewAddon',
+    'GET    /profile/addons/:id/edit':                          'ProfileController.editAddon',
+    'POST   /profile/addons/:id/edit':                          'ProfileController.editAddonPOST',
+    'GET    /profile/addons/:id/remove':                        'ProfileController.removeAddon',
+    'GET    /profile/addons/:id/publish':                       'ProfileController.publishAddon',
+    'POST   /profile/addons/:id/coupons':                       'ProfileController.couponsPOST',
+    'GET    /profile/addons/:id/coupons/:code/deactivate':      'ProfileController.deactivateCoupon',
 
-    'GET    /profile/tickets':              'ProfileController.tickets',
-    'GET    /profile/tickets/create':       'ProfileController.createTicket',
-    'POST   /profile/tickets/create':       'ProfileController.createTicketPOST',
-    'POST   /profile/tickets/:id/respond':  'ProfileController.respondPOST',
-    'GET    /profile/tickets/:id/close':    'ProfileController.close',
+    'GET    /profile/tickets':                                  'ProfileController.tickets',
+    'GET    /profile/tickets/create':                           'ProfileController.createTicket',
+    'POST   /profile/tickets/create':                           'ProfileController.createTicketPOST',
+    'POST   /profile/tickets/:id/respond':                      'ProfileController.respondPOST',
+    'GET    /profile/tickets/:id/close':                        'ProfileController.close',
 
     // Staff routes
-    'GET    /staff/addons':                 'StaffController.addons',
-    'GET    /staff/tickets':                'StaffController.tickets',
-    'GET    /staff/tickets/:id':            'StaffController.viewTicket',
-    'POST   /staff/tickets/:id/respond':    'StaffController.respondToTicket',
+    'GET    /staff/addons':                                     'StaffController.addons',
+    'GET    /staff/tickets':                                    'StaffController.tickets',
+    'GET    /staff/tickets/:id':                                'StaffController.viewTicket',
+    'POST   /staff/tickets/:id/respond':                        'StaffController.respondToTicket',
 
     // Public addons routes
-    'GET    /addons':                       'AddonsController.index',
-    'GET    /addons/:id':                   'AddonsController.viewAddon',
-    'GET    /addons/:id/download':          'AddonsController.download',
-    'POST   /addons/:id/purchase':          'AddonsController.purchasePOST',
+    'GET    /addons':                                           'AddonsController.index',
+    'GET    /addons/:id':                                       'AddonsController.viewAddon',
+    'GET    /addons/:id/download':                              'AddonsController.download',
+    'POST   /addons/:id/purchase':                              'AddonsController.purchasePOST',
 };

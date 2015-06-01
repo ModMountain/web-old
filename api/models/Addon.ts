@@ -177,6 +177,10 @@ var AddonModel = {
 			collection: 'Tag',
 			via: 'addons'
 		},
+		// The addon's coupons
+		coupons: {
+			type: 'array'
+		},
 
 		/**
 		 * Determines whether or not a user can download this addon.
@@ -325,6 +329,78 @@ var AddonModel = {
 					// When the updates complete, fire our callback
 					Promise.all(updatePromises).then(callback);
 				});
+		},
+
+		addCoupon: function(code:String, amount:Number, type:Number):Promise<void> {
+			if (this.coupons === undefined) this.coupons = [];
+
+			var prettyType;
+			switch(type) {
+				case 0:
+					prettyType = "Percentage";
+					break;
+				case 1:
+					prettyType = "Fixed";
+					break;
+				default:
+					prettyType = "Invalid Type";
+			}
+
+			this.coupons.push({
+				code: code,
+				amount: amount,
+				type: type,
+				uses: 0,
+				expired: false,
+				prettyType: prettyType
+			});
+			return this.save();
+		},
+
+		couponExists: function(code:String):boolean {
+			var exists = false;
+			this.coupons.forEach(function (coupon) {
+				if (code.toUpperCase() === coupon.code) exists = true;
+			});
+			return exists;
+		},
+
+		validCoupon: function(code:String):boolean {
+			var valid = false;
+			this.coupons.forEach(function (coupon) {
+				if (coupon.code === code.toUpperCase() && coupon.expired === false) valid = true;
+			});
+			return valid;
+		},
+
+		incrementCoupon: function(code:String):Promise<void> {
+			for (var i = 0; i < this.coupons.length; i++) {
+				var coupon = this.coupons[i];
+				if (coupon.code === code.toUpperCase()) {
+					coupon.uses++;
+					return this.save();
+				}
+			}
+		},
+
+		decrementCoupon: function(code:String):Promise<void> {
+			for (var i = 0; i < this.coupons.length; i++) {
+				var coupon = this.coupons[i];
+				if (coupon.code === code.toUpperCase()) {
+					coupon.uses--;
+					return this.save();
+				}
+			}
+		},
+
+		deactivateCoupon: function(code:String):Promise<void> {
+			for (var i = 0; i < this.coupons.length; i++) {
+				var coupon = this.coupons[i];
+				if (coupon.code === code.toUpperCase()) {
+					coupon.expired = true;
+					return this.save();
+				}
+			}
 		}
 	},
 
@@ -338,7 +414,6 @@ var AddonModel = {
 		Addon.findOne(criteria.where.id)
 			.then(function (addon:Addon) {
 				sails.hooks.gfs.exist({_id: addon.zipFile}, function (err:Error, found:Boolean) {
-						console.log('Exist results:', err, found);
 						if (err) {
 							PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside Addon.beforeDestroy');
 							cb(err)
@@ -357,26 +432,33 @@ var AddonModel = {
 	},
 
 	beforeValidate: function (addon, cb) {
-		switch (addon.status.toUpperCase()) {
-			case "PENDING":
-				addon.status = Addon.Status.PENDING;
-				break;
-			case "APPROVED":
-				addon.status = Addon.Status.APPROVED;
-				break;
-			case "DENIED":
-				addon.status = Addon.Status.DENIED;
-				break;
-			case "LOCKED":
-				addon.status = Addon.Status.LOCKED;
-				break;
-			case "PUBLISHED":
-				addon.status = Addon.Status.PUBLISHED;
-				break;
-			default:
-				throw new Error("Invalid addon status.");
-				break;
+		addon.gamemode = parseInt(addon.gamemode);
+		addon.type = parseInt(addon.type);
+		addon.size = parseInt(addon.size);
+
+		if (typeof addon.status === 'String') {
+			switch (addon.status.toUpperCase()) {
+				case "PENDING":
+					addon.status = Addon.Status.PENDING;
+					break;
+				case "APPROVED":
+					addon.status = Addon.Status.APPROVED;
+					break;
+				case "DENIED":
+					addon.status = Addon.Status.DENIED;
+					break;
+				case "LOCKED":
+					addon.status = Addon.Status.LOCKED;
+					break;
+				case "PUBLISHED":
+					addon.status = Addon.Status.PUBLISHED;
+					break;
+				default:
+					throw new Error("Invalid addon status.");
+					break;
+			}
 		}
+		addon.status = parseInt(addon.status);
 
 		cb();
 	}
