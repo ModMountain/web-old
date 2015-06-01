@@ -132,12 +132,12 @@ var AddonModel = {
 		// The image shown on the home page (featured or latest addon), stored as a GridFS ObjectID
 		thinCardImage: {
 			type: 'string',
-			required: true
+			//required: true
 		},
 		// The image shown on the addons page, stored as a GridFS ObjectID
 		wideCardImage: {
 			type: 'string',
-			required: true
+			//required: true
 		},
 		// The image shown on the home page slider, stored as a GridFS ObjectID
 		bannerImage: {
@@ -145,7 +145,8 @@ var AddonModel = {
 		},
 		// The user that created this addon
 		author: {
-			model: 'User'
+			model: 'User',
+			required: true
 		},
 		// The users that have purchased this addon
 		purchasers: {
@@ -441,37 +442,12 @@ var AddonModel = {
 
 	},
 
-	beforeCreate: function(addon, cb) {
-		switch (addon.status.toUpperCase()) {
-			case "PENDING":
-				addon.status = Addon.Status.PENDING;
-				break;
-			case "APPROVED":
-				addon.status = Addon.Status.APPROVED;
-				break;
-			case "DENIED":
-				addon.status = Addon.Status.DENIED;
-				break;
-			case "LOCKED":
-				addon.status = Addon.Status.LOCKED;
-				break;
-			case "PUBLISHED":
-				addon.status = Addon.Status.PUBLISHED;
-				break;
-			default:
-				throw new Error("Invalid addon status.");
-				break;
-		}
-		cb()
-	},
-
 	beforeValidate: function (addon, cb) {
-		addon.gamemode = parseInt(addon.gamemode);
-		addon.type = parseInt(addon.type);
-		addon.size = parseInt(addon.size);
-		addon.status = parseInt(addon.status);
-		addon.price = parseInt(addon.price);
-
+		if (addon.gamemode !== undefined) addon.gamemode = parseInt(addon.gamemode);
+		if (addon.type !== undefined) addon.type = parseInt(addon.type);
+		if (addon.size !== undefined) addon.size = parseInt(addon.size);
+		if (addon.status !== undefined) addon.status = parseInt(addon.status);
+		if (addon.price !== undefined) addon.price = parseInt(addon.price);
 		cb();
 	}
 };

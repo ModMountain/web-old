@@ -98,11 +98,11 @@ module.exports = {
                 return [addon, User.findOne(req.session.passport.user).populate('addons')];
             }).spread(function (addon, user) {
                 user.addons.add(addon);
-                return [user.save(), addon]
-            }).spread(function (save, addon) {
-                console.verbose("New addon was submitted and is awaiting approval:", addon);
+                return [addon, user.save()]
+            }).spread(function (addon) {
+                sails.log.verbose("New addon was submitted and is awaiting approval:", addon);
                 req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
-                res.redirect('/profile/addons')
+                res.redirect('/profile/addons/' + addon.id)
             }).catch(function (err) {
                 PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
                 req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
