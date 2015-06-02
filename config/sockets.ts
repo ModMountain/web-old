@@ -16,5 +16,7 @@ module.exports.sockets = {
     adapter: 'socket.io-redis',
     host: '127.0.0.1',
     port: 6379,
-    db: 'modmountain'
+    db: 'modmountain',
+
+	transports: ["polling"]
 };

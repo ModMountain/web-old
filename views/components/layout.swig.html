@@ -73,6 +73,8 @@
 <script src="{{ assetPrefix }}/js/shop.app.js"></script>
 <script src="{{ assetPrefix }}/plugins/sails.io.js"></script>
 <script>
+	io.sails.transports = ['polling'];
+
 	jQuery(document).ready(function () {
 		App.init();
 		App.initScrollBar();
