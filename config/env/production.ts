@@ -15,6 +15,7 @@
 module.exports = {
 
     port: 4337,
+	host: '127.0.0.1',
 
     log: {
         level: 'info'
