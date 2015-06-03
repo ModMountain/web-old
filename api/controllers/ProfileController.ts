@@ -78,9 +78,19 @@ module.exports = {
             req.flash('error', 'You must provide an explanation with your addon!');
             res.redirect('/profile/addons/create');
         } else if (req.body.tags === undefined) {
-            req.flash('error', 'You must specify tags with your addon!');
-            res.redirect('/profile/addons/create');
+	        req.flash('error', 'You must specify tags with your addon!');
+	        res.redirect('/profile/addons/create');
+        } else if (req.files.galleryImages === undefined || req.files.bannerImage === undefined || req.files.thinCardImage === undefined || req.files.wideCardImage === undefined) {
+	        req.flash('error', 'You must provide all four types of image with your addon!');
+	        res.redirect('/profile/addons/create');
+        } else if (!Array.isArray(req.files.galleryImages) || req.files.galleryImages.length < 3) {
+	        req.flash('error', 'You must provide at least 3 gallery images!');
+	        res.redirect('/profile/addons/create');
         } else {
+	        var galleryImages =_.map(req.files.galleryImages, function(file) {
+		        return file.objectId.toString();
+	        });
+
             Addon.create({
                 // General tab
                 name: req.body.name,
@@ -98,7 +108,11 @@ module.exports = {
                 containsDrm: (req.body.containsDrm !== undefined),
                 // Associations
                 author: req.session.passport.user,
-                rawTags: req.body.tags
+                rawTags: req.body.tags,
+	            galleryImages: galleryImages,
+	            thinCardImage: req.files.thinCardImage.objectId.toString(),
+	            wideCardImage: req.files.wideCardImage.objectId.toString(),
+	            bannerImage: req.files.bannerImage.objectId.toString()
             }).then(function (addon) {
                 return [addon, User.findOne(req.session.passport.user).populate('addons')];
             }).spread(function (addon, user) {
@@ -181,11 +195,19 @@ module.exports = {
                     if (addon.canModify(req.user)) {
                         req.body.outsideServers = req.body.outsideServers !== undefined;
                         req.body.containsDrm = req.body.containsDrm !== undefined;
-                        req.body.status = 'pending';
+                        req.body.status = Addon.Status.PENDING;
                         if (req.files.zipFile !== undefined) {
                             req.body.zipFile = req.files.zipFile.objectId.toString();
                             req.body.size = req.files.zipFile.size;
                         }
+
+	                    if (req.files.bannerImage !== undefined) req.body.bannerImage = req.files.bannerImage.objectId.toString();
+	                    if (req.files.cardImage !== undefined) req.body.cardImage = req.files.cardImage.objectId.toString();
+						if (req.files.galleryImages !== undefined) {
+							req.body.galleryImages = _.map(req.files.galleryImages, function(file) {
+								return file.objectId.toString();
+							});
+						}
 
                         var oldStatus = addon.status;
                         Addon.update(addonId, req.body)

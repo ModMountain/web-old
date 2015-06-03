@@ -17,13 +17,13 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'silly'
+        level: 'info'
     },
 
     connections: {
         mongodb: {
             adapter: 'sails-mongo',
-            url: 'mongodb://direct.mordrum.com:27017/modmountain_development'
+            url: 'mongodb://localhost:27017/modmountain_development'
         },
         localDiskDb: {
             adapter: 'sails-disk'

@@ -21,21 +21,13 @@
 					<div class="ms-showcase2-template">
 						{# Master Slider #}
 						<div class="master-slider ms-skin-default" id="masterslider">
-							<div class="ms-slide">
-								<img class="ms-brd" src="https://placehold.it/513x523&text=Picture+1"
-								     data-src="https://placehold.it/513x523&text=Picture+1" alt="lorem ipsum dolor sit">
-								<img class="ms-thumb" src="https://placehold.it/180x180&text=Picture+1" alt="thumb">
-							</div>
-							<div class="ms-slide">
-								<img src="https://placehold.it/513x523&text=Picture+2"
-								     data-src="https://placehold.it/513x523&text=Picture+2" alt="lorem ipsum dolor sit">
-								<img class="ms-thumb" src="https://placehold.it/180x180&text=Picture+2" alt="thumb">
-							</div>
-							<div class="ms-slide">
-								<img src="https://placehold.it/513x523&text=Picture+3"
-								     data-src="https://placehold.it/513x523&text=Picture+3" alt="lorem ipsum dolor sit">
-								<img class="ms-thumb" src="https://placehold.it/180x180&text=Picture+3" alt="thumb">
-							</div>
+							{% for image in addon.galleryImages %}
+								<div class="ms-slide">
+									<img class="ms-brd" src="/addons/{{ addon.id }}/artwork/{{ image }}"
+									     data-src="/addons/{{ addon.id }}/artwork/{{ image }}"alt="lorem ipsum dolor sit">
+									<img class="ms-thumb" src="/addons/{{ addon.id }}/artwork/{{ image }}" alt="thumb" width="180" height="180">
+								</div>
+							{% endfor %}
 						</div>
 						{# End Master Slider #}
 					</div>
@@ -112,7 +104,7 @@
 							<div class="row">
 								<div class="col-sm-6">
 									<ul class="list-unstyled specifies-list">
-										<li><i class="icon icon-user"></i>Author:
+										<li><i class="icon icon-caret-right"></i>Author:
 											<span>{{ addon.author.username }}</span></li>
 										<li><i class="icon icon-caret-right"></i>Gamemode:
 											<span>{{ addon.prettyGamemode() }}</span></li>

@@ -66,4 +66,5 @@ module.exports.routes = {
     'GET    /addons/:id/paypalCheckout':                        'AddonsController.paypalCheckoutGET',
     'POST   /addons/:id/stripeCheckout':                        'AddonsController.stripeCheckout',
     'POST   /addons/:id/validateCoupon':                        'AddonsController.validateCoupon',
+    'GET    /addons/:id/artwork/:artwork':                      'AddonsController.artwork',
 };

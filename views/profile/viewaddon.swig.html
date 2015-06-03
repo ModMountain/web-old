@@ -14,24 +14,14 @@
 		<!-- Profile Content -->
 		<div class="col-md-9">
 			<div class="profile-body">
-				<div class="profile-bio">
-					<div class="row">
-						<div class="col-md-5">
-							<img class="img-responsive md-margin-bottom-10"
-							     src="https://placehold.it/350x350&text=TODO" alt="">
-							<a class="btn-u btn-u-sm" href="#">Change Picture</a>
-						</div>
-						<div class="col-md-7">
-							<h2>{{ addon.name }}</h2>
-							<span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
-							<span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
-							<hr>
-							<p>{{ addon.shortDescription }}</p>
-						</div>
-					</div>
-				</div>
-				<hr>
 				<div class="row">
+					<div class="profile-bio col-sm-6">
+						<h2>{{ addon.name }}</h2>
+						<span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
+						<span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
+						<hr>
+						<p>{{ addon.shortDescription }}</p>
+					</div>
 					{# Actions #}
 					<div class="col-sm-6">
 						<div class="panel panel-profile">

@@ -7,7 +7,9 @@ var Stripe = require("stripe")(sails.config.stripe.secretKey);
 var PayPal = require('paypal-rest-sdk');
 PayPal.configure({
 	mode: 'sandbox',
+	//client_id: sails.config.paypal.clientId,
 	client_id: sails.config.paypal.clientId,
+	//client_secret: sails.config.paypal.secret,
 	client_secret: sails.config.paypal.secret,
 });
 var Needle = require('needle');
@@ -94,6 +96,36 @@ module.exports = {
 						} else {
 							req.flash('error', "Addon '" + addon.name + "' is still uploading.");
 							res.redirect('/addons/view/' + addon.id);
+						}
+					});
+				}
+			}).catch(function (err) {
+				PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
+				res.send(500);
+			});
+	},
+
+	artwork: function(req, res) {
+		var addonId:string = req.param('id');
+		var artwork:string = req.param('artwork');
+		Addon.findOne(addonId)
+			.then(function (addon:Addon) {
+				if (addon === undefined) res.send(404);
+				else if (addon.status !== Addon.Status.PUBLISHED) res.send(403);
+				else if (addon.galleryImages.indexOf(artwork) === -1 && addon.bannerImage !== artwork && addon.thinCardImage !== artwork && addon.wideCardImage !== artwork) res.send(403);
+				else {
+					sails.hooks.gfs.exist({_id: artwork}, function (err, found:boolean) {
+						if (err) {
+							PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
+							res.send(500);
+						} else if (found) {
+							res.setHeader('Content-disposition', 'attachment;');
+							sails.hooks.gfs.createReadStream({
+								_id: artwork,
+								chunkSize: 1024 * 1024
+							}).pipe(res);
+						} else {
+							res.send(404);
 						}
 					});
 				}
@@ -274,7 +306,6 @@ module.exports = {
 							inProgress: true,
 							couponCode: coupon.code
 						}).then(function (transaction) {
-
 							var create_payment_json = {
 								"intent": "sale",
 								"payer": {
@@ -301,8 +332,10 @@ module.exports = {
 									"description": description
 								}]
 							};
+							req.flash('info', JSON.stringify(create_payment_json));
 
 							PayPal.payment.create(create_payment_json, function (err, payment) {
+								console.error(err)
 								if (err) {
 									PrettyError(err, "An error occurred during PayPal.payment.create inside AddonsController.paypalCheckout:");
 									req.flash('error', "Something went wrong during PayPal checkout, please try again.");

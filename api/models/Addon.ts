@@ -190,14 +190,14 @@ var AddonModel = {
 		 * @returns {boolean} Whether or not the user can download the addon.
 		 */
 		canDownload: function (user):Boolean {
-			if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
-				return true;
-			} else {
+			//if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
+			//	return true;
+			//} else {
 				for (var i = 0; i < this.purchasers.length; i++) {
 					if (this.purchasers[i].id === user.id) return true;
 				}
 				return false;
-			}
+			//}
 		},
 
 		/**
