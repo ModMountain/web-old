@@ -270,35 +270,56 @@ module.exports = {
 
     publishAddon: function (req, res) {
         var addonId = req.param('id');
-        Addon.findOne(addonId)
-            .then(function (addon:Addon) {
-                if (addon !== undefined) {
-                    if (addon.canModify(req.user)) {
-                        if (addon.status === Addon.Status.APPROVED) {
-                            addon.status = Addon.Status.PUBLISHED;
-                            addon.save()
-                                .then(function () {
-                                    addon.incrementTags(function () {
-                                        req.flash('success', "Addon '" + addon.name + "' has been published");
-                                        res.redirect('/profile/addons/' + addonId);
-                                    });
-                                });
-                        } else {
-                            req.flash('error', "You cannot publish an addon that is not approved.");
-                            res.redirect('/profile/addons/' + addonId);
-                        }
-                    } else {
-                        res.send(403)
-                    }
-                } else {
-                    res.send(404)
-                }
-            }).catch(function (err) {
-                PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.publishAddon');
-                req.flash('error', "Something went wrong while trying to publish addon " + addonId);
-                res.redirect('/profile/addons/' + addonId);
-            });
+	    Addon.findOne(addonId)
+		    .then(function (addon:Addon) {
+			    if (addon !== undefined) {
+				    if (addon.canModify(req.user)) {
+					    if (addon.status === Addon.Status.APPROVED) {
+						    addon.status = Addon.Status.PUBLISHED;
+						    addon.save()
+							    .then(function () {
+								    addon.incrementTags(function () {
+									    req.flash('success', "Addon '" + addon.name + "' has been published");
+									    res.redirect('/profile/addons/' + addonId);
+								    });
+							    });
+					    } else {
+						    req.flash('error', "You cannot publish an addon that is not approved.");
+						    res.redirect('/profile/addons/' + addonId);
+					    }
+				    } else {
+					    res.send(403)
+				    }
+			    } else {
+				    res.send(404)
+			    }
+		    }).catch(function (err) {
+			    PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.publishAddon');
+			    req.flash('error', "Something went wrong while trying to publish addon " + addonId);
+			    res.redirect('/profile/addons/' + addonId);
+		    });
     },
+
+	previewAddon: function(req, res) {
+		var addonId = req.param('id');
+		Addon.findOne(addonId)
+			.then(function (addon:Addon) {
+				if (addon === undefined) res.notFound();
+				else if (!addon.canModify(req.user)) res.forbidden();
+				else {
+					res.view('addons/viewaddon', {
+						title: addon.name,
+						activeTab: 'profile.addons',
+						breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon'], ['/profile/addons/' + addonId + '/preview', 'Preview Addon']],
+						addon: addon
+					})
+				}
+			}).catch(function (err) {
+				PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.previewAddon');
+				req.flash('error', "Something went wrong while trying to preview addon " + addonId);
+				res.redirect('/profile/addons/' + addonId);
+			});
+	},
 
     tickets: function (req, res) {
         if (req.isSocket) Ticket.subscribe(req.socket, req.user.tickets);

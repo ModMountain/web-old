@@ -14,14 +14,14 @@
 		<!-- Profile Content -->
 		<div class="col-md-9">
 			<div class="profile-body">
+				<div class="profile-bio col-sm-6">
+					<h2>{{ addon.name }}</h2>
+					<span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
+					<span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
+					<hr>
+					<p>{{ addon.shortDescription }}</p>
+				</div>
 				<div class="row">
-					<div class="profile-bio col-sm-6">
-						<h2>{{ addon.name }}</h2>
-						<span><strong>Status:</strong> {{ addon.prettyStatus() }}</span>
-						<span><strong>Date Created:</strong> {{ addon.createdAt.toDateString() }}</span>
-						<hr>
-						<p>{{ addon.shortDescription }}</p>
-					</div>
 					{# Actions #}
 					<div class="col-sm-6">
 						<div class="panel panel-profile">
@@ -36,8 +36,8 @@
 												href="/profile/addons/{{ addon.id }}/edit">Edit</a></li>
 									<li><i class="icon icon-check"></i> <a
 												href="/profile/addons/{{ addon.id }}/publish">Publish</a></li>
-									<li><i class="icon icon-download"></i> <a
-												href="/addons/download/{{ addon.id }}">Download</a></li>
+									<li><i class="icon icon-search"></i> <a target="_blank"
+												href="/profile/addons/{{ addon.id }}/preview">Preview</a></li>
 									<li><i class="icon icon-trash"></i> <a
 												href="/profile/addons/{{ addon.id }}/remove">Remove</a></li>
 								</ul>

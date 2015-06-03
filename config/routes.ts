@@ -42,6 +42,7 @@ module.exports.routes = {
     'POST   /profile/addons/:id/edit':                          'ProfileController.editAddonPOST',
     'GET    /profile/addons/:id/remove':                        'ProfileController.removeAddon',
     'GET    /profile/addons/:id/publish':                       'ProfileController.publishAddon',
+    'GET    /profile/addons/:id/preview':                       'ProfileController.previewAddon',
     'POST   /profile/addons/:id/coupons':                       'ProfileController.couponsPOST',
     'GET    /profile/addons/:id/coupons/:code/deactivate':      'ProfileController.deactivateCoupon',
 
