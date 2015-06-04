@@ -11,10 +11,9 @@ module.exports = {
 
     home: function (req, res) {
         Promise.join(
-            Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(3),
             Addon.find({status: Addon.Status.PUBLISHED, featured: true}).limit(4),
             Addon.find({status: Addon.Status.PUBLISHED}).sort({createdAt: 'asc'}).limit(10)
-            , function (popularTags, featuredAddons, latestAddons) {
+            , function (featuredAddons, latestAddons) {
 
 		        featuredAddons.forEach(function(addon) {
 			        addon.coupons = undefined;
@@ -26,7 +25,6 @@ module.exports = {
                 res.view({
                     title: 'Mod Mountain',
                     activeTab: 'home',
-                    popularTags: popularTags,
                     featuredAddons: featuredAddons,
                     latestAddons: latestAddons
                 });
