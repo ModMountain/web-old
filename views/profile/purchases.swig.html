@@ -1,0 +1,49 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+	{% include 'components/profile/commoncss.swig.html' %}
+{% endblock %}
+
+{% block content %}
+	<!--=== Profile ===-->
+	<div class="container content profile">
+		<div class="row">
+			{% include 'components/flashhandler.swig.html' %}
+			{% include 'components/profile/sidebar.swig.html' %}
+			<!-- Profile Content -->
+			<div class="col-md-9">
+				<div class="profile-body">
+					<div class="row">
+						{% for addon in user.purchases %}
+							<div class="col-sm-6">
+								<div class="easy-block-v1">
+									<img class="img-responsive" src="/addons/{{ addon.id }}/artwork/{{ addon.bannerImage }}" alt="">
+								</div>
+								<div class="projects">
+									<h2><a class="color-dark" href="/addons/{{ addon.id }}">{{ addon.name }}</a></h2>
+									<ul class="list-unstyled list-inline blog-info-v2">
+										<li>By: <a class="color-green" href="#">{{ addon.author.username }}</a></li>
+										<li><i class="icon icon-clock-o"></i>Last Update: {{ addon.updatedAt.toDateString() }}</li>
+									</ul>
+									<p>{{ addon.shortDescription }}</p>
+									<br>
+								</div>
+								<div class="project-share">
+									<a href="/addons/{{ addon.id }}/download">Download</a>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+
+
+				</div>
+			</div>
+			<!-- End Profile Content -->
+		</div>
+	</div><!--/container-->
+	<!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

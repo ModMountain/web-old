@@ -9,8 +9,14 @@ module.exports = {
         rest: false
     },
 
-    index: function (req, res) {
-        res.view({title: "Your Profile", activeTab: 'profile.index', breadcrumbs: true});
+    purchases: function (req, res) {
+	    Promise.all(_.map(req.user.purchases, function(purchase) {
+		    return Addon.findOne(purchase.id).populate('author');
+	    }))
+	    .then(function(populatedPurchases) {
+			    req.user.purchases = populatedPurchases;
+			    res.view({title: "Your Purchases", activeTab: 'profile.purchases', breadcrumbs: true});
+		    })
     },
 
     addons: function (req, res) {

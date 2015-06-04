@@ -28,7 +28,7 @@ module.exports.routes = {
     'GET    /':                                                 'StaticController.home',
 
     // Profile routes
-    'GET    /profile':                                          'ProfileController.index',
+    'GET    /profile':                                          'ProfileController.purchases',
     'GET    /profile/settings':                                 'ProfileController.settings',
     'POST   /profile/settings':                                 'ProfileController.settingsPOST',
     'GET    /profile/transactions':                             'ProfileController.transactions',
