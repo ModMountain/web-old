@@ -1,0 +1,61 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+	{% include 'components/profile/commoncss.swig.html' %}
+{% endblock %}
+
+{% block content %}
+	<!--=== Profile ===-->
+	<div class="container content profile">
+		<div class="row">
+			{% include 'components/flashhandler.swig.html' %}
+			<!-- Profile Content -->
+			<div class="col-md-10 col-md-offset-1">
+				<div class="profile-body">
+					<div class="profile-bio">
+						<div class="row">
+							<div class="col-md-3">
+								<img class="img-responsive md-margin-bottom-10" src="{{ user.steamProfile.photos[2].value }}" alt="">
+							</div>
+							<div class="col-md-9">
+								<h2>{{ user.username }}</h2>
+								<span><strong>Status:</strong> {{ user.prettyStatus() }}</span>
+								<hr>
+								<p>{{ user.bio }}</p>
+							</div>
+						</div>
+					</div><!--/end row-->
+
+					<hr>
+
+					<div class="row">
+						{% for addon in user.addons %}
+							<div class="col-sm-4">
+								<div class="easy-block-v1">
+									<img class="img-responsive" src="/addons/{{ addon.id }}/artwork/{{ addon.bannerImage }}" alt="">
+								</div>
+								<div class="projects">
+									<h2><a class="color-dark" href="/addons/{{ addon.id }}">{{ addon.name }}</a></h2>
+									<ul class="list-unstyled list-inline blog-info-v2">
+										<li><i class="icon icon-clock-o"></i>Last Update: {{ addon.updatedAt.toDateString() }}</li>
+									</ul>
+									<p>{{ addon.shortDescription }}</p>
+									<br>
+								</div>
+								<div class="project-share">
+									<a href="/addons/{{ addon.id }}">View</a>
+								</div>
+							</div>
+						{% endfor %}
+					</div><!--/end row-->
+				</div>
+			</div>
+			<!-- End Profile Content -->
+		</div>
+	</div><!--/container-->
+	<!--=== End Profile ===-->
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

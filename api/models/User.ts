@@ -45,6 +45,9 @@ var UserModel = {
 	    bannedReason: {
 		    type: 'string'
 	    },
+	    bio: {
+		    type: 'string'
+	    },
 
         // Associations
         addons: {
@@ -94,7 +97,19 @@ var UserModel = {
         },
         isAdministrator: function () {
             return this.permissionLevel >= 2
-        }
+        },
+	    prettyStatus: function() {
+		    switch (this.status) {
+			    case User.Status.ACTIVE:
+				    return 'Active';
+			    case User.Status.SUSPENDED:
+				    return 'Suspended';
+			    case User.Status.BANNED:
+				    return 'Banned';
+			    default:
+				    return "Invalid Status '" + this.status + "'"
+		    }
+	    }
     },
 
 	beforeValidate: function(user, cb) {

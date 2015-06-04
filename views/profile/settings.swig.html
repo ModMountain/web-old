@@ -60,6 +60,13 @@
 												<b class="tooltip tooltip-bottom-left">This is the email we will send funds to via PayPal.</b>
 											</label>
 										</section>
+										<section>
+											<label class="label">Bio</label>
+											<label class="textarea">
+												<textarea id="bioInput" rows="10" name="bio"></textarea>
+											</label>
+										</section>
+
 									</fieldset>
 
 									<footer>
@@ -150,8 +157,7 @@
 	<!--=== End Profile ===-->
 {% endblock %}
 {% block scripts %}
-	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 	<script>
-		Stripe.setPublishableKey('***REMOVED***');
+		$("#bioInput").val("{{ user.bio }}");
 	</script>
 {% endblock %}

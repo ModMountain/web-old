@@ -41,6 +41,7 @@ module.exports = {
         if (req.body.username !== undefined && req.body.username !== '') req.user.username = req.body.username;
         req.user.email = req.body.primaryEmail;
         req.user.paypalEmail = req.body.paypalEmail;
+	    req.user.bio = req.body.bio;
 
         req.user.save()
             .then(function () {
