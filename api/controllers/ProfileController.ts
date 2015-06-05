@@ -19,13 +19,21 @@ module.exports = {
 		    })
     },
 
-    addons: function (req, res) {
-        res.view({
-            title: "Your Addons",
-            breadcrumbs: [["/profile", "Your Profile"]],
-            activeTab: 'profile.addons'
-        })
-    },
+	addons: function (req, res) {
+		Promise.all(_.map(req.user.addons, (addon) => {return Addon.findOne(addon.id).populate('purchasers')}))
+			.then(function (addons) {
+				req.user.addons = addons;
+				res.view({
+					title: "Your Addons",
+					breadcrumbs: [["/profile", "Your Profile"]],
+					activeTab: 'profile.addons'
+				})
+			}).catch(function (err) {
+				PrettyError(err, "An error occurred during Promise.all inside ProfileController.addons")
+				req.flash('error', "Something went wrong, please try again.")
+				res.redirect('/profile');
+			});
+	},
 
     settings: function (req, res) {
         res.view({

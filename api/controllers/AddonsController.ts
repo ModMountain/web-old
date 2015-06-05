@@ -56,6 +56,10 @@ module.exports = {
 					req.flash('error', "Addon '" + addon.name + "' is not published");
 					res.redirect('/addons')
 				} else {
+					// Increment views count
+					addon.views++;
+					addon.save();
+
 					addon.author = {
 						id: addon.author.id,
 						username: addon.author.username
@@ -87,6 +91,10 @@ module.exports = {
 							req.flash('error', "Something went wrong while downloading addon '" + addon.name + "'");
 							res.redirect('/addons/view/' + addon.id);
 						} else if (found) {
+							// Increment download count
+							addon.downloads++;
+							addon.save();
+
 							var filename:String = addon.name + '.zip';
 							res.setHeader('Content-disposition', 'attachment; filename=' + filename);
 							sails.hooks.gfs.createReadStream({
