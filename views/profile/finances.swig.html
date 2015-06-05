@@ -55,7 +55,7 @@
 											<td>
 												<a href="/addons/{{ transaction.addon.id }}">{{ transaction.addon.name }}</a>
 											</td>
-											<td>${{ transaction.rawData.amount / 100 }}</td>
+											<td>${{ transaction.amount / 100 }}</td>
 											<td>{{ transaction.createdAt.toDateString() }}</td>
 										</tr>
 									{% endfor %}

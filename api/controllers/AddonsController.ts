@@ -187,6 +187,8 @@ module.exports = {
 						var amountToCharge = addon.price * 100;
 						// If this addon is free, the user will pay whatever they want
 						if (amountToCharge === 0) amountToCharge = finalBill;
+						var type = 'purchase';
+						if (addon.price === 0) type = 'donation';
 
 						// A coupon is being used in this transaction
 						if (coupon !== undefined && coupon !== null) {
@@ -227,7 +229,7 @@ module.exports = {
 										return Transaction.create({
 											sender: req.user,
 											receiver: addon.author,
-											senderType: 'purchase',
+											senderType: type,
 											receiverType: 'sale',
 											addon: addon,
 											amount: amountToCharge,
@@ -255,7 +257,8 @@ module.exports = {
 										res.redirect('/addons/' + addonId);
 
 										// Lazy increment, no need to wait for user feedback or anything
-										if (coupon.code !== '') return addon.incrementCoupon(coupon.code)
+										if (coupon.code !== '') return addon.incrementCoupon(coupon.code);
+										FeeService.chargeFee(addon.author);
 									}).catch(function (err) {
 										PrettyError(err, "Something went wrong while calling addon.incrementCoupon inside AddonsController.accountBalanceCheckout:")
 									});
@@ -281,6 +284,8 @@ module.exports = {
 					var amountToCharge = addon.price * 100;
 					// If this addon is free, the user will pay whatever they want
 					if (amountToCharge === 0) amountToCharge = finalBill;
+					var type = 'purchase';
+					if (addon.price === 0) type = 'donation';
 
 					// A coupon is being used in this transaction
 					if (coupon !== undefined && coupon !== null) {
@@ -311,7 +316,7 @@ module.exports = {
 						Transaction.create({
 							sender: req.user,
 							receiver: addon.author,
-							senderType: 'purchase',
+							senderType: type,
 							receiverType: 'sale',
 							addon: addon,
 							amount: amountToCharge,
@@ -411,6 +416,7 @@ module.exports = {
 									NotificationService.sendUserNotification(addon.author, "MEDIUM", req.user.username + " purchased your addon, '" + addon.name + "' for $" + transaction.amount / 100);
 									req.flash('success', 'Purchase success');
 								}
+								FeeService.chargeFee(addon.author);
 								res.redirect('/addons/' + addonId);
 							}).catch(function() {
 								PrettyError(err, "An error occurred during Addon.findOne inside AddonsController.paypalCheckoutGET:");
@@ -441,6 +447,8 @@ module.exports = {
 					var coupon = req.param('coupon');
 					var description = req.param('description');
 					var amountToCharge = addon.price * 100;
+					var type = 'purchase';
+					if (addon.price === 0) type = 'donation';
 
 					// If this addon is free, the user will pay whatever they want
 					if (amountToCharge === 0) amountToCharge = finalBill;
@@ -491,7 +499,7 @@ module.exports = {
 								Transaction.create({
 									sender: req.user,
 									receiver: addon.author,
-									senderType: 'purchase',
+									senderType: type,
 									receiverType: 'sale',
 									addon: addon,
 									amount: amountToCharge,
@@ -506,7 +514,7 @@ module.exports = {
 									if (addon.price > 0) {
 										req.user.purchases.add(addon);
 									}
-									addon.author.balance += amountToCharge - 30;
+									addon.author.balance += amountToCharge;
 									return [req.user.save(), addon.author.save()]
 								}).spread(function () {
 									if (addon.price === 0) {
@@ -520,8 +528,8 @@ module.exports = {
 
 									// Lazy increment, no need to wait for user feedback or anything
 									if (coupon.code !== '') return addon.incrementCoupon(coupon.code);
+									FeeService.chargeFee(addon.author);
 								}).catch(function (error) {
-									console.log(error)
 									PrettyError(error, "Something went wrong while saving transactions to users inside AddonsController.stripeCheckout:")
 								})
 							}

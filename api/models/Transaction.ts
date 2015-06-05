@@ -16,11 +16,11 @@ var TransactionModel = {
             via: 'Transactions'
         },
         senderType: {
-            enum: ['donation', 'purchase', 'withdrawal'],
+            enum: ['donation', 'purchase', 'withdrawal', 'devfee'],
             required: true
         },
         receiverType: {
-            enum: ['income', 'sale', 'withdrawal'],
+            enum: ['income', 'sale', 'withdrawal', 'devfee'],
             required: true
         },
 	    amount: {
@@ -57,6 +57,8 @@ var TransactionModel = {
                     return 'Purchase';
 	            case 'withdrawal':
 		            return 'Withdrawal';
+	            case 'devfee':
+		            return 'Developer Fee';
             }
         },
         prettyReceiverType: function () {
@@ -67,6 +69,8 @@ var TransactionModel = {
                     return 'Sale';
 	            case 'withdrawal':
 		            return 'Withdrawal';
+	            case 'devfee':
+		            return 'Developer Fee';
             }
         }
     },
