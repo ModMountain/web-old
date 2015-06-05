@@ -8,6 +8,7 @@ $(function () {
 	var $couponNote = $("#couponNote");
 	var $totalBill = $("#totalBill");
 	var $checkoutButton = $("#checkoutButton");
+	var $donationInput = $("#donationInput");
 	var finalBill = window.addon.price;
 
 	var $payWithAccountBalanceCheckbox = $("#payWithAccountBalance");
@@ -68,7 +69,12 @@ $(function () {
 			finalBill = 0;
 			$totalBill.text('Free');
 		}
-		else $totalBill.text('$' + finalBill + ' usd');
+		else $totalBill.text('$' + finalBill + ' USD');
+	});
+
+	$donationInput.on('change keydown paste input', function(e) {
+		finalBill = $donationInput.val();
+		$totalBill.text('$' + finalBill + ' USD');
 	});
 
 	$purchaseButton.on('click', function (event) {
@@ -81,6 +87,7 @@ $(function () {
 		if (window.addon.price === 0 && finalBill === 0) {
 			alert("You must enter an amount into the donation input!")
 		} else {
+			// If the final bill is 0 dollars but this isn't a free addon, the user used a 100% off coupon
 			if (finalBill === 0 || $payWithAccountBalanceCheckbox.is(':checked')) checkoutWithAccountBalance();
 			else if ($payWithPayPalCheckbox.is(':checked')) checkoutWithPayPal();
 			else if ($payWithStripeCheckbox.is(':checked')) checkoutWithStripe();

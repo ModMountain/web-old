@@ -185,6 +185,8 @@ module.exports = {
 						var finalBill = parseInt(req.param('finalBill'));
 						var coupon = req.param('coupon');
 						var amountToCharge = addon.price * 100;
+						// If this addon is free, the user will pay whatever they want
+						if (amountToCharge === 0) amountToCharge = finalBill;
 
 						// A coupon is being used in this transaction
 						if (coupon !== undefined && coupon !== null) {
@@ -277,6 +279,8 @@ module.exports = {
 					var coupon = req.param('coupon');
 					var description = req.param('description');
 					var amountToCharge = addon.price * 100;
+					// If this addon is free, the user will pay whatever they want
+					if (amountToCharge === 0) amountToCharge = finalBill;
 
 					// A coupon is being used in this transaction
 					if (coupon !== undefined && coupon !== null) {
@@ -438,6 +442,9 @@ module.exports = {
 					var description = req.param('description');
 					var amountToCharge = addon.price * 100;
 
+					// If this addon is free, the user will pay whatever they want
+					if (amountToCharge === 0) amountToCharge = finalBill;
+
 					// A coupon is being used in this transaction
 					if (coupon !== undefined && coupon !== null) {
 						coupon = addon.getCoupon(coupon);
@@ -466,7 +473,7 @@ module.exports = {
 					} else {
 						Stripe.charges.create({
 							amount: amountToCharge,
-							currency: 'usD',
+							currency: 'USD',
 							source: tokenId,
 							description: description
 						}, function (err, charge) {
