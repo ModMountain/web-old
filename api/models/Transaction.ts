@@ -12,15 +12,15 @@ var TransactionModel = {
         },
         receiver: {
             model: 'User',
-            required: true,
+            required: false,
             via: 'Transactions'
         },
         senderType: {
-            enum: ['donation', 'purchase'],
+            enum: ['donation', 'purchase', 'withdrawal'],
             required: true
         },
         receiverType: {
-            enum: ['income', 'sale'],
+            enum: ['income', 'sale', 'withdrawal'],
             required: true
         },
 	    amount: {
@@ -45,7 +45,7 @@ var TransactionModel = {
 	    },
         addon: {
             model: 'Addon',
-            required: true,
+            required: false,
             via: 'Transactions'
         },
 
@@ -55,6 +55,8 @@ var TransactionModel = {
                     return 'Donation';
                 case 'purchase':
                     return 'Purchase';
+	            case 'withdrawal':
+		            return 'Withdrawal';
             }
         },
         prettyReceiverType: function () {
@@ -63,6 +65,8 @@ var TransactionModel = {
                     return 'Income';
                 case 'sale':
                     return 'Sale';
+	            case 'withdrawal':
+		            return 'Withdrawal';
             }
         }
     },

@@ -443,7 +443,7 @@ module.exports = {
             });
     },
 
-    transactions: function(req, res) {
+    finances: function(req, res) {
         var populatePromiseArray = [];
         req.user.transactions.forEach(function(transaction) {
             populatePromiseArray.push(Transaction.findOne(transaction.id).populate('sender').populate('receiver').populate('addon'));
@@ -460,6 +460,35 @@ module.exports = {
             });
 
     },
+
+	withdrawal: function(req, res) {
+		var amount = req.param('amount') * 100;
+		if (amount <= 10) {
+			req.flash('error', "You cannot withdraw any less than $10");
+			res.redirect('/profile/finances');
+		} else if (req.user.balance - amount < 0) {
+			req.flash('error', "Your balance is not sufficient enough to withdraw $" + amount / 100);
+			res.redirect('/profile/finances');
+		} else {
+			Transaction.create({
+				sender: req.user,
+				senderType: 'withdrawal',
+				receiverType: 'withdrawal',
+				amount: amount,
+				inProgress: true,
+			}).then(function(transaction) {
+				req.user.balance -= amount;
+				return req.user.save();
+			}).then(function() {
+				req.flash('success', "Request received, we will contact you soon to complete the process.");
+				res.redirect('/profile/finances');
+			}).catch(function(err) {
+				PrettyError(err, "An error occurred during Transaction.create or user.save inside ProfileController.withdrawal");
+				req.flash('error', "Something went wrong, please try again.");
+				res.redirect('/profile/finances');
+			});
+		}
+	},
 
 	syncSteam: function(req, res) {
 		req.user.steamProfile = {};

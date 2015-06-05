@@ -31,7 +31,8 @@ module.exports.routes = {
     'GET    /profile':                                          'ProfileController.purchases',
     'GET    /profile/settings':                                 'ProfileController.settings',
     'POST   /profile/settings':                                 'ProfileController.settingsPOST',
-    'GET    /profile/transactions':                             'ProfileController.transactions',
+    'GET    /profile/finances':                                 'ProfileController.finances',
+    'POST   /profile/finances/withdrawal':                      'ProfileController.withdrawal',
     'GET    /profile/syncSteam':                                'ProfileController.syncSteam',
 
     'GET    /profile/addons':                                   'ProfileController.addons',

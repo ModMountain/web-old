@@ -13,6 +13,19 @@
 			<!-- Profile Content -->
 			<div class="col-md-9">
 				<div class="profile-body">
+					<div class="table-search-v1 margin-bottom-20">
+						<h2>Request Withdrawal</h2>
+
+						<form class="form-inline" method="POST" action="/profile/finances/withdrawal"
+						      enctype="multipart/form-data">
+							<div class="form-group">
+								<label for="codeInput">Amount</label>
+								<input type="number" class="form-control" name="amount" id="amountInput" required>
+							</div>
+							<button type="submit" class="btn btn-green">Submit</button>
+						</form>
+					</div>
+
 					{% if user.transactions.length == 0 %}
 						<h1 style="text-align: center;">You have no addons.</h1>
 					{% else %}
