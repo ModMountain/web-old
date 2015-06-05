@@ -24,7 +24,7 @@ var NotificationService = {
             message: message
         }).then(function (notification) {
             // Don't try sending an email if the user has no email specified
-            if (user.email === undefined) return;
+            if (user.email === undefined || user.email === null) return;
 
             // Use Swig to compile the email template to HTML
             Swig.renderFile(process.cwd() + '/views/emails/notification.swig.html', {
