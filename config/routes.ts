@@ -26,6 +26,9 @@ module.exports.routes = {
 
     // Static routes
     'GET    /':                                                 'StaticController.home',
+    'GET    /privacyPolicy':                                    'StaticController.privacyPolicy',
+    'GET    /termsOfService':                                   'StaticController.termsOfService',
+    'GET    /codeOfConduct':                                    'StaticController.codeOfConduct',
 
     // Profile routes
     'GET    /profile':                                          'ProfileController.purchases',

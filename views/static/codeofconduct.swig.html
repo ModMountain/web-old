@@ -1,0 +1,38 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/css/settings.css">
+{% endblock %}
+
+{% block content %}
+	<div class="container content">
+		<div class="row-fluid privacy">
+			<h3>All Developers Must Abide by the Developer Code of Conduct</h3>
+			<ol>
+				<li>I will be kind, courteous, and respectful</li>
+				<li>I will always provide support to the best of my ability</li>
+				<li>I will always put people before profit</li>
+				<li>I will never attempt to mislead my customers or deliver an inferior product</li>
+				<li>I will always contact Mod Mountain when I need assistance and will never take the law into my own hands</li>
+			</ol>
+		</div><!--/row-fluid-->
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ assetPrefix }}/plugins/jquery.parallax.js"></script>
+
+	<script src="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
+	<script src="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
+	<script src="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
+	<!-- JS Page Level -->
+	<script src="{{ assetPrefix }}/js/plugins/owl-carousel.js"></script>
+	<script src="{{ assetPrefix }}/js/plugins/revolution-slider.js"></script>
+	<script>
+		jQuery(document).ready(function () {
+			OwlCarousel.initOwlCarousel();
+			RevolutionSlider.initRSfullWidth();
+		});
+	</script>
+{% endblock %}
