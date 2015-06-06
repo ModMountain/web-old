@@ -31,7 +31,7 @@ module.exports = {
 						title: "User " + user.username,
 						activeTab: 'users',
 						breadcrumbs: [],
-						user: user
+						loadedUser: user
 					});
 				}
 			}).catch(function (err) {

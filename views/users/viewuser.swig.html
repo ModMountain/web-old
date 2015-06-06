@@ -15,13 +15,13 @@
 					<div class="profile-bio">
 						<div class="row">
 							<div class="col-md-3">
-								<img class="img-responsive md-margin-bottom-10" src="{{ user.steamProfile.photos[2].value }}" alt="">
+								<img class="img-responsive md-margin-bottom-10" src="{{ loadedUser.steamProfile.photos[2].value }}" alt="">
 							</div>
 							<div class="col-md-9">
-								<h2>{{ user.username }}</h2>
-								<span><strong>Status:</strong> {{ user.prettyStatus() }}</span>
+								<h2>{{ loadedUser.username }}</h2>
+								<span><strong>Status:</strong> {{ loadedUser.prettyStatus() }}</span>
 								<hr>
-								<p>{{ user.bio }}</p>
+								<p>{{ loadedUser.bio }}</p>
 							</div>
 						</div>
 					</div><!--/end row-->
@@ -29,7 +29,7 @@
 					<hr>
 
 					<div class="row">
-						{% for addon in user.addons %}
+						{% for addon in loadedUser.addons %}
 							<div class="col-sm-4">
 								<div class="easy-block-v1">
 									<img class="img-responsive" src="/addons/{{ addon.id }}/artwork/{{ addon.bannerImage }}" alt="">
