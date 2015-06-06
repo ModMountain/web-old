@@ -7,9 +7,12 @@ $(function () {
         var content = $textArea.val();
         if (content !== null && content !== '') {
             $textArea.val('');
-            io.socket.post('/staff/tickets/' + $button.data('ticket-id') + '/respond', {
-                content: content
-            });
+	        io.socket.get('/csrfToken', function(data) {
+		        io.socket.post('/staff/tickets/' + $button.data('ticket-id') + '/respond', {
+			        _csrf: data._csrf,
+			        content: content
+		        });
+	        });
         }
         e.preventDefault();
     });

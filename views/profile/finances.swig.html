@@ -18,7 +18,8 @@
 
 						<form class="form-inline" method="POST" action="/profile/finances/withdrawal"
 						      enctype="multipart/form-data">
-							<div class="form-group">
+							<input type="hidden" name="_csrf" value="{{ _csrf }}" />
+								<div class="form-group">
 								<label for="codeInput">Amount</label>
 								<input type="number" class="form-control" name="amount" id="amountInput" required>
 							</div>

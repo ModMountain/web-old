@@ -1,8 +1,8 @@
 /// <reference path='../../../../typings/jquery/jquery.d.ts' />
 
 $(function () {
-    // jQuery selectors
-    var $purchaseButton = $("#purchaseButton");
+	// jQuery selectors
+	var $purchaseButton = $("#purchaseButton");
 	var $couponInput = $("#couponInput");
 	var $couponLabel = $("#couponLabel");
 	var $couponNote = $("#couponNote");
@@ -18,16 +18,20 @@ $(function () {
 	// Coupon logic
 	var couponTimer;
 	var coupon = {code: ''};
-	$couponInput.on('change keydown paste input', function() {
+	$couponInput.on('change keydown paste input', function () {
 		if (couponTimer !== null) clearTimeout(couponTimer);
-		couponTimer = setTimeout(function() {
-			io.socket.post('/addons/' + window.addon.id + '/validateCoupon', {
-				couponCode: $couponInput.val()
-			})
+		couponTimer = setTimeout(function () {
+			io.socket.get('/csrfToken', function (data) {
+				io.socket.post('/addons/' + window.addon.id + '/validateCoupon', {
+					_csrf: data._csrf,
+					couponCode: $couponInput.val()
+				})
+			});
+
 		}, 200);
 	});
 
-	io.socket.on('couponValidated', function(data) {
+	io.socket.on('couponValidated', function (data) {
 		coupon = data;
 		if ($couponInput.val() === '') {
 			$couponLabel.removeClass('state-success');
@@ -72,17 +76,17 @@ $(function () {
 		else $totalBill.text('$' + finalBill + ' USD');
 	});
 
-	$donationInput.on('change keydown paste input', function(e) {
+	$donationInput.on('change keydown paste input', function (e) {
 		finalBill = $donationInput.val();
 		$totalBill.text('$' + finalBill + ' USD');
 	});
 
 	$purchaseButton.on('click', function (event) {
 		$('#paymentModal').modal('show');
-        event.preventDefault();
-    });
+		event.preventDefault();
+	});
 
-	$checkoutButton.on('click', function(event) {
+	$checkoutButton.on('click', function (event) {
 		// This is a donation, therefore we need to make sure they entered an amount
 		if (window.addon.price === 0 && finalBill === 0) {
 			alert("You must enter an amount into the donation input!")
@@ -99,61 +103,76 @@ $(function () {
 		event.preventDefault();
 	});
 
-	var checkoutWithAccountBalance = function() {
-		post('/addons/' + window.addon.id + '/accountBalanceCheckout', {
-			addonId: window.addon.id,
-			finalBill: finalBill * 100,
-			coupon: coupon.code
+	var getCSRF = function(cb) {
+		io.socket.get('/csrfToken', function(data) {
+			cb(data._csrf);
+		})
+	};
+
+	var checkoutWithAccountBalance = function () {
+		getCSRF(function(csrf) {
+			post('/addons/' + window.addon.id + '/accountBalanceCheckout', {
+				_csrf: csrf,
+				addonId: window.addon.id,
+				finalBill: finalBill * 100,
+				coupon: coupon.code
+			});
 		});
 	};
 
-	var checkoutWithPayPal = function() {
-		// Set the description
-		var description;
-		if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
-		else description = "License for '" + window.addon.name + "'";
+	var checkoutWithPayPal = function () {
+		getCSRF(function(csrf) {
+			// Set the description
+			var description;
+			if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
+			else description = "License for '" + window.addon.name + "'";
 
-		post('/addons/' + window.addon.id + '/paypalCheckout', {
-			addonId: window.addon.id,
-			finalBill: finalBill * 100,
-			coupon: coupon.code,
-			description: description
-		});
+			post('/addons/' + window.addon.id + '/paypalCheckout', {
+				_csrf: csrf,
+				addonId: window.addon.id,
+				finalBill: finalBill * 100,
+				coupon: coupon.code,
+				description: description
+			});
+		})
 	};
 
-	var checkoutWithStripe = function() {
-		// Set the description
-		var description;
-		if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
-		else description = "License for '" + window.addon.name + "'";
+	var checkoutWithStripe = function () {
+		getCSRF(function(csrf) {
+			// Set the description
+			var description;
+			if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
+			else description = "License for '" + window.addon.name + "'";
 
-		// Configure Stripe
-		var handler = StripeCheckout.configure({
-			key: window.stripePublicKey,
-			token: function (token) {
-				post('/addons/' + window.addon.id + '/stripeCheckout', {
-					tokenId: token.id,
-					type: token.type,
-					addonId: window.addon.id,
-					finalBill: finalBill * 100,
-					coupon: coupon.code,
-					description: description
-				});
-			}
-		});
+			// Configure Stripe
+			var handler = StripeCheckout.configure({
+				key: window.stripePublicKey,
+				token: function (token) {
+					post('/addons/' + window.addon.id + '/stripeCheckout', {
+						_csrf: csrf,
+						tokenId: token.id,
+						type: token.type,
+						addonId: window.addon.id,
+						finalBill: finalBill * 100,
+						coupon: coupon.code,
+						description: description
+					});
+				}
+			});
 
-		// Close Checkout on page navigation
-		$(window).on('popstate', function () {
-			handler.close();
-		});
+			// Close Checkout on page navigation
+			$(window).on('popstate', function () {
+				handler.close();
+			});
 
-		// Open Checkout with further options
-		handler.open({
-			name: 'Mod Mountain',
-			description: description,
-			currency: "usd",
-			amount: finalBill * 100
-		});
+			// Open Checkout with further options
+			handler.open({
+				name: 'Mod Mountain',
+				description: description,
+				currency: "usd",
+				amount: finalBill * 100
+			});
+		})
 	};
 
 	// Post to the provided URL with the specified parameters.
@@ -164,7 +183,7 @@ $(function () {
 		form.attr("action", path);
 		form.attr("enctype", "multipart/form-data");
 
-		$.each(parameters, function(key, value) {
+		$.each(parameters, function (key, value) {
 			var field = $('<input></input>');
 
 			field.attr("type", "hidden");

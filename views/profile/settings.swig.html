@@ -27,7 +27,8 @@
 
 								<form class="sky-form profile-edit tab-pane fade in active" action="/profile/settings"
 								      method="POST" enctype="MULTIPART/FORM-DATA">
-									<fieldset>
+									<input type="hidden" name="_csrf" value="{{ _csrf }}" />
+											<fieldset>
 										<section>
 											<label class="label">Username</label>
 											<label class="input">

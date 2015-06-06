@@ -25,9 +25,13 @@ $('.respondButton').on('click', function (e) {
     var content = $textArea.val();
     if (content !== null && content !== '') {
         $textArea.val('');
-        io.socket.post('/profile/tickets/' + $button.data('ticket-id') + '/respond', {
-            content: content
-        });
+	    io.socket.get('/csrfToken', function(data) {
+		    io.socket.post('/profile/tickets/' + $button.data('ticket-id') + '/respond', {
+			    _csrf: data._csrf,
+			    content: content
+		    });
+	    });
+
     }
     e.preventDefault();
 });

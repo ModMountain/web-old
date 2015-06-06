@@ -28,6 +28,7 @@
                                 <br>
 
                                 <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST" action="/profile/tickets/create">
+	                                <input type="hidden" name="_csrf" value="{{ _csrf }}" />
                                     <fieldset>
                                         <section>
                                             <label class="label">Title</label>
