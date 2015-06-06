@@ -7,7 +7,7 @@
 
 {% block content %}
 	<!--=== Slider ===-->
-	<div class="tp-banner-container">
+	<div id="slider" class="tp-banner-container">
 		<div class="tp-banner">
 			<ul>
 				{% if featuredAddons.length === 0 %}
@@ -156,7 +156,6 @@
 			<div class="tp-bannertimer tp-bottom"></div>
 		</div>
 	</div>
-	<!--=== End Slider ===-->
 
 	<div class="container content-md">
 		<div class="row margin-bottom-50">
@@ -188,8 +187,9 @@
 	<script src="{{ assetPrefix }}/js/plugins/revolution-slider.js"></script>
 	<script>
 		jQuery(document).ready(function () {
-			OwlCarousel.initOwlCarousel();
 			RevolutionSlider.initRSfullWidth();
+			OwlCarousel.initOwlCarousel();
+			$("#slider").fadeIn();
 		});
 	</script>
 {% endblock %}
