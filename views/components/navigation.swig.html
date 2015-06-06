@@ -73,9 +73,11 @@
 					{# Browse jobs #}
 					{#<li {% if activeTab.indexOf('jobs') == 0 %}class="active"{% endif %}><a href="/jobs">Jobs</a></li>#}
 
+					{% if user %}
 					{# Browse profile #}
 					<li {% if activeTab.indexOf('profile') == 0 %}class="active"{% endif %}><a
 								href="/profile">Dashboard</a></li>
+					{% endif %}
 
 					{# Staff area #}
 					{% if user.permissionLevel >= 1 %}
