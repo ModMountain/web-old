@@ -88,7 +88,7 @@ var App = function () {
 			handleSearchV1();
 			handleToggle();
 			handleBoxed();
-			handleHeader();
+			//handleHeader();
 			handleMegaMenu();
 		},
 
