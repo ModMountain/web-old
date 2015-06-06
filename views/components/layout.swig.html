@@ -38,10 +38,13 @@
 
 	<script src="//use.fonticons.com/b63071a6.js" data-cfasync="false"></script>
 	{% block css %}{% endblock %}
+	{% if sails.config.analytics %}{% include 'components/analytics.swig.html' %}{% endif %}
+
 </head>
 
 <body class="header-fixed">
 <div class="wrapper">
+
 	{% include 'components/navigation.swig.html' %}
 	{% if breadcrumbs %}
 		{% include 'components/breadcrumbs.swig.html' %}

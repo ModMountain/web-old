@@ -99,5 +99,7 @@ module.exports = {
 	slack: {
 		communityName: 'modmountain',
 		token: '***REMOVED***'
-	}
+	},
+
+	analytics: true
 };
