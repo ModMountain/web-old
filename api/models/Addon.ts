@@ -118,7 +118,7 @@ var AddonModel = {
 		// Whether or not this addon is featured on the home page
 		featured: {
 			type: 'boolean',
-			defaultsTo: true
+			defaultsTo: false
 		},
 		// The addon's tags in raw (comma separated) format
 		rawTags: {
