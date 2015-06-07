@@ -107,7 +107,7 @@ var UserModel = {
 			    case User.Status.BANNED:
 				    return 'Banned';
 			    default:
-				    return "Invalid Status '" + this.status + "'"
+				    return "Unknown"
 		    }
 	    }
     },
