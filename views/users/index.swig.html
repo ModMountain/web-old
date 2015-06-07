@@ -19,9 +19,15 @@
 							<h3 class="panel-title"><a href="/users/{{ user.id }}"> {{ user.username }}</a></h3>
 						</div>
 						<div class="panel-body">
-							<img class="img-responsive profile-img margin-bottom-20"
-							     style="margin-left: auto; margin-right: auto;"
-							     src="{{ profilePic }}" alt="">
+							{% if user.steamProfile.photos and user.steamProfile.photos.length >= 2 %}
+								<img class="img-responsive profile-img margin-bottom-20"
+								     style="margin-left: auto; margin-right: auto;"
+								     src="{{ user.steamProfile.photos[2].value }}" alt="">
+							{% else %}
+								<img class="img-responsive profile-img margin-bottom-20"
+								     style="margin-left: auto; margin-right: auto;"
+								     src="https://placeholdit.imgix.net/~text?txtsize=200&txt=?&w=256&h=256" alt="">
+							{% endif %}
 							<p>Registered: {{ user.createdAt.toDateString() }}</p>
 							<p>Status: {{ user.prettyStatus() }}</p>
 						</div>
