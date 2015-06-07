@@ -27,11 +27,14 @@ module.exports = {
 			.then(function (user:User) {
 				if (user === undefined) res.notFound();
 				else {
+					var profilePic = 'https://placeholdit.imgix.net/~text?txtsize=200&txt=?&w=256&h=256';
+					if (user.steamProfile.photos[2] !== undefined && user.steamProfile.photos[2] !== null) profilePic = user.steamProfile.photos[2].value;
 					res.view({
 						title: "User " + user.username,
 						activeTab: 'users',
 						breadcrumbs: [],
-						loadedUser: user
+						loadedUser: user,
+						profilePic: profilePic
 					});
 				}
 			}).catch(function (err) {
