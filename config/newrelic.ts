@@ -11,5 +11,9 @@ module.exports.newrelic = {
 		rules: {
 			ignore: ['^/socket.io/*/xhr-polling']
 		}
+	},
+	capture_params: true,
+	browser_monitoring: {
+		enable: false
 	}
 };
