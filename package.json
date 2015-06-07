@@ -40,6 +40,7 @@
     "sails-hook-newrelic": "^0.2.2",
     "sails-mongo": "^0.10.6",
     "socket.io-redis": "^0.1.4",
+    "stack-trace": "0.0.9",
     "streamifier": "^0.1.1",
     "stripe": "^3.3.4",
     "swig": "^1.4.2"
