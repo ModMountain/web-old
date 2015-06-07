@@ -95,13 +95,16 @@ module.exports = {
         } else if (req.body.tags === undefined) {
 	        req.flash('error', 'You must specify tags with your addon!');
 	        res.redirect('/profile/addons/create');
-        } else if (req.files.galleryImages === undefined || req.files.bannerImage === undefined || req.files.thinCardImage === undefined || req.files.wideCardImage === undefined) {
-	        req.flash('error', 'You must provide all four types of image with your addon!');
+        } else if (req.files.galleryImages === undefined || req.files.thinCardImage === undefined || req.files.wideCardImage === undefined) {
+	        req.flash('error', 'You must provide a thin card image, wide card image, and at least 3 gallery images with your addon!');
 	        res.redirect('/profile/addons/create');
         } else if (!Array.isArray(req.files.galleryImages) || req.files.galleryImages.length < 3) {
 	        req.flash('error', 'You must provide at least 3 gallery images!');
 	        res.redirect('/profile/addons/create');
         } else {
+	        var bannerImage = '';
+	        if (req.files.bannerImage !== undefined) bannerImage = req.files.bannerImage.objectId.toString();
+
 	        var galleryImages =_.map(req.files.galleryImages, function(file) {
 		        return file.objectId.toString();
 	        });
@@ -127,7 +130,7 @@ module.exports = {
 	            galleryImages: galleryImages,
 	            thinCardImage: req.files.thinCardImage.objectId.toString(),
 	            wideCardImage: req.files.wideCardImage.objectId.toString(),
-	            bannerImage: req.files.bannerImage.objectId.toString()
+	            bannerImage: bannerImage
             }).then(function (addon) {
                 return [addon, User.findOne(req.session.passport.user).populate('addons')];
             }).spread(function (addon, user) {

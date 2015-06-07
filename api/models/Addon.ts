@@ -132,12 +132,12 @@ var AddonModel = {
 		// The image shown on the home page (featured or latest addon), stored as a GridFS ObjectID
 		thinCardImage: {
 			type: 'string',
-			//required: true
+			required: true
 		},
 		// The image shown on the addons page, stored as a GridFS ObjectID
 		wideCardImage: {
 			type: 'string',
-			//required: true
+			required: true
 		},
 		// The image shown on the home page slider, stored as a GridFS ObjectID
 		bannerImage: {
