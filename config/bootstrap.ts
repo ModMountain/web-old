@@ -34,9 +34,9 @@ var setGlobals = function () {
     });
 
     if (sails.config.environment === 'production') {
-        sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets-jessesavary.netdna-ssl.com'
+        sails.hooks.http.app.locals.assetPrefix = '//modmountain-assets-jessesavary.netdna-ssl.com/assets'
     } else {
-        sails.hooks.http.app.locals.assetPrefix = ''
+        sails.hooks.http.app.locals.assetPrefix = '/assets'
     }
 };
 

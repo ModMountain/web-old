@@ -2,8 +2,8 @@
 
 {% block css %}
 	{% include 'components/profile/commoncss.swig.html' %}
-	<link rel="stylesheet" href="/plugins/ladda-buttons/css/ladda.min.css">
-	<link rel="stylesheet" href="/plugins/ladda-buttons/css/custom-lada-btn.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/ladda-buttons/css/ladda.min.css">
+	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/ladda-buttons/css/custom-lada-btn.css">
 {% endblock %}
 
 {% block content %}
@@ -84,7 +84,7 @@
 {% endblock %}
 
 {% block scripts %}
-	<script type="text/javascript" src="/plugins/ladda-buttons/js/ladda.js"></script>
-	<script type="text/javascript" src="/plugins/ladda-buttons/js/spin.js"></script>
-	<script type="text/javascript"  src="{{ assetPrefix }}/js/pages/profile/tickets.js"></script>
+	<script src="{{ assetPrefix }}/plugins/ladda-buttons/js/ladda.js"></script>
+	<script src="{{ assetPrefix }}/plugins/ladda-buttons/js/spin.js"></script>
+	<script src="{{ assetPrefix }}/js/pages/profile/tickets.js"></script>
 {% endblock %}

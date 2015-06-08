@@ -2,6 +2,8 @@
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 
+var NewRelic = require('newrelic');
+
 module.exports = {
 	_config: {
 		actions: false,
@@ -10,6 +12,7 @@ module.exports = {
 	},
 
 	index: function (req, res) {
+		NewRelic.setTransactionName('UsersController.index');
 		User.find()
 			.then(function (users) {
 				res.view({
@@ -22,6 +25,7 @@ module.exports = {
 	},
 
 	viewUser: function (req, res) {
+		NewRelic.setTransactionName('UsersController.viewUser');
 		var userId = req.param('id');
 		User.findOne(userId).populate('addons')
 			.then(function (user:User) {

@@ -2,6 +2,8 @@
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 
+var NewRelic = require('newrelic');
+
 module.exports = {
     _config: {
         actions: true,
@@ -10,7 +12,8 @@ module.exports = {
     },
 
     addons: function (req, res) {
-        Addon.find({status: Addon.Status.PENDING}).populate('author')
+	    NewRelic.setTransactionName('StaffController.addons');
+	    Addon.find({status: Addon.Status.PENDING}).populate('author')
             .then(function (addons) {
                 res.view({
                     title: "Unapproved Addons",
@@ -22,7 +25,8 @@ module.exports = {
     },
 
     approveAddon: function (req, res) {
-        var addonId = req.param('addonId');
+	    NewRelic.setTransactionName('StaffController.approveAddon');
+	    var addonId = req.param('addonId');
         Addon.update(addonId, {status: Addon.Status.APPROVED})
             .then(function (addon) {
                 if (req.isSocket) {
@@ -44,7 +48,8 @@ module.exports = {
     },
 
     denyAddon: function (req, res) {
-        var addonId = req.param('addonId');
+	    NewRelic.setTransactionName('StaffController.denyAddon');
+	    var addonId = req.param('addonId');
         Addon.update(addonId, {status: Addon.Status.DENIED})
             .then(function (addon) {
                 if (req.isSocket) {
@@ -66,7 +71,8 @@ module.exports = {
     },
 
     tickets: function (req, res) {
-        Ticket.find({status: TicketStatus.SUBMITTER_RESPONSE}).populate('submitter').populate('handler').populate('affectedAddon')
+	    NewRelic.setTransactionName('StaffController.tickets');
+	    Ticket.find({status: TicketStatus.SUBMITTER_RESPONSE}).populate('submitter').populate('handler').populate('affectedAddon')
             .then(function (tickets) {
                 res.view({
                     title: "Ticket Queue",
@@ -82,7 +88,8 @@ module.exports = {
     },
 
     viewTicket: function (req, res) {
-        var ticketId = req.param('id');
+	    NewRelic.setTransactionName('StaffController.viewTicket');
+	    var ticketId = req.param('id');
         if (req.isSocket) Ticket.subscribe(req.socket, ticketId);
         else {
             Ticket.findOne(ticketId).populate('submitter').populate('handler').populate('responses').populate('affectedAddon')
@@ -114,7 +121,8 @@ module.exports = {
     },
 
     respondToTicket: function (req, res) {
-        var ticketId = req.param('id');
+	    NewRelic.setTransactionName('StaffController.respondToTicket');
+	    var ticketId = req.param('id');
         Ticket.findOne(ticketId)
             .then(function (ticket) {
                 if (ticket === undefined) return res.send(404);

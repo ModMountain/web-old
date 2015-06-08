@@ -53,7 +53,6 @@ module.exports = {
                 'multer',
                 'morgan',
                 'router',
-                'www',
                 '404',
                 '500'
             ],

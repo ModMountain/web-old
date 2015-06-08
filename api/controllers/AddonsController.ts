@@ -13,6 +13,7 @@ PayPal.configure({
 	client_secret: sails.config.paypal.secret,
 });
 var Needle = require('needle');
+var NewRelic = require('newrelic');
 
 module.exports = {
 	_config: {
@@ -22,6 +23,7 @@ module.exports = {
 	},
 
 	index: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.index');
 		Promise.join(Addon.count({status: Addon.Status.PUBLISHED}), Addon.find({status: Addon.Status.PUBLISHED}).paginate({
 			page: 0,
 			limit: 10
@@ -48,6 +50,7 @@ module.exports = {
 	},
 
 	viewAddon: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.viewAddon');
 		var addonId:String = req.param('id');
 		Addon.findOne(addonId).populate('author').populate('reviews').populate('tags').populate('purchasers')
 			.then(function (addon:Addon) {
@@ -79,6 +82,7 @@ module.exports = {
 	},
 
 	download: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.download');
 		var addonId:String = req.param('id');
 		Addon.findOne(addonId).populate('purchasers')
 			.then(function (addon:Addon) {
@@ -114,6 +118,7 @@ module.exports = {
 	},
 
 	artwork: function(req, res) {
+		NewRelic.setTransactionName('AddonsController.artwork');
 		var addonId:string = req.param('id');
 		var artwork:string = req.param('artwork');
 		Addon.findOne(addonId)
@@ -144,6 +149,7 @@ module.exports = {
 	},
 
 	validateCoupon: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.validateCoupon');
 		if (!req.isSocket) {
 			req.flash('error', 'Only sockets may validate coupons');
 			res.redirect('/')
@@ -169,6 +175,7 @@ module.exports = {
 	},
 
 	accountBalanceCheckout: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.accountBalanceCheckout');
 		if (req.user === undefined) {
 			req.socket.emit('notification', {type: 'error', msg: 'You must be logged in to make purchases.'})
 		} else {
@@ -270,6 +277,7 @@ module.exports = {
 	},
 
 	paypalCheckout: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.paypalCheckout');
 		var addonId:String = req.param('addonId');
 		Addon.findOne(addonId).populate('author').populate('purchasers')
 			.then(function (addon:Addon) {
@@ -376,6 +384,7 @@ module.exports = {
 	},
 
 	paypalCheckoutGET: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.paypalCheckoutGET');
 		var addonId = req.param('id');
 		var paypalId = req.param('paymentId');
 		var payerId = req.param('PayerID');
@@ -434,6 +443,7 @@ module.exports = {
 	},
 
 	stripeCheckout: function (req, res) {
+		NewRelic.setTransactionName('AddonsController.stripeCheckout');
 		var addonId:String = req.param('addonId');
 		Addon.findOne(addonId).populate('author').populate('purchasers')
 			.then(function (addon:Addon) {

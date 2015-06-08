@@ -105,7 +105,13 @@ module.exports.http = {
             onPartsLimit: function() {
                 console.error("Parts limit reached");
             }
-        })
+        }),
+	    static: require('st')({
+		    path: '.tmp/public/',
+		    url: 'assets/',
+		    cache: false,
+		    index: true // Show directory listings
+	    })
 
         /***************************************************************************
          *                                                                          *

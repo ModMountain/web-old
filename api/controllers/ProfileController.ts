@@ -2,6 +2,8 @@
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 
+var NewRelic = require('newrelic');
+
 module.exports = {
     _config: {
         actions: false,
@@ -10,6 +12,7 @@ module.exports = {
     },
 
     purchases: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.purchases');
 	    Promise.all(_.map(req.user.purchases, function(purchase) {
 		    return Addon.findOne(purchase.id).populate('author');
 	    }))
@@ -20,6 +23,7 @@ module.exports = {
     },
 
 	addons: function (req, res) {
+		NewRelic.setTransactionName('ProfileController.addons');
 		Promise.all(_.map(req.user.addons, (addon) => {return Addon.findOne(addon.id).populate('purchasers')}))
 			.then(function (addons) {
 				req.user.addons = addons;
@@ -36,6 +40,7 @@ module.exports = {
 	},
 
     settings: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.settings');
         res.view({
             title: "Your Settings",
             breadcrumbs: [["/profile", "Your Profile"]],
@@ -44,6 +49,7 @@ module.exports = {
     },
 
     settingsPOST: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.settingsPOST');
 	    var oldEmail = req.user.email;
 
         if (req.body.username !== undefined && req.body.username !== '') req.user.username = req.body.username;
@@ -65,15 +71,8 @@ module.exports = {
             })
     },
 
-    jobs: function (req, res) {
-        res.view({
-            title: "Your Jobs",
-            breadcrumbs: [["/profile", "Your Profile"]],
-            activeTab: 'profile.jobs'
-        })
-    },
-
     createAddon: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.createAddon');
         res.view({
             title: "Create Addon",
             subtitle: "Create and Upload a New Addon",
@@ -83,6 +82,7 @@ module.exports = {
     },
 
     createAddonPOST: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.createAddonPOST');
         if (req.files.zipFile === undefined) {
             req.flash('error', 'You must attach a file with your addon!');
             res.redirect('/profile/addons/create');
@@ -149,6 +149,7 @@ module.exports = {
     },
 
     viewAddon: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.viewAddon');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
@@ -180,6 +181,7 @@ module.exports = {
     },
 
     editAddon: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.editAddon');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
@@ -206,6 +208,7 @@ module.exports = {
     },
 
     editAddonPOST: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.editAddonPOST');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon:Addon) {
@@ -258,6 +261,7 @@ module.exports = {
     },
 
     removeAddon: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.removeAddon');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
@@ -287,6 +291,7 @@ module.exports = {
     },
 
     publishAddon: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.publishAddon');
         var addonId = req.param('id');
 	    Addon.findOne(addonId)
 		    .then(function (addon:Addon) {
@@ -319,6 +324,7 @@ module.exports = {
     },
 
 	previewAddon: function(req, res) {
+		NewRelic.setTransactionName('ProfileController.previewAddon');
 		var addonId = req.param('id');
 		Addon.findOne(addonId)
 			.then(function (addon:Addon) {
@@ -340,6 +346,7 @@ module.exports = {
 	},
 
     tickets: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.tickets');
         if (req.isSocket) Ticket.subscribe(req.socket, req.user.tickets);
         else {
             var promises = [];
@@ -369,6 +376,7 @@ module.exports = {
     },
 
     createTicket: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.createTicket');
         res.view({
             title: "Create Ticket",
             subtitle: "Create a New Ticket",
@@ -378,6 +386,7 @@ module.exports = {
     },
 
     createTicketPOST: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.createTicketPOST');
         var tick;
         Ticket.create({
             title: req.param('title'),
@@ -399,6 +408,7 @@ module.exports = {
     },
 
     respondPOST: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.respondPOST');
         var ticketId = req.param('id');
         Ticket.findOne(ticketId)
             .then(function (ticket) {
@@ -424,6 +434,7 @@ module.exports = {
     },
 
     close: function (req, res) {
+	    NewRelic.setTransactionName('ProfileController.close');
         var ticketId = req.param('id');
         Ticket.findOne(ticketId)
             .then(function (ticket) {
@@ -447,6 +458,7 @@ module.exports = {
     },
 
     finances: function(req, res) {
+	    NewRelic.setTransactionName('ProfileController.finances');
         var populatePromiseArray = [];
         req.user.transactions.forEach(function(transaction) {
             populatePromiseArray.push(Transaction.findOne(transaction.id).populate('sender').populate('receiver').populate('addon'));
@@ -465,6 +477,7 @@ module.exports = {
     },
 
 	withdrawal: function(req, res) {
+		NewRelic.setTransactionName('ProfileController.withdrawal');
 		var amount = req.param('amount') * 100;
 		if (amount <= 10) {
 			req.flash('error', "You cannot withdraw any less than $10");
@@ -494,6 +507,7 @@ module.exports = {
 	},
 
 	syncSteam: function(req, res) {
+		NewRelic.setTransactionName('ProfileController.syncSteam');
 		req.user.steamProfile = {};
 		req.user.save()
 		.then(function() {
@@ -503,6 +517,7 @@ module.exports = {
 	},
 
 	couponsPOST: function(req, res) {
+		NewRelic.setTransactionName('ProfileController.couponsPOST');
 		var addonId = req.param('id');
 
 		var code:String = req.param('code');
@@ -542,6 +557,7 @@ module.exports = {
 	},
 
 	deactivateCoupon: function(req, res) {
+		NewRelic.setTransactionName('ProfileController.deactivateCoupon');
 		var addonId = req.param('id');
 		var code:String = req.param('code');
 
