@@ -58,14 +58,16 @@ declare class Model {
     toObject():Object;
 
     toJSON():JSON;
+
+	populate:Promise<Model>;
 }
 
 declare class Addon extends Model {
     name:string;
     price:number;
     discount:number;
-    gamemode:AddonGamemode;
-    type:AddonType;
+    gamemode:Addon.Gamemode;
+    type:Addon.Type;
     zipFile:string;
     size:number;
     shortDescription:string;
@@ -79,7 +81,7 @@ declare class Addon extends Model {
     configuratorEnabled:boolean;
     leakProtectionEnabled:boolean;
     statTrackerEnabled:boolean;
-    status:AddonStatus;
+    status:Addon.Status;
     views:number;
     downloads:number;
     featured:boolean;
@@ -95,6 +97,7 @@ declare class Addon extends Model {
     dependents:Array<Addon>;
     reviews:Array<Review>;
     tags:Array<Tag>;
+	coupons:Array<Object>;
 
     canDownload(user:User):boolean;
     canModify(user:User):boolean;
@@ -110,6 +113,7 @@ declare class Addon extends Model {
 	incrementCoupon(code:String):Promise<void>;
 	decrementCoupon(code:String):Promise<void>;
 	deactivateCoupon(code:String):Promise<void>;
+	getCoupon(code:String):Object;
 }
 
 declare class Job extends Model {
@@ -181,6 +185,9 @@ declare class Transaction extends Model {
     receiverType:TransactionType;
     rawData:Object;
     addon:Addon;
+	paypalId:string;
+	paypalExecuteUrl:string;
+	inProgress:boolean;
 
     prettySenderType:string;
     prettyReceiverType:string;
@@ -261,4 +268,21 @@ declare enum TicketStatus {
 
 declare enum TransactionType {
     DONATION, PURCHASE, INCOME, SALE
+}
+
+/*
+Services
+ */
+
+declare class FeeService {
+	static chargeFee(user:User):void;
+}
+
+declare class NotificationService {
+	static sendGlobalNotification(priority:String, message:String):void;
+	static sendUserNotification(user:User, priority:String, message:String):void;
+}
+
+declare class SlackService {
+	static inviteUserToSlack(user:User):void;
 }

@@ -1,7 +1,7 @@
 /// <reference path='../../typings/node/node.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
+/// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
-var Promise = require('bluebird');
 var Mailgun = require('mailgun').Mailgun;
 var mg = new Mailgun('***REMOVED***');
 var Swig = require('swig');
@@ -17,7 +17,7 @@ var NotificationService = {
             });
     },
 
-    sendUserNotification: function (user, priority:String, message:String) {
+    sendUserNotification: function (user:User, priority:String, message:String) {
         Notification.create({
             receiver: user,
             priority: priority,
