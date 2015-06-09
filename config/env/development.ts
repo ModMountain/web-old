@@ -24,9 +24,6 @@ module.exports = {
         mongodb: {
             adapter: 'sails-mongo',
             url: 'mongodb://localhost:27017/modmountain_development'
-        },
-        localDiskDb: {
-            adapter: 'sails-disk'
         }
     },
 
