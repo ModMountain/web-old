@@ -14,4 +14,6 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.session.html
  */
 
-module.exports.session = {};
+module.exports.session = {
+	adapter: 'redis'
+};
