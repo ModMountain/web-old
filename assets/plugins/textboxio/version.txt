@@ -1,2 +1,0 @@
-Textbox.io 1.2.0.287
-Client build 1.2.0.368
