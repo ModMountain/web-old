@@ -20,8 +20,10 @@ module.exports = {
 	host: '127.0.0.1',
 
 	express: {
-		key: FS.readFileSync('/usr/local/nginx/ssl/modmountain/bundle.pem'),
-		cert: FS.readFileSync('/usr/local/nginx/ssl/modmountain/modmountain.key')
+		serverOptions: {
+			key: FS.readFileSync('/usr/local/nginx/ssl/modmountain/bundle.pem'),
+			cert: FS.readFileSync('/usr/local/nginx/ssl/modmountain/modmountain.key')
+		}
 	},
 
     log: {
