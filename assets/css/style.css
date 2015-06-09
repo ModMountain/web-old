@@ -6,13 +6,7 @@
  * Website: http://htmlstream.com
 */
 
-/*Import Global Compulsory CSS Files*/
-@import url(ie8.css);
-@import url(blocks.css);
-@import url(plugins.css);
-@import url(app.css);
-
-body { 
+body {
    color: #333; 
    font-size: 13px;
    line-height: 1.6;
