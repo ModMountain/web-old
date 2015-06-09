@@ -185,12 +185,12 @@
 
 {% block scripts %}
     {#<script src="/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>#}
-    <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
-    <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
-    <script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
-    <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
-	<script>
+    <script async src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
+    <script async src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
+    <script async src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
+    <script async src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+	<script async>
 		$("#descriptionEditor").markdown({autofocus: false, savable: false, fullscreen: false, iconlibrary: 'mm'})
 	</script>
-    <script src="{{ assetPrefix }}/js/pages/profile/createAddon.js"></script>
+    <script async src="{{ assetPrefix }}/js/pages/profile/createAddon.js"></script>
 {% endblock %}

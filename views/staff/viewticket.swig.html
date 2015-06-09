@@ -65,8 +65,8 @@
 {% endblock %}
 
 {% block scripts %}
-	<script>
+	<script async>
 		window.ticketId = "{{ ticket.id }}";
 	</script>
-    <script src="{{ assetPrefix }}/js/pages/staff/tickets.js"></script>
+    <script async src="{{ assetPrefix }}/js/pages/staff/tickets.js"></script>
 {% endblock %}

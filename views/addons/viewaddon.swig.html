@@ -261,9 +261,9 @@
 {% endblock %}
 
 {% block scripts %}
-	<script src="https://checkout.stripe.com/checkout.js"></script>
-	<script src="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/masterslider.min.js"></script>
-	<script>
+	<script async src="https://checkout.stripe.com/checkout.js"></script>
+	<script async src="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/masterslider.min.js"></script>
+	<script async>
 		// Attach the addon to the window so it can be accessed from client-side Javascript
 		window.addon = {{ addon|json|safe }};
 		window.stripePublicKey = '{{ sails.config.stripe.publicKey }}';
@@ -302,5 +302,5 @@
 
 		MasterSliderShowcase2.initMasterSliderShowcase2();
 	</script>
-	<script src="{{ assetPrefix }}/js/pages/addons/viewaddon.js"></script>
+	<script async src="{{ assetPrefix }}/js/pages/addons/viewaddon.js"></script>
 {% endblock %}
