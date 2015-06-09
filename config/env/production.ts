@@ -16,80 +16,78 @@ var FS = require('fs');
 
 module.exports = {
 
-    port: 4337,
+	port: 4337,
 	host: '127.0.0.1',
 
-	express: {
-		serverOptions: {
-			key: FS.readFileSync('/usr/local/nginx/ssl/modmountain/bundle.pem'),
-			cert: FS.readFileSync('/usr/local/nginx/ssl/modmountain/modmountain.key')
+	ssl: {
+		key: FS.readFileSync('/usr/local/nginx/ssl/modmountain/bundle.pem'),
+		cert: FS.readFileSync('/usr/local/nginx/ssl/modmountain/modmountain.key')
+	},
+
+	log: {
+		level: 'info'
+	},
+
+	connections: {
+		mongodb: {
+			adapter: 'sails-mongo',
+			url: 'mongodb://localhost:27017/modmountain_production'
 		}
 	},
 
-    log: {
-        level: 'info'
-    },
+	session: {
+		secret: '***REMOVED***',
+		cookie: {
+			maxAge: 24 * 60 * 60 * 1000 * 30
+		}
+	},
 
-    connections: {
-        mongodb: {
-            adapter: 'sails-mongo',
-            url: 'mongodb://localhost:27017/modmountain_production'
-        }
-    },
+	models: {
+		connection: 'mongodb',
+		migrate: 'safe'
+	},
 
-    session: {
-        secret: '***REMOVED***',
-        cookie: {
-            maxAge: 24 * 60 * 60 * 1000 * 30
-        }
-    },
+	http: {
+		middleware: {
+			order: [
+				'favicon',
+				'cookieParser',
+				'session',
+				'passportInit',
+				'passportSession',
+				'userToTemplate',
+				'multer',
+				'morgan',
+				'router',
+				'404',
+				'500'
+			],
+		}
+	},
 
-    models: {
-        connection: 'mongodb',
-        migrate: 'safe'
-    },
+	auth: {
+		steam: {
+			returnURL: "https://modmountain.com/auth/steamCallback",
+			realm: 'https://modmountain.com/',
+			apiKey: '***REMOVED***'
+		}
+	},
 
-    http: {
-        middleware: {
-            order: [
-                'favicon',
-                'cookieParser',
-                'session',
-                'passportInit',
-                'passportSession',
-                'userToTemplate',
-                'multer',
-                'morgan',
-                'router',
-                '404',
-                '500'
-            ],
-        }
-    },
-
-    auth: {
-        steam: {
-            returnURL: "https://modmountain.com/auth/steamCallback",
-            realm: 'https://modmountain.com/',
-            apiKey: '***REMOVED***'
-        }
-    },
-
-    // Turn view caching on for production
-    views: {
-        engine: {
-            ext: 'swig.html',
-            fn: function (pathName, locals, cb) {
-                var swig = require('swig');
-                swig.setDefaults({
-                    root: process.cwd() + '/views',
-                    cache: 'memory',
-                    loader: swig.loaders.fs(process.cwd() + '/views')
-                });
-                return swig.renderFile(pathName, locals, cb);
-            }
-        }
-    },
+	// Turn view caching on for production
+	views: {
+		engine: {
+			ext: 'swig.html',
+			fn: function (pathName, locals, cb) {
+				var swig = require('swig');
+				swig.setDefaults({
+					root: process.cwd() + '/views',
+					cache: 'memory',
+					loader: swig.loaders.fs(process.cwd() + '/views')
+				});
+				return swig.renderFile(pathName, locals, cb);
+			}
+		}
+	},
 
 	stripe: {
 		secretKey: '***REMOVED***',
