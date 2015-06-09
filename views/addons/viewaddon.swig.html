@@ -262,7 +262,7 @@
 
 {% block scripts %}
 	<script async src="https://checkout.stripe.com/checkout.js"></script>
-	<script async src="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/masterslider.min.js"></script>
+	<script async src="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/masterslider.js"></script>
 	<script async>
 		// Attach the addon to the window so it can be accessed from client-side Javascript
 		window.addon = {{ addon|json|safe }};
