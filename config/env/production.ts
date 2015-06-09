@@ -24,6 +24,10 @@ module.exports = {
 		key: FS.readFileSync('/usr/local/nginx/ssl/modmountain/modmountain.key')
 	},
 
+	grunt: {
+		_hookTimeout: 1000 * 60 * 2 // 2 minutes for Grunt to do all of its Grunt stuff
+	},
+
 	log: {
 		level: 'info'
 	},
