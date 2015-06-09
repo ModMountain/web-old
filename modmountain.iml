@@ -8,7 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="modmountain node_modules" level="project" />
+    <orderEntry type="library" name="b63071a6" level="application" />
+    <orderEntry type="library" name="modmtn node_modules" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">

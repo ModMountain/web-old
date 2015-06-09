@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MongoConfiguration">
+    <option name="serverConfigurations">
+      <list>
+        <ServerConfiguration>
+          <option name="connectOnIdeStartup" value="true" />
+          <option name="label" value="Localhost" />
+          <option name="serverUrls">
+            <list>
+              <option value="localhost:27017" />
+            </list>
+          </option>
+          <option name="userDatabase" value="modmountain_development" />
+          <option name="userDatabaseAsMySingleDatabase" value="true" />
+        </ServerConfiguration>
+        <ServerConfiguration>
+          <option name="label" value="Remote" />
+          <option name="serverUrls">
+            <list>
+              <option value="localhost:27019" />
+            </list>
+          </option>
+        </ServerConfiguration>
+      </list>
+    </option>
+  </component>
+</project>
