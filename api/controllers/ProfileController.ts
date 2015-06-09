@@ -12,7 +12,7 @@ module.exports = {
     },
 
     purchases: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.purchases');
+	    NewRelic.setControllerName('ProfileController.purchases');
 	    Promise.all(_.map(req.user.purchases, function(purchase) {
 		    return Addon.findOne(purchase.id).populate('author');
 	    }))
@@ -23,7 +23,7 @@ module.exports = {
     },
 
 	addons: function (req, res) {
-		NewRelic.setTransactionName('ProfileController.addons');
+		NewRelic.setControllerName('ProfileController.addons');
 		Promise.all(_.map(req.user.addons, (addon) => {return Addon.findOne(addon.id).populate('purchasers')}))
 			.then(function (addons) {
 				req.user.addons = addons;
@@ -40,7 +40,7 @@ module.exports = {
 	},
 
     settings: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.settings');
+	    NewRelic.setControllerName('ProfileController.settings');
         res.view({
             title: "Your Settings",
             breadcrumbs: [["/profile", "Your Profile"]],
@@ -49,7 +49,7 @@ module.exports = {
     },
 
     settingsPOST: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.settingsPOST');
+	    NewRelic.setControllerName('ProfileController.settingsPOST');
 	    var oldEmail = req.user.email;
 
         if (req.body.username !== undefined && req.body.username !== '') req.user.username = req.body.username;
@@ -72,7 +72,7 @@ module.exports = {
     },
 
     createAddon: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.createAddon');
+	    NewRelic.setControllerName('ProfileController.createAddon');
         res.view({
             title: "Create Addon",
             subtitle: "Create and Upload a New Addon",
@@ -82,7 +82,7 @@ module.exports = {
     },
 
     createAddonPOST: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.createAddonPOST');
+	    NewRelic.setControllerName('ProfileController.createAddonPOST');
         if (req.files.zipFile === undefined) {
             req.flash('error', 'You must attach a file with your addon!');
             res.redirect('/profile/addons/create');
@@ -149,7 +149,7 @@ module.exports = {
     },
 
     viewAddon: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.viewAddon');
+	    NewRelic.setControllerName('ProfileController.viewAddon');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
@@ -181,7 +181,7 @@ module.exports = {
     },
 
     editAddon: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.editAddon');
+	    NewRelic.setControllerName('ProfileController.editAddon');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
@@ -208,7 +208,7 @@ module.exports = {
     },
 
     editAddonPOST: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.editAddonPOST');
+	    NewRelic.setControllerName('ProfileController.editAddonPOST');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon:Addon) {
@@ -261,7 +261,7 @@ module.exports = {
     },
 
     removeAddon: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.removeAddon');
+	    NewRelic.setControllerName('ProfileController.removeAddon');
         var addonId = req.param('id');
         Addon.findOne(addonId)
             .then(function (addon) {
@@ -291,7 +291,7 @@ module.exports = {
     },
 
     publishAddon: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.publishAddon');
+	    NewRelic.setControllerName('ProfileController.publishAddon');
         var addonId = req.param('id');
 	    Addon.findOne(addonId)
 		    .then(function (addon:Addon) {
@@ -324,7 +324,7 @@ module.exports = {
     },
 
 	previewAddon: function(req, res) {
-		NewRelic.setTransactionName('ProfileController.previewAddon');
+		NewRelic.setControllerName('ProfileController.previewAddon');
 		var addonId = req.param('id');
 		Addon.findOne(addonId)
 			.then(function (addon:Addon) {
@@ -346,7 +346,7 @@ module.exports = {
 	},
 
     tickets: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.tickets');
+	    NewRelic.setControllerName('ProfileController.tickets');
         if (req.isSocket) Ticket.subscribe(req.socket, req.user.tickets);
         else {
             var promises = [];
@@ -376,7 +376,7 @@ module.exports = {
     },
 
     createTicket: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.createTicket');
+	    NewRelic.setControllerName('ProfileController.createTicket');
         res.view({
             title: "Create Ticket",
             subtitle: "Create a New Ticket",
@@ -386,7 +386,7 @@ module.exports = {
     },
 
     createTicketPOST: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.createTicketPOST');
+	    NewRelic.setControllerName('ProfileController.createTicketPOST');
         var tick;
         Ticket.create({
             title: req.param('title'),
@@ -408,7 +408,7 @@ module.exports = {
     },
 
     respondPOST: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.respondPOST');
+	    NewRelic.setControllerName('ProfileController.respondPOST');
         var ticketId = req.param('id');
         Ticket.findOne(ticketId)
             .then(function (ticket) {
@@ -434,7 +434,7 @@ module.exports = {
     },
 
     close: function (req, res) {
-	    NewRelic.setTransactionName('ProfileController.close');
+	    NewRelic.setControllerName('ProfileController.close');
         var ticketId = req.param('id');
         Ticket.findOne(ticketId)
             .then(function (ticket) {
@@ -458,7 +458,7 @@ module.exports = {
     },
 
     finances: function(req, res) {
-	    NewRelic.setTransactionName('ProfileController.finances');
+	    NewRelic.setControllerName('ProfileController.finances');
         var populatePromiseArray = [];
         req.user.transactions.forEach(function(transaction) {
             populatePromiseArray.push(Transaction.findOne(transaction.id).populate('sender').populate('receiver').populate('addon'));
@@ -477,7 +477,7 @@ module.exports = {
     },
 
 	withdrawal: function(req, res) {
-		NewRelic.setTransactionName('ProfileController.withdrawal');
+		NewRelic.setControllerName('ProfileController.withdrawal');
 		var amount = req.param('amount') * 100;
 		if (amount <= 10) {
 			req.flash('error', "You cannot withdraw any less than $10");
@@ -507,7 +507,7 @@ module.exports = {
 	},
 
 	syncSteam: function(req, res) {
-		NewRelic.setTransactionName('ProfileController.syncSteam');
+		NewRelic.setControllerName('ProfileController.syncSteam');
 		req.user.steamProfile = {};
 		req.user.save()
 		.then(function() {
@@ -517,7 +517,7 @@ module.exports = {
 	},
 
 	couponsPOST: function(req, res) {
-		NewRelic.setTransactionName('ProfileController.couponsPOST');
+		NewRelic.setControllerName('ProfileController.couponsPOST');
 		var addonId = req.param('id');
 
 		var code:String = req.param('code');
@@ -557,7 +557,7 @@ module.exports = {
 	},
 
 	deactivateCoupon: function(req, res) {
-		NewRelic.setTransactionName('ProfileController.deactivateCoupon');
+		NewRelic.setControllerName('ProfileController.deactivateCoupon');
 		var addonId = req.param('id');
 		var code:String = req.param('code');
 

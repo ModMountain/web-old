@@ -12,7 +12,7 @@ module.exports = {
 	},
 
 	index: function (req, res) {
-		NewRelic.setTransactionName('UsersController.index');
+		NewRelic.setControllerName('UsersController.index');
 		User.find()
 			.then(function (users) {
 				res.view({
@@ -25,7 +25,7 @@ module.exports = {
 	},
 
 	viewUser: function (req, res) {
-		NewRelic.setTransactionName('UsersController.viewUser');
+		NewRelic.setControllerName('UsersController.viewUser');
 		var userId = req.param('id');
 		User.findOne(userId).populate('addons')
 			.then(function (user:User) {

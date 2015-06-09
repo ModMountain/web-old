@@ -12,7 +12,7 @@ module.exports = {
 	},
 
 	home: function (req, res) {
-		NewRelic.setTransactionName('StaticController.home');
+		NewRelic.setControllerName('StaticController.home');
 		Promise.join(
 			Addon.find({status: Addon.Status.PUBLISHED, featured: true}).limit(4),
 			Addon.find({status: Addon.Status.PUBLISHED}).sort({createdAt: 'asc'}).limit(10)
@@ -35,7 +35,7 @@ module.exports = {
 	},
 
 	privacyPolicy: function (req, res) {
-		NewRelic.setTransactionName('StaticController.privacyPolicy');
+		NewRelic.setControllerName('StaticController.privacyPolicy');
 		res.view({
 			title: 'Privacy Policy',
 			activeTab: 'extra',
@@ -44,7 +44,7 @@ module.exports = {
 	},
 
 	termsOfService: function (req, res) {
-		NewRelic.setTransactionName('StaticController.termsOfService');
+		NewRelic.setControllerName('StaticController.termsOfService');
 		res.view({
 			title: 'Terms of Service',
 			activeTab: 'extra',
@@ -53,7 +53,7 @@ module.exports = {
 	},
 
 	codeOfConduct: function (req, res) {
-		NewRelic.setTransactionName('StaticController.codeOfConduct');
+		NewRelic.setControllerName('StaticController.codeOfConduct');
 		res.view({
 			title: 'Code of Conduct',
 			activeTab: 'extra',

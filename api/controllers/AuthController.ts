@@ -13,24 +13,24 @@ module.exports = {
     },
 
     login: function(req, res) {
-	    NewRelic.setTransactionName('AuthController.login');
+	    NewRelic.setControllerName('AuthController.login');
         if (req.user) res.redirect('/profile');
         else res.redirect('/auth/steamSignIn');
     },
 
     logout: function(req, res) {
-	    NewRelic.setTransactionName('AuthController.logout');
+	    NewRelic.setControllerName('AuthController.logout');
         req.logout();
         res.redirect('/');
     },
 
     steamSignIn: function(req, res, next) {
-	    NewRelic.setTransactionName('AuthController.steamSignIn');
+	    NewRelic.setControllerName('AuthController.steamSignIn');
         Passport.authenticate('steam')(req, res, next);
     },
 
     steamCallback: function(req, res, next) {
-	    NewRelic.setTransactionName('AuthController.steamCallback');
+	    NewRelic.setControllerName('AuthController.steamCallback');
         Passport.authenticate('steam', {successRedirect: '/profile', failureRedirect: '/auth/login'})(req, res, next);
     }
 };

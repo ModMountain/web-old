@@ -12,7 +12,7 @@ module.exports = {
     },
 
     addons: function (req, res) {
-	    NewRelic.setTransactionName('StaffController.addons');
+	    NewRelic.setControllerName('StaffController.addons');
 	    Addon.find({status: Addon.Status.PENDING}).populate('author')
             .then(function (addons) {
                 res.view({
@@ -25,7 +25,7 @@ module.exports = {
     },
 
     approveAddon: function (req, res) {
-	    NewRelic.setTransactionName('StaffController.approveAddon');
+	    NewRelic.setControllerName('StaffController.approveAddon');
 	    var addonId = req.param('addonId');
         Addon.update(addonId, {status: Addon.Status.APPROVED})
             .then(function (addon) {
@@ -48,7 +48,7 @@ module.exports = {
     },
 
     denyAddon: function (req, res) {
-	    NewRelic.setTransactionName('StaffController.denyAddon');
+	    NewRelic.setControllerName('StaffController.denyAddon');
 	    var addonId = req.param('addonId');
         Addon.update(addonId, {status: Addon.Status.DENIED})
             .then(function (addon) {
@@ -71,7 +71,7 @@ module.exports = {
     },
 
     tickets: function (req, res) {
-	    NewRelic.setTransactionName('StaffController.tickets');
+	    NewRelic.setControllerName('StaffController.tickets');
 	    Ticket.find({status: TicketStatus.SUBMITTER_RESPONSE}).populate('submitter').populate('handler').populate('affectedAddon')
             .then(function (tickets) {
                 res.view({
@@ -88,7 +88,7 @@ module.exports = {
     },
 
     viewTicket: function (req, res) {
-	    NewRelic.setTransactionName('StaffController.viewTicket');
+	    NewRelic.setControllerName('StaffController.viewTicket');
 	    var ticketId = req.param('id');
         if (req.isSocket) Ticket.subscribe(req.socket, ticketId);
         else {
@@ -121,7 +121,7 @@ module.exports = {
     },
 
     respondToTicket: function (req, res) {
-	    NewRelic.setTransactionName('StaffController.respondToTicket');
+	    NewRelic.setControllerName('StaffController.respondToTicket');
 	    var ticketId = req.param('id');
         Ticket.findOne(ticketId)
             .then(function (ticket) {
