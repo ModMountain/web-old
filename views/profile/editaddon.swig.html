@@ -185,10 +185,10 @@
 {% endblock %}
 
 {% block scripts %}
-	<script async src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
-	<script async src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
-	<script async src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
-	<script async src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
+	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
+	<script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
+	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
 	<script async>
 		// Attach the addon to the window so it can be accessed from client-side Javascript
 		window.addon = {{ addon|json|safe }};
