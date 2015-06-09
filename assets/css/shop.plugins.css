@@ -1,14 +1,4 @@
-/*   
- * Template Name: Unify - Responsive Bootstrap Template
- * Description: Business, Corporate, Portfolio, E-commerce and Blog Theme.
- * Version: 1.7
- * Author: @htmlstream
- * Website: http://htmlstream.com
-*/
-
-/*Master Slider
-------------------------------------*/
-.ms-showcase2-template { 
+.ms-showcase2-template {
   margin: 0 auto;
   max-width: 550px; 
 }
@@ -16,8 +6,6 @@
   background: transparent;
 }
 
-/*Revolution Slider (Main)
-------------------------------------*/
 .tp-bullets.preview4 .bullet {
   border-radius: 10px !important;
 }
@@ -47,14 +35,12 @@
   position: relative;
 }
 
-/*Fullscreen*/
 .fullscreen-container {
   width:100%;
   position:relative;
   padding:0;
 }
 
-/*Slider Contents v1*/
 .revolution-mch-1:after {
   top: 0;
   left: 0;
@@ -132,8 +118,6 @@
   font-family: "Open Sans", sans-serif;
 }
 
-/*Back to top Button
-------------------------------------*/
 #topcontrol {
   color: #fff;
   z-index: 99;
