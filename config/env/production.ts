@@ -12,10 +12,17 @@
  *
  */
 
+var FS = require('fs');
+
 module.exports = {
 
     port: 4337,
 	host: '127.0.0.1',
+
+	express: {
+		key: FS.readFileSync('/usr/local/nginx/ssl/modmountain/bundle.pem'),
+		cert: FS.readFileSync('/usr/local/nginx/ssl/modmountain/modmountain.key')
+	},
 
     log: {
         level: 'info'
