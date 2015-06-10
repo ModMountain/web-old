@@ -26,7 +26,6 @@ module.exports = {
 				});
 
 				res.view({
-					title: 'Mod Mountain',
 					activeTab: 'home',
 					featuredAddons: featuredAddons,
 					latestAddons: latestAddons
