@@ -42,7 +42,7 @@
                                             <label class="label">Desired Price</label>
                                             <label class="input">
                                                 <i class="icon-prepend icon icon-usd"></i>
-                                                <input type="number" step="any" value="{{ addon.price }}" name="price" id="priceInput" required>
+                                                <input type="number" step="any" value="{{ addon.price / 100 }}" name="price" id="priceInput" required>
                                                 <b class="tooltip tooltip-bottom-left">This is how much you would like your addon to sell for. If you want this to be a free addon, enter 0.</b>
                                             </label>
                                         </section>
