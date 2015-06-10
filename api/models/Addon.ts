@@ -190,14 +190,16 @@ var AddonModel = {
 		 * @returns {boolean} Whether or not the user can download the addon.
 		 */
 		canDownload: function (user):Boolean {
-			//if (this.author === user.id || user.permissionLevel >= 1 || this.price === 0) {
-			//	return true;
-			//} else {
-				for (var i = 0; i < this.purchasers.length; i++) {
-					if (this.purchasers[i].id === user.id) return true;
-				}
-				return false;
-			//}
+			// If this is a production env, the user can download an addon if they're the author, an admin, or if it's free
+			if (process.env.NODE_ENV === 'production' && (this.author === user.id || user.permissionLevel >= 1 || this.price === 0)) {
+				return true;
+			}
+			// Otherwise they must have purchased it
+			for (var i = 0; i < this.purchasers.length; i++) {
+				if (this.purchasers[i].id === user.id) return true;
+			}
+			// If they didn't pass one of the above checks, they cannot download it
+			return false;
 		},
 
 		/**
