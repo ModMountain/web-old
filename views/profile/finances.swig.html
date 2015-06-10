@@ -18,8 +18,9 @@
 
 						<form class="form-inline" method="POST" action="/profile/finances/withdrawal"
 						      enctype="multipart/form-data">
-							<input type="hidden" name="_csrf" value="{{ _csrf }}" />
-								<div class="form-group">
+							<input type="hidden" name="_csrf" value="{{ _csrf }}"/>
+
+							<div class="form-group">
 								<label for="codeInput">Amount</label>
 								<input type="number" class="form-control" name="amount" id="amountInput" required>
 							</div>
@@ -48,17 +49,12 @@
 									{% for transaction in user.transactions %}
 										<tr>
 											<td>
-												{# If this user sent the transaction #}
-												{% if transaction.sender.id == user.id %}
-													{{ transaction.prettySenderType() }}
-												{% else %}
-													{{ transaction.prettyReceiverType() }}
-												{% endif %}
+												{{ transaction.prettyType() }}
 											</td>
 											<td>
 												<a href="/addons/{{ transaction.addon.id }}">{{ transaction.addon.name }}</a>
 											</td>
-											<td>${{ transaction.amount / 100 }}</td>
+											<td>${{ transaction.netAmount / 100 }}</td>
 											<td>{{ transaction.createdAt.toDateString() }}</td>
 										</tr>
 									{% endfor %}

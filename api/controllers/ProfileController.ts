@@ -112,7 +112,7 @@ module.exports = {
             Addon.create({
                 // General tab
                 name: req.body.name,
-                price: req.body.price,
+                price: parseFloat(req.body.price) * 100,
                 gamemode: req.body.gamemode,
                 type: req.body.type,
                 zipFile: req.files.zipFile.objectId.toString(),
@@ -229,6 +229,10 @@ module.exports = {
 								return file.objectId.toString();
 							});
 						}
+
+	                    if (req.body.price) {
+		                    req.body.price = parseFloat(req.body.price) * 100;
+	                    }
 
                         var oldStatus = addon.status;
                         Addon.update(addonId, req.body)
@@ -459,6 +463,7 @@ module.exports = {
 
     finances: function(req, res) {
 	    NewRelic.setControllerName('ProfileController.finances');
+	    console.log(req.user.transactions)
         var populatePromiseArray = [];
         req.user.transactions.forEach(function(transaction) {
             populatePromiseArray.push(Transaction.findOne(transaction.id).populate('sender').populate('receiver').populate('addon'));

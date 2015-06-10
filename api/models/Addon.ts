@@ -17,8 +17,8 @@ var AddonModel = {
 		price: {
 			type: 'number',
 			required: true,
-			min: 0.0,
-			max: 1000.0
+			min: 0,
+			max: 25000
 		},
 		// How much the addon is discounted. This is a percentage from 1% to 99%.
 		discount: {
@@ -335,13 +335,13 @@ var AddonModel = {
 				});
 		},
 
-		addCoupon: function addCoupon(code:String, amount:Number, type:Number):Promise<void> {
+		addCoupon: function addCoupon(code:String, amount:Number, type:Coupon.Type):Promise<void> {
 			var prettyType;
 			switch (type) {
-				case 0:
+				case Coupon.Type.PERCENTAGE:
 					prettyType = "Percentage";
 					break;
-				case 1:
+				case Coupon.Type.FIXED:
 					prettyType = "Fixed";
 					break;
 				default:
@@ -405,7 +405,7 @@ var AddonModel = {
 			}
 		},
 
-		getCoupon: function getCoupon(code:String):Object {
+		getCoupon: function getCoupon(code:String):Coupon {
 			for (var i = 0; i < this.coupons.length; i++) {
 				var coupon = this.coupons[i];
 				if (coupon.code === code.toUpperCase()) {
@@ -449,6 +449,7 @@ var AddonModel = {
 		if (addon.size !== undefined) addon.size = parseInt(addon.size);
 		if (addon.status !== undefined) addon.status = parseInt(addon.status);
 		if (addon.price !== undefined) addon.price = parseInt(addon.price);
+
 		cb();
 	}
 };

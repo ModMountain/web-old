@@ -11,7 +11,6 @@ module.exports = function (req, res, next) {
                     user.tickets.push(ticket)
                 }
             });
-            user.transactions = _.union(user.receivedTransactions, user.sentTransactions);
 
             res.locals.user = user;
             req.user = user;

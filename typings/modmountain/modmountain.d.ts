@@ -11,6 +11,15 @@ declare var sails:{
 };
 
 /*
+Services
+ */
+declare class PaymentService  {
+	static accountBalancePayment(amount:number, type:Transaction.Type, sender:User, receiver:User, description:String, metadata:Object):Promise<any>;
+	static creditCardPayment(amount:number, type:Transaction.Type, sender:User, receiver:User, description:String, metadata:Object):Promise<any>;
+	static paypalPayment(amount:number, type:Transaction.Type, sender:User, receiver:User, description:String, metadata:Object):Promise<any>;
+}
+
+/*
 Waterline ORM models
  */
 
@@ -113,7 +122,7 @@ declare class Addon extends Model {
 	incrementCoupon(code:String):Promise<void>;
 	decrementCoupon(code:String):Promise<void>;
 	deactivateCoupon(code:String):Promise<void>;
-	getCoupon(code:String):Object;
+	getCoupon(code:String):Coupon;
 }
 
 declare class Job extends Model {
@@ -179,18 +188,25 @@ declare class TicketResponse extends Model {
 }
 
 declare class Transaction extends Model {
-    sender:User;
-    receiver:User;
-    senderType:TransactionType;
-    receiverType:TransactionType;
-    rawData:Object;
-    addon:Addon;
-	paypalId:string;
-	paypalExecuteUrl:string;
-	inProgress:boolean;
+	totalAmount:number;
+	developerFee:number;
+	paymentMethodFee:number;
+	netAmount:number;
+	paymentMethod:Transaction.PaymentMethod;
+	type:Transaction.Type;
+	status:Transaction.Status;
+	statusReason:string;
+	sender:User;
+	receiver:User;
+	addon:Addon;
+	senderCopy:boolean;
+	related:Array<Transaction>;
+	description:string;
+	metadata:Object;
 
-    prettySenderType:string;
-    prettyReceiverType:string;
+	prettyPaymentMethod():string;
+	prettyStatus():string;
+	prettyType():string;
 }
 
 declare class User extends Model {
@@ -210,12 +226,20 @@ declare class User extends Model {
     reviewComments:Array<ReviewComment>;
     sentTickets:Array<Ticket>;
     receivedTickets:Array<Ticket>;
-    sentTransactions:Array<Transaction>;
-    receivedTransactions:Array<Transaction>;
+    transactions:Array<Transaction>;
 
     isModerator():boolean;
 
     isAdministrator():boolean;
+}
+
+declare class Coupon {
+	code:string;
+	amount:number;
+	type:Coupon.Type;
+	uses:number;
+	expired:boolean;
+	prettyType:string;
 }
 
 /*
@@ -243,6 +267,39 @@ declare module Addon {
 		CHATBOX = 1,
 		UTILITY = 2,
 		OTHER = 3
+	}
+}
+
+declare module Coupon {
+	export enum Type {
+		PERCENTAGE = 0,
+		FIXED = 1
+	}
+}
+
+declare module Transaction {
+	export enum PaymentMethod {
+		ACCOUNT_BALANCE = 0,
+		CREDIT_CARD = 1,
+		PAYPAL = 2
+	}
+
+	export enum Type {
+		PURCHASE = 0,
+		WITHDRAWAL = 1,
+		DONATION = 2
+	}
+
+	export enum Status {
+		PENDING = 0,
+		COMPLETED = 1,
+		FAILED = 2
+	}
+
+	export enum FailReason {
+		INSUFFICIENT_FUNDS = 0,
+		GENERAL_ERROR = 1,
+		CARD_DECLINED = 2
 	}
 }
 

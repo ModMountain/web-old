@@ -3,80 +3,127 @@
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
 var TransactionModel = {
-    schema: true,
-    attributes: {
-        sender: {
-            model: 'User',
-            required: true,
-            via: 'Transactions'
-        },
-        receiver: {
-            model: 'User',
-            required: false,
-            via: 'Transactions'
-        },
-        senderType: {
-            enum: ['donation', 'purchase', 'withdrawal', 'devfee'],
-            required: true
-        },
-        receiverType: {
-            enum: ['income', 'sale', 'withdrawal', 'devfee'],
-            required: true
-        },
-	    amount: {
-		    type: 'number',
-		    required: true
-	    },
-        stripeData: {
-            type: 'json'
-        },
-	    inProgress: {
-		    type: 'boolean',
-		    defaultsTo: false
-	    },
-	    paypalId: {
-		    type: 'string'
-	    },
-	    paypalExecuteUrl: {
-		    type: 'string'
-	    },
-	    couponCode: {
-		    type: 'string'
-	    },
-        addon: {
-            model: 'Addon',
-            required: false,
-            via: 'Transactions'
-        },
+	schema: true,
+	attributes: {
+		totalAmount: {
+			type: 'number',
+			required: true
+		},
+		developerFee: {
+			type: 'number'
+		},
+		paymentMethodFee: {
+			type: 'number'
+		},
+		netAmount: {
+			type: 'number',
+			required: true
+		},
+		paymentMethod: {
+			type: 'number',
+			min: 0,
+			required: true
+		},
+		type: {
+			type: 'number',
+			min: 0,
+			required: true
+		},
+		status: {
+			type: 'number',
+			min: 0,
+			required: true
+		},
+		statusReason: {
+			type: 'string'
+		},
+		sender: {
+			model: 'User',
+			required: true,
+			via: 'transactions'
+		},
+		receiver: {
+			model: 'User',
+			via: 'transactions'
+		},
+		addon: {
+			model: 'Addon',
+			via: 'transactions'
+		},
+		senderCopy: {
+			type: 'boolean',
+			required: true
+		},
+		related: {
+			model: 'Transaction',
+			via: 'related'
+		},
+		description: {
+			type: 'string',
+			required: true
+		},
+		metadata: {
+			type: 'json'
+		},
 
-        prettySenderType: function () {
-            switch (this.senderType) {
-                case 'donation':
-                    return 'Donation';
-                case 'purchase':
-                    return 'Purchase';
-	            case 'withdrawal':
-		            return 'Withdrawal';
-	            case 'devfee':
-		            return 'Developer Fee';
-            }
-        },
-        prettyReceiverType: function () {
-            switch (this.receiverType) {
-                case 'income':
-                    return 'Income';
-                case 'sale':
-                    return 'Sale';
-	            case 'withdrawal':
-		            return 'Withdrawal';
-	            case 'devfee':
-		            return 'Developer Fee';
-            }
-        }
-    },
+		prettyPaymentMethod: function ():string {
+			switch (this.paymentMethod) {
+				case Transaction.PaymentMethod.ACCOUNT_BALANCE:
+					return 'Account Balance';
+					break;
+				case Transaction.PaymentMethod.CREDIT_CARD:
+					return 'Credit Card';
+					break;
+				case Transaction.PaymentMethod.PAYPAL:
+					return 'PayPal';
+					break;
+				default:
+					return 'Invalid Payment Method'
+			}
+		},
+
+		prettyStatus: function ():string {
+			switch (this.status) {
+				case Transaction.Status.PENDING:
+					return 'Pending';
+					break;
+				case Transaction.Status.COMPLETED:
+					return 'Completed';
+					break;
+				case Transaction.Status.FAILED:
+					return 'Failed';
+					break;
+				default:
+					return 'Invalid Status'
+			}
+		},
+
+		prettyType: function ():string {
+			switch (this.type) {
+				case Transaction.Type.PURCHASE:
+					return 'Purchase';
+					break;
+				case Transaction.Type.WITHDRAWAL:
+					return 'Withdrawal';
+					break;
+				case Transaction.Type.DONATION:
+					return 'Donation';
+					break;
+				default:
+					return 'Invalid Type'
+			}
+		}
+	},
 
 	beforeValidate: function(transaction, cb) {
-		if (typeof transaction.amount === 'string') transaction.amount = parseInt(transaction.amount);
+		if (typeof transaction.totalAmount === 'string' || transaction.totalAmount instanceof String) transaction.totalAmount = parseInt(transaction.totalAmount);
+		if (typeof transaction.netAmount === 'string' || transaction.netAmount instanceof String) transaction.netAmount = parseInt(transaction.netAmount);
+		if (typeof transaction.paymentMethod === 'string' || transaction.paymentMethod instanceof String) transaction.paymentMethod = parseInt(transaction.paymentMethod);
+		if (typeof transaction.type === 'string' || transaction.type instanceof String) transaction.type = parseInt(transaction.type);
+		if (typeof transaction.status === 'string' || transaction.status instanceof String) transaction.status = parseInt(transaction.status);
+		if (typeof transaction.developerFee === 'string' || transaction.developerFee instanceof String) transaction.developerFee = parseInt(transaction.developerFee);
+		if (typeof transaction.paymentMethodFee === 'string' || transaction.paymentMethodFee instanceof String) transaction.paymentMethodFee = parseInt(transaction.paymentMethodFee);
+
 		cb();
 	}
 };

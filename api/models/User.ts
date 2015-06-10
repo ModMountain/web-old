@@ -58,14 +58,6 @@ var UserModel = {
             collection: 'Addon',
             via: 'purchasers'
         },
-        postedJobs: {
-            collection: 'Job',
-            via: 'poster'
-        },
-        workJobs: {
-            collection: 'Job',
-            via: 'worker'
-        },
         reviews: {
             collection: 'Review',
             via: 'author'
@@ -82,13 +74,9 @@ var UserModel = {
             collection: 'Ticket',
             via: 'handler'
         },
-        sentTransactions: {
+        transactions: {
             collection: 'Transaction',
-            via: 'sender'
-        },
-        receivedTransactions: {
-            collection: 'Transaction',
-            via: 'receiver'
+	        via: 'sender'
         },
 
         // Instance methods

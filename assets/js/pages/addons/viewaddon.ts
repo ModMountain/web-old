@@ -1,4 +1,5 @@
 /// <reference path='../../../../typings/jquery/jquery.d.ts' />
+/// <reference path='../../../../typings/modmountain/modmountain.d.ts' />
 
 $(function () {
 	// jQuery selectors
@@ -110,12 +111,18 @@ $(function () {
 	};
 
 	var checkoutWithAccountBalance = function () {
+		var description;
+		if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
+		else description = "License for '" + window.addon.name + "'";
+
 		getCSRF(function(csrf) {
-			post('/addons/' + window.addon.id + '/accountBalanceCheckout', {
+			post('/addons/' + window.addon.id + '/checkout', {
 				_csrf: csrf,
 				addonId: window.addon.id,
-				finalBill: finalBill * 100,
-				coupon: coupon.code
+				bill: finalBill,
+				couponCode: coupon.code,
+				paymentMethod: Transaction.PaymentMethod.ACCOUNT_BALANCE,
+				description: description
 			});
 		});
 	};
@@ -127,11 +134,12 @@ $(function () {
 			if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";
 			else description = "License for '" + window.addon.name + "'";
 
-			post('/addons/' + window.addon.id + '/paypalCheckout', {
+			post('/addons/' + window.addon.id + '/checkout', {
 				_csrf: csrf,
 				addonId: window.addon.id,
-				finalBill: finalBill * 100,
-				coupon: coupon.code,
+				bill: finalBill,
+				couponCode: coupon.code,
+				paymentMethod: Transaction.PaymentMethod.PAYPAL,
 				description: description
 			});
 		})
@@ -148,14 +156,17 @@ $(function () {
 			var handler = StripeCheckout.configure({
 				key: window.stripePublicKey,
 				token: function (token) {
-					post('/addons/' + window.addon.id + '/stripeCheckout', {
+					var metadata = JSON.stringify({
+						token: token.id
+					});
+					post('/addons/' + window.addon.id + '/checkout', {
 						_csrf: csrf,
-						tokenId: token.id,
-						type: token.type,
 						addonId: window.addon.id,
-						finalBill: finalBill * 100,
-						coupon: coupon.code,
-						description: description
+						bill: finalBill,
+						couponCode: coupon.code,
+						paymentMethod: Transaction.PaymentMethod.CREDIT_CARD,
+						description: description,
+						metadata: metadata
 					});
 				}
 			});
@@ -170,7 +181,7 @@ $(function () {
 				name: 'Mod Mountain',
 				description: description,
 				currency: "usd",
-				amount: finalBill * 100
+				amount: finalBill
 			});
 		})
 	};
