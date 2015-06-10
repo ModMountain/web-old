@@ -26,10 +26,10 @@
 						<div class="product-price">
 							{% if addon.price > 0.0 %}
 								{% if addon.discount > 0.0 %}
-									<span class="title-price">${{ addon.price * (1.0 - addon.discount) }}</span>
-									<span class="title-price line-through">${{ addon.price }}</span>
+									<span class="title-price">${{ addon.price / 100 * (1.0 - addon.discount) }}</span>
+									<span class="title-price line-through">${{ addon.price / 100 }}</span>
 								{% else %}
-									<span class="title-price">${{ addon.price }}</span>
+									<span class="title-price">${{ addon.price / 100 }}</span>
 								{% endif %}
 							{% else %}
 								<span class="title-price">Free</span>
