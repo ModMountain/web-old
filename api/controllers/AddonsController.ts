@@ -86,32 +86,37 @@ module.exports = {
 				      if (addon === undefined) res.send(404);
 				      else if (!addon.canDownload(req.user)) res.send(403);
 				      else {
-					      sails.hooks.gfs.exist({_id: addon.zipFile}, function (err, found:boolean) {
+					      // Get the file and it's metadata from GridFS
+					      sails.hooks.gfs.findOne({_id: addon.zipFile}, function (err, file) {
 						      if (err) {
 							      PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
-							      req.flash('error', "Something went wrong while downloading addon '" + addon.name + "'");
-							      res.redirect('/addons/view/' + addon.id);
-						      } else if (found) {
+							      res.send(500);
+						      } else if (!file) {
+							      res.send(404);
+						      }
+						      else {
 							      // Increment download count
 							      addon.downloads++;
 							      addon.save();
 
-							      var filename:String = addon.name + '.zip';
-							      res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+							      // Build the response
+							      res.type(file.contentType);
+							      res.set({
+								      'Content-Disposition': 'attachment; filename="' + file.filename + '"',
+								      'Content-Length': file.length
+							      });
 							      sails.hooks.gfs.createReadStream({
 								      _id: addon.zipFile,
 								      chunkSize: 1024 * 1024
 							      }).pipe(res);
-						      } else {
-							      req.flash('error', "Addon '" + addon.name + "' is still uploading.");
-							      res.redirect('/addons/view/' + addon.id);
 						      }
 					      });
 				      }
-			      }).catch(function (err) {
-				               PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
-				               res.send(500);
-			               });
+			      })
+			.catch(function (err) {
+				       PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
+				       res.send(500);
+			       });
 	},
 
 	artwork: function (req, res) {
@@ -124,21 +129,26 @@ module.exports = {
 				      else if (addon.status !== Addon.Status.PUBLISHED && !addon.canModify(req.user)) res.send(403);
 				      else if (addon.galleryImages.indexOf(artwork) === -1 && addon.bannerImage !== artwork && addon.thinCardImage !== artwork && addon.wideCardImage !== artwork) res.send(403);
 				      else {
-					      sails.hooks.gfs.exist({_id: artwork}, function (err, found:boolean) {
+					      // Get the file and it's metadata from GridFS
+					      sails.hooks.gfs.findOne({_id: artwork}, function (err, file) {
 						      if (err) {
 							      PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
 							      res.send(500);
-						      } else if (found) {
-							      res.type('png');
+						      } else if (!file) {
+							      res.send(404);
+						      }
+						      else {
+							      // Build the response
+							      res.type(file.contentType);
 							      res.set({
-								      'Content-disposition': 'attachment'
+								      'Content-Disposition': 'inline; filename="' + file.filename + '"',
+								      'Content-Length': file.length,
+								      'ETag': file.md5
 							      });
 							      sails.hooks.gfs.createReadStream({
 								      _id: artwork,
 								      chunkSize: 1024 * 1024
 							      }).pipe(res);
-						      } else {
-							      res.send(404);
 						      }
 					      });
 				      }
