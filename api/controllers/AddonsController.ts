@@ -121,7 +121,7 @@ module.exports = {
 		Addon.findOne(addonId)
 			.then(function (addon:Addon) {
 				      if (addon === undefined) res.send(404);
-				      else if (addon.status !== Addon.Status.PUBLISHED) res.send(403);
+				      else if (addon.status !== Addon.Status.PUBLISHED && !addon.canModify(req.user)) res.send(403);
 				      else if (addon.galleryImages.indexOf(artwork) === -1 && addon.bannerImage !== artwork && addon.thinCardImage !== artwork && addon.wideCardImage !== artwork) res.send(403);
 				      else {
 					      sails.hooks.gfs.exist({_id: artwork}, function (err, found:boolean) {
