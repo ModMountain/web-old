@@ -238,7 +238,10 @@ module.exports = {
 						      paymentMethod = Transaction.PaymentMethod.ACCOUNT_BALANCE;
 					      }
 
-					      var metadata = JSON.parse(req.param('metadata'));
+					      var metadata;
+					      if (req.param('metadata') !== undefined) metadata = JSON.parse(req.param('metadata'));
+					      else metadata = {};
+
 					      metadata.coupon = couponCode;
 					      var description = req.param('description');
 
