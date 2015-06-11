@@ -129,7 +129,10 @@ module.exports = {
 							      PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
 							      res.send(500);
 						      } else if (found) {
-							      res.setHeader('Content-disposition', 'attachment;');
+							      res.type('png');
+							      res.set({
+								      'Content-disposition': 'attachment'
+							      });
 							      sails.hooks.gfs.createReadStream({
 								      _id: artwork,
 								      chunkSize: 1024 * 1024
