@@ -73,4 +73,6 @@ module.exports.routes = {
 	// Public users routes
 	'GET    /users':                                            'UsersController.index',
 	'GET    /users/:id':                                        'UsersController.viewUser',
+	'POST   /users/message':                                    'UsersController.message',
+	'POST   /users/report':                                     'UsersController.report',
 };

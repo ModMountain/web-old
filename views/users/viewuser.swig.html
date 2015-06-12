@@ -1,61 +1,318 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-	{% include 'components/profile/commoncss.swig.html' %}
+  {% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
-	<!--=== Profile ===-->
-	<div class="container content profile">
-		<div class="row">
-			{% include 'components/flashhandler.swig.html' %}
-			<!-- Profile Content -->
-			<div class="col-md-10 col-md-offset-1">
-				<div class="profile-body">
-					<div class="profile-bio">
-						<div class="row">
-							<div class="col-md-3">
-								<img class="img-responsive md-margin-bottom-10" src="{{ loadedUser.steamProfile.photos[2].value }}" alt="">
-							</div>
-							<div class="col-md-9">
-								<h2>{{ loadedUser.username }}</h2>
-								<span><strong>Status:</strong> {{ loadedUser.prettyStatus() }}</span>
-								<hr>
-								<p>{{ loadedUser.bio }}</p>
-							</div>
-						</div>
-					</div><!--/end row-->
+  <!--=== Profile ===-->
+  <div class="container content profile">
+    <div class="row">
+      {% include 'components/flashhandler.swig.html' %}
+      <!-- Profile Content -->
+      <div class="col-md-12">
+        <div class="profile-body">
+          <div class="profile-bio margin-bottom-20">
+            <div class="row">
+              <div class="col-md-3">
+                <img class="img-responsive md-margin-bottom-10"
+                     style="margin-left:auto;margin-right:auto;"
+                     src="{{ loadedUser.steamProfile.photos[2].value }}" alt=""><br>
+                {% if user.id !== loadedUser.id %}
+                  <button type="button" id="messageButton" class="btn-u btn-u-green btn-u-sm btn-block">Send Message
+                  </button>
+                  <button type="button" id="reportButton" class="btn-u btn-u-red btn-u-sm btn-block">Report</button>
+                {% endif %}
+              </div>
+              <div class="col-md-9">
+                <h2>{{ loadedUser.username }}</h2>
+                <span><strong>Status:</strong> {{ loadedUser.prettyStatus() }}</span>
+                <span>Registered Since {{ loadedUser.createdAt.toDateString() }}</span>
+                <hr>
+                <p>{{ loadedUser.bio }}</p>
+              </div>
+            </div>
+          </div>
 
-					<hr>
+          <div class="row margin-bottom-20">
+            {# Contact info #}
+            <div class="col-sm-6">
+              <div class="panel panel-profile">
+                <div class="panel-heading overflow-h">
+                  <h2 class="panel-title heading-sm pull-left"> Contact Info </h2>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-unstyled social-contacts-v2">
+                    <li><i class="rounded-x icon icon-steam"></i> <a
+                        href="{{ loadedUser.steamProfile._json.profileurl }}">{{ loadedUser.username }}</a></li>
+                    {% if loadedUser.social.facebook %}
+                      <li><i class="rounded-x fb icon icon-facebook"></i> <a
+                        href="https://www.facebook.com/{{ loadedUser.social.facebook }}">{{ loadedUser.social.facebook }}</a>
+                      </li>{% endif %}
+                    {% if loadedUser.social.skype %}
+                      <li><i class="rounded-x sk icon icon-skype"></i> <a
+                        href="skype:{{ loadedUser.social.skype }}?chat">{{ loadedUser.social.skype }}</a>
+                      </li>{% endif %}
+                    {% if loadedUser.social.youtube %}
+                      <li><i class="rounded-x gp icon icon-youtube"></i> <a
+                        href="https://www.youtube.com/user/{{ loadedUser.social.youtube }}">{{ loadedUser.social.youtube }}</a>
+                      </li>{% endif %}
+                    {% if loadedUser.social.email %}
+                      <li><i class="rounded-x gm icon icon-envelope"></i> <a
+                        href="mailto:{{ loadedUser.social.email }}">{{ loadedUser.social.email }}</a></li>{% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {# End contact info #}
 
-					<div class="row">
-						{% for addon in loadedUser.addons %}
-							<div class="col-sm-4">
-								<div class="easy-block-v1">
-									<img class="img-responsive" src="/addons/{{ addon.id }}/artwork/{{ addon.bannerImage }}" alt="">
-								</div>
-								<div class="projects">
-									<h2><a class="color-dark" href="/addons/{{ addon.id }}">{{ addon.name }}</a></h2>
-									<ul class="list-unstyled list-inline blog-info-v2">
-										<li><i class="icon icon-clock-o"></i>Last Update: {{ addon.updatedAt.toDateString() }}</li>
-									</ul>
-									<p>{{ addon.shortDescription }}</p>
-									<br>
-								</div>
-								<div class="project-share">
-									<a href="/addons/{{ addon.id }}">View</a>
-								</div>
-							</div>
-						{% endfor %}
-					</div><!--/end row-->
-				</div>
-			</div>
-			<!-- End Profile Content -->
-		</div>
-	</div><!--/container-->
-	<!--=== End Profile ===-->
+            {# Reputation #}
+            <div class="col-sm-6">
+              <div class="panel panel-profile">
+                <div class="panel-heading overflow-h">
+                  <h2 class="panel-title heading-sm pull-left"><i class="fa fa-pencil"></i> Statistics</h2>
+                  <a href="#"><i class="fa fa-cog pull-right"></i></a>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="row pie-progress-charts">
+                      <div class="inner-pchart col-md-6">
+                        <div class="circle" id="reputationCircle"></div>
+                        <h3 class="circle-title">Reputation</h3>
+                      </div>
+                      <div class="inner-pchart col-md-6">
+                        <div class="circle" id="profileCompletenessCircle"></div>
+                        <h3 class="circle-title">Profile Completeness</h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {# End Reputation #}
+          </div>
+
+          <hr>
+
+          <div class="row">
+            {% for addon in loadedUser.addons %}
+              <div class="col-sm-4">
+                <div class="easy-block-v1">
+                  <img class="img-responsive"
+                       src="/addons/{{ addon.id }}/artwork/{{ addon.bannerImage }}" alt="">
+                </div>
+                <div class="projects">
+                  <h2><a class="color-dark" href="/addons/{{ addon.id }}">{{ addon.name }}</a></h2>
+                  <ul class="list-unstyled list-inline blog-info-v2">
+                    <li><i class="icon icon-clock-o"></i>Last
+                      Update: {{ addon.updatedAt.toDateString() }}</li>
+                  </ul>
+                  <p>{{ addon.shortDescription }}</p>
+                  <br>
+                </div>
+                <div class="project-share">
+                  <a href="/addons/{{ addon.id }}">View</a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <!--/end row-->
+        </div>
+      </div>
+      <!-- End Profile Content -->
+    </div>
+  </div><!--/container-->
+  <!--=== End Profile ===-->
+
+  {% if user.id !== loadedUser.id %}
+    {# Private messaging modal #}
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Send {{ loadedUser.username }} a Message</h4>
+          </div>
+          <div class="modal-body sky-form">
+            <section>
+              <label class="label">Title</label>
+              <label class="input">
+                <input type="text" id="messageTitleInput">
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Body</label>
+              <label class="textarea">
+                <textarea id="messageBodyInput" rows="10"></textarea>
+              </label>
+            </section>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="messageSendButton">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {# End private messaging modal #}
+
+    {# Report modal #}
+    <div class="modal fade" id="reportModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Report {{ loadedUser.username }}</h4>
+          </div>
+          <div class="modal-body sky-form">
+            <section>
+              <label class="label">Reason</label>
+              <label class="select">
+                <select id="reportReasonInput">
+                  <option value="" style="display:none">Select a Reason</option>
+                  <option value="Leaking Paid Content">Leaking Paid Content</option>
+                  <option value="TOS Violations">TOS Violations</option>
+                  <option value="Abusive Behaviour">Abusive Behaviour</option>
+                  <option value="Other">Other (Please Specify)</option>
+                </select>
+              </label>
+            </section>
+
+            <section>
+              <label class="label">Body</label>
+              <label class="textarea">
+                <textarea id="reportBodyInput" rows="10"></textarea>
+              </label>
+            </section>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" id="reportFileButton">File Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {# End report modal #}
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
+  <script src="{{ assetPrefix }}/plugins/circles-master/circles.js"></script>
+  <script async>
+    $(function () {
+      makeCircles();
+      function makeCircles() {
+        var completeness = {{ loadedUser.getProfileCompleteness() }};
+        var reputation = {{ loadedUser.getReputation() }};
 
+        Circles.create({
+          id: "reputationCircle",
+          percentage: reputation,
+          radius: 60,
+          width: 10,
+          number: reputation,
+          text: '%',
+          colors: ['#D43A43', '#00BC13'],
+          duration: 1000
+        });
+
+        Circles.create({
+          id: "profileCompletenessCircle",
+          percentage: completeness,
+          radius: 60,
+          width: 10,
+          number: completeness,
+          text: '%',
+          colors: ['#D43A43', '#00BC13'],
+          duration: 1000,
+          wrpClass: 'circles-wrp',
+          textClass: 'circles-text',
+          valueStrokeClass: 'circles-valueStroke',
+          maxValueStrokeClass: 'circles-maxValueStroke',
+        });
+      }
+    });
+  </script>
+  {% if user.id !== loadedUser.id %}
+    <script async>
+      $(function () {
+        setupMessageButton();
+        setupReportButton();
+        function setupMessageButton() {
+          var messageModal = $('#messageModal');
+          var messageButton = $("#messageButton");
+          var messageSendButton = $("#messageSendButton");
+          var messageReasonInput = $("#messageTitleInput");
+          var messageBodyInput = $("#messageBodyInput");
+          var waitingForResponse = false;
+
+          messageButton.on('click', function (event) {
+            messageModal.modal('show');
+            event.preventDefault();
+          });
+          messageSendButton.on('click', function (event) {
+            // Don't submit multiple messages
+            if (waitingForResponse) return;
+            waitingForResponse = true;
+
+            getCSRF(function (csrf) {
+              var messageData = {
+                _csrf: csrf,
+                user: '{{ loadedUser.id }}',
+                title: messageReasonInput.val(),
+                body: messageBodyInput.val()
+              };
+              messageModal.modal('hide');
+              io.socket.post('/users/message', messageData);
+            });
+            event.preventDefault();
+          });
+          io.socket.on('messageResponse', function (data) {
+            waitingForResponse = false;
+            if (data.sent) addAlert('success', 'Message Sent', data.reason);
+            else addAlert('error', 'Message Error', data.reason);
+          });
+        }
+
+        function setupReportButton() {
+          var reportModal = $('#reportModal');
+          var reportButton = $("#reportButton");
+          var reportFileButton = $("#reportFileButton");
+          var reportReasonInput = $("#reportReasonInput");
+          var reportBodyInput = $("#reportBodyInput");
+          var waitingForResponse = false;
+
+          reportButton.on('click', function (event) {
+            reportModal.modal('show');
+            event.preventDefault();
+          });
+          reportFileButton.on('click', function (event) {
+            // Don't submit multiple reports
+            if (waitingForResponse) return;
+            waitingForResponse = true;
+
+            getCSRF(function (csrf) {
+              var reportData = {
+                _csrf: csrf,
+                user: '{{ loadedUser.id }}',
+                reason: reportReasonInput.val(),
+                body: reportBodyInput.val()
+              };
+              reportModal.modal('hide');
+              io.socket.post('/users/report', reportData);
+            });
+            event.preventDefault();
+          });
+          io.socket.on('reportResponse', function (data) {
+            waitingForResponse = false;
+            if (data.sent) addAlert('success', 'Report Filed', data.reason);
+            else addAlert('error', 'Report Error', data.reason);
+          });
+        }
+      });
+    </script>
+  {% endif %}
 {% endblock %}

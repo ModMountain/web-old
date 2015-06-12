@@ -24,5 +24,9 @@ module.exports.policies = {
     ProfileController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'profileCommonTemplate'],
     StaffController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'staffOnly'],
     AdminController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'adminOnly'],
-    AddonsController: ['socketUser', 'flashToSwig', 'emailNagger']
+    AddonsController: ['socketUser', 'flashToSwig', 'emailNagger'],
+    UsersController: {
+        'message': ['socketOnly', 'socketUser'],
+        'report': ['socketOnly', 'socketUser']
+    }
 };

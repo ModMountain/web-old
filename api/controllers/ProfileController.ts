@@ -57,6 +57,12 @@ module.exports = {
         req.user.paypalEmail = req.body.paypalEmail;
 	    req.user.bio = req.body.bio;
 
+	    if (req.body.social_facebook) req.user.social.facebook = req.body.social_facebook;
+	    if (req.body.social_skype) req.user.social.skype = req.body.social_skype;
+	    if (req.body.social_youtube) req.user.social.youtube = req.body.social_youtube;
+	    if (req.body.social_email) req.user.social.email = req.body.social_email;
+		console.log(req.body, req.user.social)
+
         req.user.save()
             .then(function () {
 		        // If the user updated their email, invite them to Slack

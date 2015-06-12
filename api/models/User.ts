@@ -78,6 +78,18 @@ var UserModel = {
             collection: 'Transaction',
 	        via: 'sender'
         },
+	    social: {
+		    type: 'json',
+		    defaultsTo: {}
+	    },
+        reports: {
+            collection: 'Report',
+            via: 'reporter'
+        },
+        conversations: {
+            collection: 'Conversation',
+            via: 'participants'
+        },
 
         // Instance methods
         isModerator: function () {
@@ -97,6 +109,19 @@ var UserModel = {
 			    default:
 				    return "Unknown"
 		    }
+	    },
+	    getProfileCompleteness: function() {
+		    var completeness = 0;
+		    if (this.bio.length > 140) completeness += 30;
+		    if (this.email !== undefined) completeness += 40;
+		    if (this.steamIdentifier !== undefined) completeness += 10;
+			if (Object.keys(this.social).length >= 1) completeness += 10;
+			if (Object.keys(this.social).length >= 2) completeness += 10;
+
+		    return completeness;
+	    },
+	    getReputation: function() {
+		    return 100;
 	    }
     },
 

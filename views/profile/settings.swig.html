@@ -70,6 +70,38 @@
 
 									</fieldset>
 
+									<fieldset>
+										<h2>Social Information</h2>
+										<section>
+											<label class="label">Facebook Username</label>
+											<label class="input">
+												<i class="icon-prepend icon icon-facebook"></i>
+												<input type="text" value="{{ user.social.facebook }}" name="social_facebook">
+											</label>
+										</section>
+										<section>
+											<label class="label">Skype Username</label>
+											<label class="input">
+												<i class="icon-prepend icon icon-skype"></i>
+												<input type="text" value="{{ user.social.skype }}" name="social_skype">
+											</label>
+										</section>
+										<section>
+											<label class="label">Youtube Username</label>
+											<label class="input">
+												<i class="icon-prepend icon icon-youtube"></i>
+												<input type="text" value="{{ user.social.youtube }}" name="social_youtube">
+											</label>
+										</section>
+										<section>
+											<label class="label">Public Email</label>
+											<label class="input">
+												<i class="icon-prepend icon icon-envelope"></i>
+												<input type="text" value="{{ user.social.email }}" name="social_email">
+											</label>
+										</section>
+									</fieldset>
+
 									<footer>
 										<button type="submit" class="button">Save Changes</button>
 										<button class="button" style="background-color: #4b99ff;" onclick="window.location.href = '/profile/syncSteam';" type="button">Sync Steam Profile</button>

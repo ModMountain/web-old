@@ -104,12 +104,6 @@ $(function () {
 		event.preventDefault();
 	});
 
-	var getCSRF = function(cb) {
-		io.socket.get('/csrfToken', function(data) {
-			cb(data._csrf);
-		})
-	};
-
 	var checkoutWithAccountBalance = function () {
 		var description;
 		if (window.addon.price === 0) description = "Donation to '" + window.addon.name + "'";

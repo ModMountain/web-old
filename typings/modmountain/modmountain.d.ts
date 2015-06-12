@@ -242,6 +242,40 @@ declare class Coupon {
 	prettyType:string;
 }
 
+declare class Report extends Model {
+	report:User;
+	reported:string;
+	reason:string;
+	body:string;
+	type:Report.Type;
+	status:Report.Status;
+	responses:Array<ReportResponse>;
+
+	prettyType():string;
+	prettyStatus():string;
+	addResponse(user:User, body:string):Promise<void>;
+}
+
+declare class ReportResponse {
+	user:string;
+	body:string;
+	date:Date;
+}
+
+declare class Conversation extends Model {
+	participants:Array<User>;
+	title:string;
+	messages:Array<ConversationMessage>;
+
+	addMessage(user:User, body:string):Promise<void>;
+}
+
+declare class ConversationMessage {
+	user:string;
+	body:string;
+	date:Date;
+}
+
 /*
 Enumerations
 */
@@ -308,6 +342,19 @@ declare module User {
 		ACTIVE = 0,
 		SUSPENDED = 1,
 		BANNED = 2
+	}
+}
+
+declare module Report {
+	export enum Type {
+		USER = 0,
+		ADDON = 1
+	}
+
+	export enum Status {
+		FILED = 0,
+		IN_PROGRESS = 1,
+		CLOSED = 2
 	}
 }
 

@@ -43,7 +43,7 @@
 	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
 
 	{# FontIcons #}
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/fonticons.css">
+  <script src="https://use.fonticons.com/b63071a6.js"></script>
 
 	{% block css %}{% endblock %}
 	{% if sails.config.analytics %}{% include 'components/analytics.swig.html' %}{% endif %}
@@ -79,7 +79,24 @@
 <script async src="{{ assetPrefix }}/plugins/html5shiv.js"></script>
 <script async src="{{ assetPrefix }}/js/plugins/placeholder-IE-fixes.js"></script>
 <![endif]-->
+<script>
+	var alertArea = $("#alertArea");
+	function addAlert(type, title, message) {
+		if (type === 'error') type = 'danger';
 
+		var alertString = "<br><div class=\"alert alert-" + type + " alert-dismissible\" role=\"alert\">";
+		alertString += "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;<\/span><\/button>";
+		alertString += "  <strong>" + title +"<\/strong> " + message;
+		alertString += "<\/div>";
+		$(alertString).appendTo(alertArea).hide().slideDown();
+	}
+
+	function getCSRF(cb) {
+		io.socket.get('/csrfToken', function(data) {
+			cb(data._csrf);
+		})
+	}
+</script>
 <script async>
 	var App = function () {
 		function handleBootstrap() {
