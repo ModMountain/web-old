@@ -441,7 +441,9 @@ module.exports = {
       }
     });
 
-    if (body === '') return;
+    if (body === '') {
+      return req.socket.emit('messageResponse', {sent: false, reason: "Failed to add response, please try again"});
+    }
 
     Conversation.findOne(conversationId).populate('participants')
       .then(function (conversation:Conversation) {
