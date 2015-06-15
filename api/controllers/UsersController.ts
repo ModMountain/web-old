@@ -31,6 +31,10 @@ module.exports = {
 			.then(function (user:User) {
 				if (user === undefined) res.notFound();
 				else {
+          var cleanAddons = [];
+          user.addons.forEach((addon) => {if (addon.status === Addon.Status.PUBLISHED) cleanAddons.push(addon)});
+          user.addons = cleanAddons;
+
 					res.view({
 						title: user.username,
 						activeTab: 'users',
