@@ -113,7 +113,7 @@ var UserModel = {
 	    },
 	    getProfileCompleteness: function() {
 		    var completeness = 0;
-		    if (this.bio.length > 140) completeness += 30;
+		    if (this.bio && this.bio.length > 140) completeness += 30;
 		    if (this.email !== undefined) completeness += 40;
 		    if (this.steamIdentifier !== undefined) completeness += 10;
 			if (Object.keys(this.social).length >= 1) completeness += 10;
