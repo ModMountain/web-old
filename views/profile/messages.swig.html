@@ -1,0 +1,118 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+  {% include 'components/profile/commoncss.swig.html' %}
+  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+<!--=== Profile ===-->
+<div class="container content profile">
+  <div class="row">
+    {% include 'components/flashhandler.swig.html' %}
+    {% include 'components/profile/sidebar.swig.html' %}
+
+    <div class="col-md-9">
+      <div class="profile-body">
+        <div class="table-search-v1 margin-bottom-20">
+          {% if user.conversations.length == 0 %}
+          {% else %}
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped">
+              <thead>
+              <tr>
+                <th>Title</th>
+                <th>Participants</th>
+                <th>Last Reply</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for conversation in user.conversations %}
+                <tr class="clickable" data-url="/profile/messages/{{ conversation.id }}">
+                  <td>{{ conversation.title }}</td>
+                  <td>{{ conversation.participants }}</td>
+                  <td>{{ conversation.lastReply.date.toDateString() }} by {{ conversation.lastReply.username }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            {% endif %}
+
+            <hr>
+
+            <h2>New Message</h2>
+
+            <form class="sky-form" method="POST" action="/users/message"
+                  enctype="multipart/form-data">
+              <input type="hidden" name="_csrf" value="{{ _csrf }}"/>
+              <section>
+                <label class="label">Title</label>
+                <label class="input">
+                  <input type="text" name="title">
+                </label>
+              </section>
+              <section>
+                <label class="label">Users</label>
+                <label class="select">
+                  <select id="userSelect" name="users">
+                  </select>
+                </label>
+              </section>
+              <section>
+                <label class="label">Body</label>
+                <label class="textarea">
+                  <textarea id="messageBodyInput" rows="10" name="body"></textarea>
+                </label>
+              </section>
+              <button type="submit" class="btn btn-green">Send Message</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block scripts %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+    <script>
+      $('#userSelect').select2({
+        ajax: {
+          url: "/users/find",
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              username: params.term
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        }, // let our custom formatter do all the work
+        minimumInputLength: 1,
+        templateResult: function (user) {
+          if (user.loading) return user.text;
+
+          return '<div class="clearfix">' +
+            '<div class="col-sm-1">' +
+            '<img src="' + user.avatar + '" style="max-width: 100%" />' +
+            '</div>' +
+            '<div class="col-sm-10">' +
+            '<div class="clearfix">' +
+            '<div class="col-sm-6">' + user.username + '</div>' +
+            '</div>' +
+            '</div>';
+        },
+        templateSelection: function (user) {
+          return user.username;
+        }
+      });
+    </script>
+  {% endblock %}

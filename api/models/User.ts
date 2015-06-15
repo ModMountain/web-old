@@ -46,7 +46,8 @@ var UserModel = {
 		    type: 'string'
 	    },
 	    bio: {
-		    type: 'string'
+		    type: 'string',
+        defaultsTo: ''
 	    },
 
         // Associations
@@ -66,14 +67,6 @@ var UserModel = {
             collection: 'ReviewComment',
             via: 'author'
         },
-        sentTickets: {
-            collection: 'Ticket',
-            via: 'submitter'
-        },
-        receivedTickets: {
-            collection: 'Ticket',
-            via: 'handler'
-        },
         transactions: {
             collection: 'Transaction',
 	        via: 'sender'
@@ -90,6 +83,14 @@ var UserModel = {
             collection: 'Conversation',
             via: 'participants'
         },
+      notifications: {
+        collection: 'Notification',
+        via: 'user'
+      },
+      notificationIgnoreLevel: {
+        type: 'number',
+        defaultsTo: -1
+      },
 
         // Instance methods
         isModerator: function () {
@@ -127,6 +128,7 @@ var UserModel = {
 
 	beforeValidate: function(user, cb) {
 		if (typeof user.status === 'string') user.status = parseInt(user.status);
+		if (typeof user.notificationIgnoreLevel === 'string') user.notificationIgnoreLevel = parseInt(user.notificationIgnoreLevel);
 		cb();
 	}
 };

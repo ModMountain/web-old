@@ -49,18 +49,16 @@ module.exports.routes = {
     'GET    /profile/addons/:id/preview':                       'ProfileController.previewAddon',
     'POST   /profile/addons/:id/coupons':                       'ProfileController.couponsPOST',
     'GET    /profile/addons/:id/coupons/:code/deactivate':      'ProfileController.deactivateCoupon',
+    'GET    /profile/notification/:id':                         'ProfileController.notification',
+    'POST   /profile/notification/:id':                         'ProfileController.deleteNotification',
 
-    'GET    /profile/tickets':                                  'ProfileController.tickets',
-    'GET    /profile/tickets/create':                           'ProfileController.createTicket',
-    'POST   /profile/tickets/create':                           'ProfileController.createTicketPOST',
-    'POST   /profile/tickets/:id/respond':                      'ProfileController.respondPOST',
-    'GET    /profile/tickets/:id/close':                        'ProfileController.close',
+    'GET    /profile/messages':                                 'ProfileController.messages',
+    'GET    /profile/messages/:id':                             'ProfileController.viewMessage',
+    'POST   /profile/messages/:id':                             'ProfileController.respondToMessage',
+    'POST   /profile/messages/:id/addUser':                     'ProfileController.addUserToConversation',
 
     // Staff routes
     'GET    /staff/addons':                                     'StaffController.addons',
-    'GET    /staff/tickets':                                    'StaffController.tickets',
-    'GET    /staff/tickets/:id':                                'StaffController.viewTicket',
-    'POST   /staff/tickets/:id/respond':                        'StaffController.respondToTicket',
 
     // Public addons routes
     'GET    /addons':                                           'AddonsController.index',
@@ -70,9 +68,10 @@ module.exports.routes = {
     'POST   /addons/:id/validateCoupon':                        'AddonsController.validateCoupon',
     'GET    /addons/:id/artwork/:artwork':                      'AddonsController.artwork',
 
-	// Public users routes
-	'GET    /users':                                            'UsersController.index',
-	'GET    /users/:id':                                        'UsersController.viewUser',
-	'POST   /users/message':                                    'UsersController.message',
-	'POST   /users/report':                                     'UsersController.report',
+	  // Public users routes
+	  'GET    /users':                                            'UsersController.index',
+	  'POST   /users/message':                                    'UsersController.message',
+	  'POST   /users/report':                                     'UsersController.report',
+	  'GET    /users/find':                                       'UsersController.find',
+    'GET    /users/:id':                                        'UsersController.viewUser',
 };

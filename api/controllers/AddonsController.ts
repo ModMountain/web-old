@@ -272,6 +272,8 @@ module.exports = {
 						      }
 						      return promises;
 					      }).then(function() {
+                  NotificationService.sendUserNotification(addon.author, Notification.Priority.MEDIUM, req.user.username + " purchased " + addon.name + " for $" + amountToCharge / 100, "/profile/finances");
+
 						      req.flash('success', "Purchase successful!");
 						      res.redirect('/addons/' + addonId);
 					      }).catch(function (err) {

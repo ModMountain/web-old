@@ -1,104 +1,106 @@
 <!--=== Header v5 ===-->
 <div class="header-v5 header-static">
-	<!-- Topbar v3 -->
-	<div class="topbar-v3">
-		<div class="search-open">
-			<div class="container">
-				<input type="text" class="form-control" placeholder="Search">
+  <!-- Topbar v3 -->
+  <div class="topbar-v3">
+    <div class="search-open">
+      <div class="container">
+        <input type="text" class="form-control" placeholder="Search">
 
-				<div class="search-close"><i class="icon-close"></i></div>
-			</div>
-		</div>
+        <div class="search-close"><i class="icon-close"></i></div>
+      </div>
+    </div>
 
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-6">
-					{% if user %}
-					<ul class="left-topbar">
-						<li>
-							<a>Account Balance: {{ user.balance / 100}} USD</a>
-						</li>
-					</ul>
-					{% endif %}
-					<!--/end left-topbar-->
-				</div>
-				<div class="col-sm-6">
-					<ul class="list-inline right-topbar pull-right">
-						{% if user %}
-							<li><a href="/profile">Welcome, {{ user.username }}</a></li>
-							<li><a href="/auth/logout">Logout</a></li>
-						{% else %}
-							<li><a href="/auth/login">Login</a> | <a href="/auth/login">Register</a></li>
-						{% endif %}
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!--/container-->
-	</div>
-	<!-- End Topbar v3 -->
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          {% if user %}
+            <ul class="left-topbar">
+              <li>
+                <a>Account Balance: {{ user.balance / 100 }} USD</a>
+              </li>
+            </ul>
+          {% endif %}
+          <!--/end left-topbar-->
+        </div>
+        <div class="col-sm-6">
+          <ul class="list-inline right-topbar pull-right">
+            {% if user %}
+              <li><a href="/profile">Welcome, {{ user.username }}</a></li>
+              <li><a href="/auth/logout">Logout</a></li>
+            {% else %}
+              <li><a href="/auth/login">Login</a> | <a href="/auth/login">Register</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--/container-->
+  </div>
+  <!-- End Topbar v3 -->
 
-	<!-- Navbar -->
-	<div class="navbar navbar-default mega-menu" role="navigation">
-		<div class="container">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-				        data-target=".navbar-responsive-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="/">
-					<img id="logo-header" src="{{ assetPrefix }}/img/logo4.png" alt="Logo">
-				</a>
-			</div>
+  <!-- Navbar -->
+  <div class="navbar navbar-default mega-menu" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                data-target=".navbar-responsive-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">
+          <img id="logo-header" src="{{ assetPrefix }}/img/logo4.png" alt="Logo">
+        </a>
+      </div>
 
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse navbar-responsive-collapse">
-				<!-- Nav Menu -->
-				<ul class="nav navbar-nav">
-					<!-- Main Demo -->
-					<li {% if activeTab == 'home' %}class="active"{% endif %}><a href="/">Home</a></li>
+      {% if user and user.notifications.length > 0 %}
+        {% include 'components/notifications.swig.html' %}
+      {% endif %}
 
-					{# Browse addons #}
-					<li {% if activeTab.indexOf('addons') == 0 %}class="active"{% endif %}><a href="/addons">Addons</a>
-					</li>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-responsive-collapse">
+        <!-- Nav Menu -->
+        <ul class="nav navbar-nav">
+          <!-- Main Demo -->
+          <li {% if activeTab == 'home' %}class="active"{% endif %}><a href="/">Home</a></li>
 
-					{# Browse users #}
-					<li {% if activeTab.indexOf('users') == 0 %}class="active"{% endif %}><a href="/users">Users</a>
-					</li>
+          {# Browse addons #}
+          <li {% if activeTab.indexOf('addons') == 0 %}class="active"{% endif %}><a href="/addons">Addons</a>
+          </li>
 
-					{# Browse jobs #}
-					{#<li {% if activeTab.indexOf('jobs') == 0 %}class="active"{% endif %}><a href="/jobs">Jobs</a></li>#}
+          {# Browse users #}
+          <li {% if activeTab.indexOf('users') == 0 %}class="active"{% endif %}><a href="/users">Users</a>
+          </li>
 
-					{% if user %}
-					{# Browse profile #}
-					<li {% if activeTab.indexOf('profile') == 0 %}class="active"{% endif %}><a
-								href="/profile">Dashboard</a></li>
-					{% endif %}
+          {# Browse jobs #}
+          {#<li {% if activeTab.indexOf('jobs') == 0 %}class="active"{% endif %}><a href="/jobs">Jobs</a></li>#}
 
-					{# Staff area #}
-					{% if user.permissionLevel >= 1 %}
-						<li class="dropdown {% if activeTab.indexOf('staff') == 0 %}active{% endif %}">
-							<a href="javascript:void(0);" class="dropdown-toggle" data-hover="dropdown"
-							   data-toggle="dropdown" data-delay="1000">
-								Staff
-							</a>
-							<ul class="dropdown-menu">
-								<li {% if activeTab == 'staff.addons' %}class="active"{% endif %}><a
-											href="/staff/addons">Addons</a></li>
-								<li {% if activeTab == 'staff.tickets' %}class="active"{% endif %}><a
-											href="/staff/tickets">Tickets</a></li>
-							</ul>
-						</li>
-					{% endif %}
-				</ul>
-				<!-- End Nav Menu -->
-			</div>
-		</div>
-	</div>
-	<!-- End Navbar -->
+          {% if user %}
+            {# Browse profile #}
+            <li {% if activeTab.indexOf('profile') == 0 %}class="active"{% endif %}><a
+                href="/profile">Dashboard</a></li>
+          {% endif %}
+
+          {# Staff area #}
+          {% if user.permissionLevel >= 1 %}
+            <li class="dropdown {% if activeTab.indexOf('staff') == 0 %}active{% endif %}">
+              <a href="javascript:void(0);" class="dropdown-toggle" data-hover="dropdown"
+                 data-toggle="dropdown" data-delay="1000">
+                Staff
+              </a>
+              <ul class="dropdown-menu">
+                <li {% if activeTab == 'staff.addons' %}class="active"{% endif %}><a
+                    href="/staff/addons">Addons</a></li>
+              </ul>
+            </li>
+          {% endif %}
+        </ul>
+        <!-- End Nav Menu -->
+      </div>
+    </div>
+  </div>
+  <!-- End Navbar -->
 </div>
 <!--=== End Header v5 ===-->

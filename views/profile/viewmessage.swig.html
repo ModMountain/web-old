@@ -1,0 +1,240 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+  {% include 'components/profile/commoncss.swig.html' %}
+  <link rel="stylesheet" href="{{ assetPrefix }}/plugins/emoji/emoji.css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+  <div class="container content profile">
+    <div class="row">
+      {% include 'components/flashhandler.swig.html' %}
+      {% include 'components/profile/sidebar.swig.html' %}
+
+      <div class="col-md-9">
+        <div class="profile-body">
+          <div class="panel panel-profile" style="margin-bottom: 5%">
+            <div class="panel-heading overflow-h">
+              <h2 class="panel-title heading-sm pull-left"><i class="icon icon-comments"></i>{{ conversation.title }}
+              </h2>
+              <a href="#"><i class="fa fa-cog pull-right"></i></a>
+            </div>
+            <div id="messagesArea">
+              {% for message in conversation.messages %}
+                <div class="panel-body">
+                  <div class="media media-v2" style="padding-top: 0; padding-bottom: 0">
+                    <a class="pull-left" href="/users/{{ message.user }}">
+                      <img class="media-object rounded-x img-responsive" src="{{ message.avatar }}" alt="">
+                    </a>
+
+                    <div class="media-body">
+                      <h4 class="media-heading">
+                        <strong><a href="/users/{{ message.user }}">{{ message.username }}</a></strong>
+                        <small>{{ message.date.toDateString() }}</small>
+                      </h4>
+                      <p data-linkify="this">{{ message.body }}</p>
+                    </div>
+                  </div>
+                </div>
+                <hr style="margin: 0">
+              {% endfor %}
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="col-sm-7 sm-margin-bottom-30">
+              <div class="panel panel-profile">
+                <div class="sky-form">
+                  <fieldset>
+                    <section>
+                      <label class="textarea">
+                        <textarea rows="2" id="respondInput"></textarea>
+                      </label>
+                    </section>
+                    <button id="respondButton" class="btn-u btn-u-dark">Respond</button>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-5 sm-margin-bottom-30">
+              <div class="panel panel-profile">
+                <div class="sky-form">
+                  <fieldset>
+                    <section>
+                      <label class="select">
+                        <select id="userSelect" name="users">
+                        </select>
+                      </label>
+                    </section>
+                    <button id="userAddButton" class="btn-u btn-u-dark">Add New User</button>
+                  </fieldset>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+  <script src="{{ assetPrefix }}/plugins/emoji/emoji.js"></script>
+  <script src="{{ assetPrefix }}/plugins/emoji/jquery.emoji.js"></script>
+  <script src="{{ assetPrefix }}/plugins/linkify/jquery.linkify.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+  <script>
+    $(function () {
+      var messagesArea = $("#messagesArea");
+      var respondInput = $("#respondInput");
+      var respondButton = $("#respondButton");
+      var userSelect = $("#userSelect");
+      var userAddButton = $("#userAddButton");
+      var waitingForMessageResponse = false;
+      var waitingForUserAddResponse = false;
+
+      // Parse emojis in existing responses
+      messagesArea.emoji();
+      messagesArea.mCustomScrollbar({
+        setHeight: "500",
+        alwaysShowScrollbar: 2,
+        snapAmount: 50,
+        advanced: {
+          updateOnContentResize: false,
+          updateOnImageLoad: false
+        }
+      });
+      messagesArea.mCustomScrollbar("scrollTo", "bottom");
+      var scrollContentArea = $("#mCSB_1_container");
+
+      // Handle the respond button being pressed
+      respondButton.on('click', function (e) {
+        var body = respondInput.val();
+        respondInput.val('');
+
+        if (!waitingForMessageResponse && body !== '') {
+          getCSRF(function (csrf) {
+            waitingForMessageResponse = true;
+            io.socket.post('/profile/messages/{{ conversation.id }}', {
+              _csrf: csrf,
+              body: body
+            })
+          });
+        }
+        e.preventDefault();
+      });
+
+      // Setup the add new user selector
+      userSelect.select2({
+        ajax: {
+          url: "/users/find",
+          dataType: 'json',
+          delay: 250,
+          data: function (params) {
+            return {
+              username: params.term
+            };
+          },
+          processResults: function (data) {
+            return {
+              results: data
+            };
+          },
+          cache: true
+        },
+        escapeMarkup: function (markup) {
+          return markup;
+        }, // let our custom formatter do all the work
+        minimumInputLength: 1,
+        templateResult: function (user) {
+          if (user.loading) return user.text;
+
+          return '<div class="clearfix">' +
+            '<div class="col-sm-1">' +
+            '<img src="' + user.avatar + '" style="max-width: 100%" />' +
+            '</div>' +
+            '<div class="col-sm-10">' +
+            '<div class="clearfix">' +
+            '<div class="col-sm-6">' + user.username + '</div>' +
+            '</div>' +
+            '</div>';
+        },
+        templateSelection: function (user) {
+          return user.username;
+        }
+      });
+
+      userAddButton.on('click', function (e) {
+        var userToAdd = userSelect.val();
+        userSelect.val('');
+
+        if (!waitingForUserAddResponse && userToAdd !== '') {
+          getCSRF(function (csrf) {
+            waitingForUserAddResponse = true;
+            io.socket.post('/profile/messages/{{ conversation.id }}/adduser', {
+              _csrf: csrf,
+              user: userToAdd
+            })
+          });
+        }
+
+        e.preventDefault();
+      });
+
+      // Subscribe us to this conversation's events
+      io.socket.get('/profile/messages/{{ conversation.id }}');
+
+      // When this conversation is updated
+      io.socket.on('conversation', function (msg) {
+        if (msg.verb === 'updated') {
+          if (msg.data.type === 'newResponse') {
+            return addNewResponse(msg.data);
+          }
+        }
+
+        console.log('Unknown message:', msg);
+      });
+
+      // When the server has processed our response
+      io.socket.on('messageResponse', function (data) {
+        waitingForMessageResponse = false;
+        if (!data.sent) addAlert('error', 'Response Error', data.reason);
+      });
+
+      io.socket.on('addUserResponse', function (data) {
+        waitingForUserAddResponse = false;
+        if (data.sent) addAlert('success', 'User Add Success', data.reason);
+        else addAlert('error', 'User Add Error', data.reason);
+      });
+
+      // Utility Functions
+      function addNewResponse(message) {
+        message.body = emoji.replace_colons(message.body);
+
+        var responseHTML = "";
+        responseHTML += "<div class=\"panel-body\">";
+        responseHTML += "                  <div class=\"media media-v2\"  style=\"padding-top: 0; padding-bottom: 0\">";
+        responseHTML += "                    <a class=\"pull-left\" href=\"\/users\/" + message.user + "\">";
+        responseHTML += "                      <img class=\"media-object rounded-x\" src=\"" + message.avatar + "\" alt=\"\">";
+        responseHTML += "                    <\/a>";
+        responseHTML += "";
+        responseHTML += "                    <div class=\"media-body\">";
+        responseHTML += "                      <h4 class=\"media-heading\">";
+        responseHTML += "                        <strong><a href=\"\/users\/" + message.user + "\">" + message.username + "<\/a><\/strong>";
+        responseHTML += "                        <small>" + message.date + "<\/small>";
+        responseHTML += "                      <\/h4>";
+        responseHTML += "                      <p>" + message.body + "<\/p>";
+        responseHTML += "                    <\/div>";
+        responseHTML += "                  <\/div>";
+        responseHTML += "                <\/div>";
+        responseHTML += "                <hr style=\"margin: 0\">";
+
+        $(responseHTML).linkify().appendTo(scrollContentArea);
+        messagesArea.mCustomScrollbar("scrollTo", "bottom");
+      }
+    });
+  </script>
+{% endblock %}

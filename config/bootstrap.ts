@@ -49,10 +49,13 @@ var setupPassport = function () {
         done(null, user.id)
     });
     Passport.deserializeUser(function (id, done) {
-        User.findOne(id, function (err, user) {
+        User.findOne(id).populate('notifications')
+          .then(function (user:User) {
             if (user === undefined) user = null;
-            done(err, user)
-        });
+            done(null, user)
+        }).catch(function(err) {
+            done(err)
+          });
     });
 
     // Steam 3rd party sign in strategy

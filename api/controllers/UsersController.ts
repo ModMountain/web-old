@@ -46,25 +46,57 @@ module.exports = {
 	},
 
 	message: function(req, res) {
-		var messagedUserId = req.param('user');
+		var messagedUserId = req.param('users');
 		var title = req.param('title');
 		var body = req.param('body');
+
+    var usersToFind = messagedUserId.split(',').map((id) => User.findOne(id));
+
+    Promise.all(usersToFind)
+    .then(function(users:Array<User>) { //FIXME sending user gets a notif about the message they sent (redundant)
+        for (var i = 0; i < users.length; i++) {
+          if (users[i] === undefined) {
+            if (req.isSocket) {
+              return req.socket.emit('messageResponse', {sent: false, reason: "The user you are trying to message does not exist."});
+            } else {
+              req.flash('error', "The user you are trying to message does not exist.");
+              res.redirect('/profile/messages')
+            }
+          }
+        }
+        var participants = users;
+        participants.push(req.user.id);
+        Conversation.create({
+          participants: participants,
+          title: title
+        }).then(function(conversation:Conversation) {
+          return [conversation, conversation.addMessage(req.user, body)];
+        }).spread(function(conversation) {
+          users.forEach(function(user) {
+            NotificationService.sendUserNotification(user, Notification.Priority.LOW, req.user.username + ' has sent you a message', '/profile/messages/' + conversation.id)
+          });
+          if (req.isSocket) {
+            req.socket.emit('messageResponse', {sent: true, reason: ""});
+          } else {
+            req.flash('success', "Your message has been sent.");
+            res.redirect('/profile/messages/' + conversation.id)
+          }
+        }).catch(function(err) {
+          PrettyError(err, "An error occurred during Conversation.create inside UsersController.message");
+          if (req.isSocket) {
+            return req.socket.emit('messageResponse', {sent: false, reason: "Something went wrong while sending your message, please try again."});
+          } else {
+            req.flash('error', "Something went wrong while sending your message, please try again.");
+            res.redirect('/profile/messages')
+          }
+        });
+      });
 
 		User.findOne(messagedUserId)
 			.then(function(user) {
 				if (user === undefined) req.socket.emit('messageResponse', {sent: false, reason: "The user you are trying to message does not exist."});
 				else {
-					Conversation.create({
-						participants: [req.user.id,  messagedUserId],
-						title: title
-					}).then(function(conversation:Conversation) {
-						return conversation.addMessage(req.user, body);
-					}).then(function() {
-						req.socket.emit('messageResponse', {sent: true, reason: "Your message has been sent."});
-					}).catch(function(err) {
-						PrettyError(err, "An error occurred during Conversation.create inside UsersController.message");
-						req.socket.emit('messageResponse', {sent: false, reason: "Something went wrong while sending your message, please try again."});
-					});
+
 				}
 			}).catch(function(err) {
 				PrettyError(err, "An error occurred during User.findOne inside UsersController.message");
@@ -98,6 +130,19 @@ module.exports = {
 			PrettyError(err, "An error occurred during User.findOne inside UsersController.report");
 			req.socket.emit('reportResponse', {sent: false, reason: "Something went wrong while looking up the user you were trying to report, please try again."});
 		});
-	}
+	},
+
+  find: function(req, res) {
+    User.find(req.allParams()).then(function(users) {
+      users = _.map(users, function(user) {
+        return {
+          id: user.id,
+          username: user.username,
+          avatar: user.steamProfile.photos[2].value
+        }
+      });
+      res.json(users);
+    })
+  }
 };
 

@@ -1,202 +1,237 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    {% include 'components/profile/commoncss.swig.html' %}
+  {% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
-    <!--=== Profile ===-->
-    <div class="container content profile">
-        <div class="row">
-            {% include 'components/flashhandler.swig.html' %}
-            {% include 'components/profile/sidebar.swig.html' %}
-            <!-- Profile Content -->
-            <div class="col-md-9">
-                <div class="profile-body margin-bottom-20">
-                    <div class="tab-v1">
-                        <ul class="nav nav-justified nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#generalContent">General</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            {# General addon stuff #}
-                            <div id="generalContent" class="profile-edit tab-pane fade in active">
-                                <h2 class="heading-md">General Addon Information</h2>
+  <!--=== Profile ===-->
+  <div class="container content profile">
+    <div class="row">
+      {% include 'components/flashhandler.swig.html' %}
+      {% include 'components/profile/sidebar.swig.html' %}
+      <!-- Profile Content -->
+      <div class="col-md-9">
+        <div class="profile-body margin-bottom-20">
+          <div class="tab-v1">
+            <ul class="nav nav-justified nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#generalContent">General</a></li>
+            </ul>
+            <div class="tab-content">
+              {# General addon stuff #}
+              <div id="generalContent" class="profile-edit tab-pane fade in active">
+                <h2 class="heading-md">General Addon Information</h2>
 
-                                <p>Here you need to specify your addon's general information. All of this information is
-                                    required as we need it to review your addon. Once your addon has been accepted, you may customize its description and media.</p>
-                                <br>
+                <p>Here you need to specify your addon's general information. All of this information is
+                  required as we need it to review your addon. Once your addon has been accepted, you may customize its
+                  description and media.</p>
+                <br>
 
-                                <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST" action="/profile/addons/{{ addon.id }}/edit">
-	                                <input type="hidden" name="_csrf" value="{{ _csrf }}" />
-                                    <fieldset>
-                                        <section>
-                                            <label class="label">Addon Name</label>
-                                            <label class="input">
-                                                <i class="icon-prepend icon icon-font"></i>
-                                                <input type="text" value="{{ addon.name }}" name="name" id="nameInput" required>
-                                                <b class="tooltip tooltip-bottom-left">This is the name of your addon. Choose something short and descriptive.</b>
-                                            </label>
-                                        </section>
+                <form class="sky-form" id="generalForm" enctype="multipart/form-data" method="POST"
+                      action="/profile/addons/{{ addon.id }}/edit">
+                  <input type="hidden" name="_csrf" value="{{ _csrf }}"/>
+                  <fieldset>
+                    <section>
+                      <label class="label">Addon Name</label>
+                      <label class="input">
+                        <i class="icon-prepend icon icon-font"></i>
+                        <input type="text" value="{{ addon.name }}" name="name" id="nameInput" required>
+                        <b class="tooltip tooltip-bottom-left">This is the name of your addon. Choose something short
+                          and descriptive.</b>
+                      </label>
+                    </section>
 
-                                        <section>
-                                            <label class="label">Desired Price</label>
-                                            <label class="input">
-                                                <i class="icon-prepend icon icon-usd"></i>
-                                                <input type="number" step="any" value="{{ addon.price / 100 }}" name="price" id="priceInput" required>
-                                                <b class="tooltip tooltip-bottom-left">This is how much you would like your addon to sell for. If you want this to be a free addon, enter 0.</b>
-                                            </label>
-                                        </section>
+                    <section>
+                      <label class="label">Desired Price</label>
+                      <label class="input">
+                        <i class="icon-prepend icon icon-usd"></i>
+                        <input type="number" step="any" value="{{ addon.price / 100 }}" name="price" id="priceInput"
+                               required>
+                        <b class="tooltip tooltip-bottom-left">This is how much you would like your addon to sell for.
+                          If you want this to be a free addon, enter 0.</b>
+                      </label>
+                    </section>
 
-                                        <section>
-                                            <label class="label">Gamemode</label>
-                                            <label class="select">
-                                                <select name="gamemode" id="gamemodeInput" required>
-                                                    <option value="0">Sandbox Based</option>
-                                                    <option value="1">Dark RP</option>
-                                                    <option value="2">TTT</option>
-                                                    <option value="3">Murder</option>
-                                                    <option value="4">Other</option>
-                                                </select>
-                                                <i></i>
-                                            </label>
-                                        </section>
+                    <section>
+                      <label class="label">Gamemode</label>
+                      <label class="select">
+                        <select name="gamemode" id="gamemodeInput" required>
+                          <option value="0">Sandbox Based</option>
+                          <option value="1">Dark RP</option>
+                          <option value="2">TTT</option>
+                          <option value="3">Murder</option>
+                          <option value="4">Other</option>
+                        </select>
+                        <i></i>
+                      </label>
+                    </section>
 
-                                        <section>
-                                            <label class="label">Type</label>
-                                            <label class="select">
-                                                <select name="type" id="typeInput" required>
-                                                    <option value="0">Weapon</option>
-                                                    <option value="1">Chatbox</option>
-                                                    <option value="2">Utility</option>
-                                                    <option value="3">Other</option>
-                                                </select>
-                                                <i></i>
-                                            </label>
-                                        </section>
+                    <section>
+                      <label class="label">Type</label>
+                      <label class="select">
+                        <select name="type" id="typeInput" required>
+                          <option value="0">Weapon</option>
+                          <option value="1">Chatbox</option>
+                          <option value="2">Utility</option>
+                          <option value="3">Other</option>
+                        </select>
+                        <i></i>
+                      </label>
+                    </section>
 
-	                                    <section>
-		                                    <label class="label">Tags</label>
-		                                    <label class="input">
-			                                    <i class="icon-prepend icon icon-comment"></i>
-			                                    <input type="text" value="{{ addon.rawTags }}" name="rawTags" required>
-			                                    <b class="tooltip tooltip-bottom-left">A comma separated list of tags that describe your addon.</b>
-		                                    </label>
-	                                    </section>
-                                    </fieldset>
+                    <section>
+                      <label class="label">Tags</label>
+                      <label class="input">
+                        <i class="icon-prepend icon icon-comment"></i>
+                        <input type="text" value="{{ addon.rawTags }}" name="rawTags" required>
+                        <b class="tooltip tooltip-bottom-left">A comma separated list of tags that describe your
+                          addon.</b>
+                      </label>
+                    </section>
+                  </fieldset>
 
-                                    <fieldset>
-                                        <section>
-                                            <label class="checkbox"><input type="checkbox" name="outsideServers" id="outsideServersInput" {% if addon.outsideServers %}checked{% endif %}><i></i>Does your addon make calls to outside servers?</label>
-                                            <label class="checkbox"><input type="checkbox" name="containsDrm" id="containsDrmInput" {% if addon.containsDrm %}checked{% endif %}><i></i>Does your addon contain DRM or leak protection?</label>
-                                        </section>
-                                    </fieldset>
+                  <fieldset>
+                    <section>
+                      <label class="checkbox"><input type="checkbox" name="outsideServers" id="outsideServersInput"
+                                                     {% if addon.outsideServers %}checked{% endif %}><i></i>Does your
+                        addon make calls to outside servers?</label>
+                      <label class="checkbox"><input type="checkbox" name="containsDrm" id="containsDrmInput"
+                                                     {% if addon.containsDrm %}checked{% endif %}><i></i>Does your addon
+                        contain DRM or leak protection?</label>
+                    </section>
+                  </fieldset>
 
-                                    <fieldset>
-                                        <section>
-                                            <label class="label">Zip File</label>
-                                            <label for="file" class="input input-file">
-                                                <div class="button"><input type="file" id="zipFileInput" name="zipFile" onchange="this.parentNode.nextSibling.value = this.value" accept="application/zip,application/x-zip,application/x-zip-compressed">Browse</div><input type="text" readonly="">
-                                                <b class="tooltip tooltip-bottom-left">This should be a zip file containing your addon.</b>
-                                            </label>
-                                        </section>
-	                                    </fieldset>
-	                                <fieldset>
-	                                    <section>
-		                                    <label class="label">Banner Image (Optional)</label>
-		                                    <label for="file" class="input input-file">
-			                                    <div class="button"><input type="file" id="bannerImageInput" name="bannerImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
-			                                    <b class="tooltip tooltip-bottom-left">Large banner for the homepage. 1170x500 Pixels.</b>
-		                                    </label>
-	                                    </section>
-	                                    <section>
-		                                    <label class="label">Thin Card Image</label>
-		                                    <label for="file" class="input input-file">
-			                                    <div class="button"><input type="file" id="cardImageInput" name="thinCardImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
-			                                    <b class="tooltip tooltip-bottom-left">Thin card displayed on the home page. 973x1196 Pixels.</b>
-		                                    </label>
-	                                    </section>
-	                                    <section>
-		                                    <label class="label">Wide Card Image</label>
-		                                    <label for="file" class="input input-file">
-			                                    <div class="button"><input type="file" id="cardImageInput" name="wideCardImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
-			                                    <b class="tooltip tooltip-bottom-left">Wide card displayed on the addons page. 973x1196 Pixels.</b>
-		                                    </label>
-	                                    </section>
-	                                    <section>
-		                                    <label class="label">Gallery Images</label>
-		                                    <label for="file" class="input input-file">
-			                                    <div class="button"><input type="file" id="galleryImagesInput" name="galleryImages" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*" multiple>Browse</div><input type="text" readonly="">
-			                                    <b class="tooltip tooltip-bottom-left">Pictures displayed on your addon's store page. 550x560 Pixels each.</b>
-		                                    </label>
-	                                    </section>
-                                    </fieldset>
-
-	                                <fieldset>
-		                                <section>
-			                                <label class="label">Short Description</label>
-			                                <label class="input">
-				                                <i class="icon-prepend icon icon-comment"></i>
-				                                <input type="text" value="{{ addon.shortDescription }}" name="shortDescription" required>
-				                                <b class="tooltip tooltip-bottom-left">This short blurb will be displayed near the top of your addon's store page. Aim for two sentences.</b>
-			                                </label>
-		                                </section>
-
-		                                <section>
-			                                <label class="label">Long Description</label>
-			                                <label class="textarea">
-				                                <textarea id="descriptionEditor" rows="10" name="description"></textarea>
-			                                </label>
-		                                </section>
-
-		                                <section>
-			                                <label class="label">Youtube Embeddable Link</label>
-			                                <label class="input">
-				                                <i class="icon-prepend icon icon-youtube"></i>
-				                                <input type="text" value="{{ addon.youtubeLink }}" name="youtubeLink">
-				                                <b class="tooltip tooltip-bottom-left">This youtube video will be displayed on your addon's store page, near the bottom. Please use the embeddable link.</b>
-			                                </label>
-		                                </section>
-	                                </fieldset>
-
-	                                <fieldset>
-		                                <section>
-			                                <label class="label">Reason for Update</label>
-			                                <label class="input">
-				                                <i class="icon-prepend icon icon-question"></i>
-				                                <input type="text" value="" name="reasonForUpdate" id="reasonInput" required>
-				                                <b class="tooltip tooltip-bottom-left">What is the reason for updating your addon?</b>
-			                                </label>
-		                                </section>
-	                                </fieldset>
-
-                                    <footer>
-                                        <button id='submitButton' class="button">Submit</button>
-                                    </footer>
-                                </form>
-                            </div>
+                  <fieldset>
+                    <section>
+                      <label class="label">Zip File</label>
+                      <label for="file" class="input input-file">
+                        <div class="button"><input type="file" id="zipFileInput" name="zipFile"
+                                                   onchange="this.parentNode.nextSibling.value = this.value"
+                                                   accept="application/zip,application/x-zip,application/x-zip-compressed">Browse
                         </div>
-                    </div>
-                </div>
+                        <input type="text" readonly="">
+                        <b class="tooltip tooltip-bottom-left">This should be a zip file containing your addon.</b>
+                      </label>
+                    </section>
+                  </fieldset>
+                  <fieldset>
+                    <section>
+                      <label class="label">Banner Image (Optional)</label>
+                      <label for="file" class="input input-file">
+                        <div class="button"><input type="file" id="bannerImageInput" name="bannerImage"
+                                                   onchange="this.parentNode.nextSibling.value = this.value"
+                                                   accept="image/*">Browse
+                        </div>
+                        <input type="text" readonly="">
+                        <b class="tooltip tooltip-bottom-left">Large banner for the homepage. 1170x500 Pixels.</b>
+                      </label>
+                    </section>
+                    <section>
+                      <label class="label">Thin Card Image</label>
+                      <label for="file" class="input input-file">
+                        <div class="button"><input type="file" id="cardImageInput" name="thinCardImage"
+                                                   onchange="this.parentNode.nextSibling.value = this.value"
+                                                   accept="image/*">Browse
+                        </div>
+                        <input type="text" readonly="">
+                        <b class="tooltip tooltip-bottom-left">Thin card displayed on the home page. 973x1196
+                          Pixels.</b>
+                      </label>
+                    </section>
+                    <section>
+                      <label class="label">Wide Card Image</label>
+                      <label for="file" class="input input-file">
+                        <div class="button"><input type="file" id="cardImageInput" name="wideCardImage"
+                                                   onchange="this.parentNode.nextSibling.value = this.value"
+                                                   accept="image/*">Browse
+                        </div>
+                        <input type="text" readonly="">
+                        <b class="tooltip tooltip-bottom-left">Wide card displayed on the addons page. 973x1196
+                          Pixels.</b>
+                      </label>
+                    </section>
+                    <section>
+                      <label class="label">Gallery Images</label>
+                      <label for="file" class="input input-file">
+                        <div class="button"><input type="file" id="galleryImagesInput" name="galleryImages"
+                                                   onchange="this.parentNode.nextSibling.value = this.value"
+                                                   accept="image/*" multiple>Browse
+                        </div>
+                        <input type="text" readonly="">
+                        <b class="tooltip tooltip-bottom-left">Pictures displayed on your addon's store page. 550x560
+                          Pixels each.</b>
+                      </label>
+                    </section>
+                  </fieldset>
+
+                  <fieldset>
+                    <section>
+                      <label class="label">Short Description</label>
+                      <label class="input">
+                        <i class="icon-prepend icon icon-comment"></i>
+                        <input type="text" value="{{ addon.shortDescription }}" name="shortDescription" required>
+                        <b class="tooltip tooltip-bottom-left">This short blurb will be displayed near the top of your
+                          addon's store page. Aim for two sentences.</b>
+                      </label>
+                    </section>
+
+                    <section>
+                      <label class="label">Long Description</label>
+                      <label class="textarea">
+                        <textarea id="descriptionEditor" rows="10" name="description"></textarea>
+                      </label>
+                    </section>
+
+                    <section>
+                      <label class="label">Youtube Embeddable Link</label>
+                      <label class="input">
+                        <i class="icon-prepend icon icon-youtube"></i>
+                        <input type="text" value="{{ addon.youtubeLink }}" name="youtubeLink">
+                        <b class="tooltip tooltip-bottom-left">This youtube video will be displayed on your addon's
+                          store page, near the bottom. Please use the embeddable link.</b>
+                      </label>
+                    </section>
+                  </fieldset>
+
+                  <fieldset>
+                    <section>
+                      <label class="label">Reason for Update</label>
+                      <label class="input">
+                        <i class="icon-prepend icon icon-question"></i>
+                        <input type="text" value="" name="reasonForUpdate" id="reasonInput" required>
+                        <b class="tooltip tooltip-bottom-left">What is the reason for updating your addon?</b>
+                      </label>
+                    </section>
+                  </fieldset>
+
+                  <footer>
+                    <button id='submitButton' class="button">Submit</button>
+                  </footer>
+                </form>
+              </div>
             </div>
-            <!-- End Profile Content -->
+          </div>
         </div>
-    </div><!--/container-->
-    <!--=== End Profile ===-->
+      </div>
+      <!-- End Profile Content -->
+    </div>
+  </div><!--/container-->
+  <!--=== End Profile ===-->
 {% endblock %}
 
 {% block scripts %}
-	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
-	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
-	<script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
-	<script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
-	<script async>
-		// Attach the addon to the window so it can be accessed from client-side Javascript
-		window.addon = {{ addon|json|safe }};
+  <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
+  <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
+  <script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
+  <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+  <script async>
+    // Attach the addon to the window so it can be accessed from client-side Javascript
+    window.addon = {{ addon|json|safe }};
 
-		// Setup the description editor
-		var $descriptionEditor = $("#descriptionEditor");
-		$descriptionEditor.val(window.addon.description);
-		$descriptionEditor.markdown({autofocus: false, savable: false, fullscreen: false, iconlibrary: 'mm'})
-	</script>
-    <script async src="{{ assetPrefix }}/js/pages/profile/editAddon.js"></script>
+    // Setup the description editor
+    var $descriptionEditor = $("#descriptionEditor");
+    $descriptionEditor.val(window.addon.description);
+    $descriptionEditor.markdown({autofocus: false, savable: false, fullscreen: false, iconlibrary: 'mm'})
+  </script>
+  <script async src="{{ assetPrefix }}/js/pages/profile/editAddon.js"></script>
 {% endblock %}

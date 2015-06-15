@@ -231,7 +231,7 @@
           wrpClass: 'circles-wrp',
           textClass: 'circles-text',
           valueStrokeClass: 'circles-valueStroke',
-          maxValueStrokeClass: 'circles-maxValueStroke',
+          maxValueStrokeClass: 'circles-maxValueStroke'
         });
       }
     });
@@ -261,7 +261,7 @@
             getCSRF(function (csrf) {
               var messageData = {
                 _csrf: csrf,
-                user: '{{ loadedUser.id }}',
+                users: '{{ loadedUser.id }}',
                 title: messageReasonInput.val(),
                 body: messageBodyInput.val()
               };

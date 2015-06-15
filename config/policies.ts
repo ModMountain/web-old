@@ -21,12 +21,17 @@
 
 module.exports.policies = {
     '*': ['flashToSwig', 'emailNagger'],
-    ProfileController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'profileCommonTemplate'],
+    ProfileController: {
+      '*': ['sessionAuth', 'socketUser', 'flashToSwig', 'emailNagger', 'profileCommonTemplate'],
+      'deleteNotification': ['socketOnly', 'sessionAuth', 'socketUser'],
+      'viewMessage': ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'profileCommonTemplate'],
+      'respondToMessage': ['socketOnly', 'sessionAuth', 'socketUser'],
+      'addUserToConversation': ['socketOnly', 'sessionAuth', 'socketUser']
+    },
     StaffController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'staffOnly'],
-    AdminController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'adminOnly'],
     AddonsController: ['socketUser', 'flashToSwig', 'emailNagger'],
     UsersController: {
-        'message': ['socketOnly', 'socketUser'],
+        'message': ['socketUser'],
         'report': ['socketOnly', 'socketUser']
     }
 };

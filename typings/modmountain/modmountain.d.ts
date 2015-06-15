@@ -28,7 +28,7 @@ declare class Model {
     static findOne(id:string):Promise<Model>;
     static findOne(criteria:Object):Promise<Model>;
 
-    static find(id:string):Promise<Array<Model>>;
+    static find(id?:string):Promise<Array<Model>>;
     static find(criteria:Object):Promise<Array<Model>>;
 
     static create(criteria:Object):Promise<Model>;
@@ -137,8 +137,11 @@ declare class Job extends Model {
 
 declare class Notification extends Model {
     receiver:User;
-    priority:NotificationPriority;
+    priority:Notification.Priority;
     message:string;
+  link:string;
+
+  prettyPriority():string;
 }
 
 declare class Review extends Model {
@@ -160,32 +163,6 @@ declare class Tag extends Model {
     addons:Array<Addon>;
 }
 
-declare class Ticket extends Model {
-	static findOne(id:string):Promise<Ticket>;
-	static findOne(criteria:Object):Promise<Ticket>;
-
-    title:string;
-    priority:TicketPriority;
-    status:TicketStatus;
-    submitter:User;
-    responses:Array<TicketResponse>;
-    handler:User;
-    affectedAddon:Addon;
-
-    canClose(user:User):boolean;
-
-    canResponse(user:User):boolean;
-
-    addResponse(user:User, content:string):Promise<void>;
-
-    prettyStatus():string;
-}
-
-declare class TicketResponse extends Model {
-    user:User;
-    content:string;
-    ticket:Ticket;
-}
 
 declare class Transaction extends Model {
 	totalAmount:number;
@@ -227,6 +204,10 @@ declare class User extends Model {
     sentTickets:Array<Ticket>;
     receivedTickets:Array<Ticket>;
     transactions:Array<Transaction>;
+    social:Object;
+    reports:Array<Report>;
+    conversations:Array<Conversation>;
+    notificationIgnoreLevel:number;
 
     isModerator():boolean;
 
@@ -268,6 +249,7 @@ declare class Conversation extends Model {
 	messages:Array<ConversationMessage>;
 
 	addMessage(user:User, body:string):Promise<void>;
+  isParticipant(user:User):boolean;
 }
 
 declare class ConversationMessage {
@@ -358,8 +340,13 @@ declare module Report {
 	}
 }
 
-declare enum NotificationPriority {
-    LOW, MEDIUM, HIGH, EMERGENCY
+declare module Notification {
+  export enum Priority {
+    LOW = 0,
+    MEDIUM = 1,
+    HIGH = 2,
+    EMERGENCY = 3
+  }
 }
 
 declare enum TicketPriority {
@@ -383,8 +370,8 @@ declare class FeeService {
 }
 
 declare class NotificationService {
-	static sendGlobalNotification(priority:String, message:String):void;
-	static sendUserNotification(user:User, priority:String, message:String):void;
+	static sendGlobalNotification(priority:Notification.Priority, message:string, link:string):void;
+	static sendUserNotification(user:User, priority:Notification.Priority, message:string, link:string):void;
 }
 
 declare class SlackService {

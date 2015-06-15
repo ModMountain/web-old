@@ -67,7 +67,7 @@
 								<td>{{ coupon.prettyType }}</td>
 								<td>{{ coupon.uses }}</td>
 								<td>
-									{% if !coupon.exired %}
+									{% if !coupon.expired %}
 									<a href="/profile/addons/{{ addon.id }}/coupons/{{ coupon.code }}/deactivate">Deactivate</a>
 									{% endif %}
 								</td>

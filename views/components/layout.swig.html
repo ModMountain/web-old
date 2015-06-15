@@ -7,59 +7,59 @@
 <html lang="en"> <!--<![endif]-->
 
 <head>
-	{% if title %}
-		<title>{{ title }} - Mod Mountain</title>
-	{% else %}
-		<title>Mod Mountain</title>
-	{% endif %}
+  {% if title %}
+    <title>{{ title }} - Mod Mountain</title>
+  {% else %}
+    <title>Mod Mountain</title>
+  {% endif %}
 
-	<!-- Meta -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="">
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-	<!-- Web Fonts -->
-	<link rel='stylesheet' href='{{ assetPrefix }}/css/googlefonts.css'>
+  <!-- Web Fonts -->
+  <link rel='stylesheet' href='{{ assetPrefix }}/css/googlefonts.css'>
 
-	<!-- CSS Global Compulsory -->
-	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap-3.3.4/css/bootstrap.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/app.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/style.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/shop.style.css">
+  <!-- CSS Global Compulsory -->
+  <link rel="stylesheet" href="{{ assetPrefix }}/plugins/bootstrap-3.3.4/css/bootstrap.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/app.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/style.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/shop.style.css">
 
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/shop.plugins.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/shop.blocks.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/ie8.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/blocks.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/plugins.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/shop.plugins.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/shop.blocks.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/ie8.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/blocks.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/plugins.css">
 
-	<!-- CSS Header and Footer -->
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/headers/header-v5.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/footers/footer-v3.css">
+  <!-- CSS Header and Footer -->
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/headers/header-v5.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/footers/footer-v3.css">
 
-	<!-- CSS Implementing Plugins -->
-	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/animate.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
+  <!-- CSS Implementing Plugins -->
+  <link rel="stylesheet" href="{{ assetPrefix }}/plugins/animate.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
 
-	{# FontIcons #}
+  {# FontIcons #}
   <script src="https://use.fonticons.com/b63071a6.js"></script>
 
-	{% block css %}{% endblock %}
-	{% if sails.config.analytics %}{% include 'components/analytics.swig.html' %}{% endif %}
+  {% block css %}{% endblock %}
+  {% if sails.config.analytics %}{% include 'components/analytics.swig.html' %}{% endif %}
 </head>
 
 <body class="header-fixed">
 <div class="wrapper">
 
-	{% include 'components/navigation.swig.html' %}
-	{% if breadcrumbs %}
-		{% include 'components/breadcrumbs.swig.html' %}
-	{% endif %}
+  {% include 'components/navigation.swig.html' %}
+  {% if breadcrumbs %}
+    {% include 'components/breadcrumbs.swig.html' %}
+  {% endif %}
 
-	{% block content %}{% endblock %}
+  {% block content %}{% endblock %}
 
-	{% include 'components/footer.swig.html' %}
+  {% include 'components/footer.swig.html' %}
 </div>
 <!--/wrapper-->
 
@@ -80,130 +80,157 @@
 <script async src="{{ assetPrefix }}/js/plugins/placeholder-IE-fixes.js"></script>
 <![endif]-->
 <script>
-	var alertArea = $("#alertArea");
-	function addAlert(type, title, message) {
-		if (type === 'error') type = 'danger';
+  var alertArea = $("#alertArea");
+  function addAlert(type, title, message) {
+    if (type === 'error') type = 'danger';
 
-		var alertString = "<br><div class=\"alert alert-" + type + " alert-dismissible\" role=\"alert\">";
-		alertString += "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;<\/span><\/button>";
-		alertString += "  <strong>" + title +"<\/strong> " + message;
-		alertString += "<\/div>";
-		$(alertString).appendTo(alertArea).hide().slideDown();
-	}
+    var alertString = "<br><div class=\"alert alert-" + type + " alert-dismissible\" role=\"alert\">";
+    alertString += "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;<\/span><\/button>";
+    alertString += "  <strong>" + title + "<\/strong> " + message;
+    alertString += "<\/div>";
+    $(alertString).appendTo(alertArea).hide().slideDown();
+  }
 
-	function getCSRF(cb) {
-		io.socket.get('/csrfToken', function(data) {
-			cb(data._csrf);
-		})
-	}
+  function getCSRF(cb) {
+    io.socket.get('/csrfToken', function (data) {
+      cb(data._csrf);
+    })
+  }
 </script>
 <script async>
-	var App = function () {
-		function handleBootstrap() {
-			/*Bootstrap Carousel*/
-			jQuery('.carousel').carousel({
-				interval: 15000,
-				pause: 'hover'
-			});
+  var App = function () {
+    function handleBootstrap() {
+      /*Bootstrap Carousel*/
+      jQuery('.carousel').carousel({
+        interval: 15000,
+        pause: 'hover'
+      });
 
-			/*Tooltips*/
-			jQuery('.tooltips').tooltip();
-			jQuery('.tooltips-show').tooltip('show');
-			jQuery('.tooltips-hide').tooltip('hide');
-			jQuery('.tooltips-toggle').tooltip('toggle');
-			jQuery('.tooltips-destroy').tooltip('destroy');
+      /*Tooltips*/
+      jQuery('.tooltips').tooltip();
+      jQuery('.tooltips-show').tooltip('show');
+      jQuery('.tooltips-hide').tooltip('hide');
+      jQuery('.tooltips-toggle').tooltip('toggle');
+      jQuery('.tooltips-destroy').tooltip('destroy');
 
-			/*Popovers*/
-			jQuery('.popovers').popover();
-			jQuery('.popovers-show').popover('show');
-			jQuery('.popovers-hide').popover('hide');
-			jQuery('.popovers-toggle').popover('toggle');
-			jQuery('.popovers-destroy').popover('destroy');
-		}
+      /*Popovers*/
+      jQuery('.popovers').popover();
+      jQuery('.popovers-show').popover('show');
+      jQuery('.popovers-hide').popover('hide');
+      jQuery('.popovers-toggle').popover('toggle');
+      jQuery('.popovers-destroy').popover('destroy');
+    }
 
-		function handleSearchV1() {
-			jQuery('.search-button').click(function () {
-				jQuery('.search-open').slideDown();
-			});
+    function handleSearchV1() {
+      jQuery('.search-button').click(function () {
+        jQuery('.search-open').slideDown();
+      });
 
-			jQuery('.search-close').click(function () {
-				jQuery('.search-open').slideUp();
-			});
+      jQuery('.search-close').click(function () {
+        jQuery('.search-open').slideUp();
+      });
 
-			jQuery(window).scroll(function () {
-				if (jQuery(this).scrollTop() > 1) jQuery('.search-open').fadeOut('fast');
-			});
+      jQuery(window).scroll(function () {
+        if (jQuery(this).scrollTop() > 1) jQuery('.search-open').fadeOut('fast');
+      });
 
-		}
+    }
 
-		function handleToggle() {
-			jQuery('.list-toggle').on('click', function () {
-				jQuery(this).toggleClass('active');
-			});
-		}
+    function handleToggle() {
+      jQuery('.list-toggle').on('click', function () {
+        jQuery(this).toggleClass('active');
+      });
+    }
 
-		function handleBoxed() {
-			jQuery('.boxed-layout-btn').click(function () {
-				jQuery(this).addClass("active-switcher-btn");
-				jQuery(".wide-layout-btn").removeClass("active-switcher-btn");
-				jQuery("body").addClass("boxed-layout container");
-			});
-			jQuery('.wide-layout-btn').click(function () {
-				jQuery(this).addClass("active-switcher-btn");
-				jQuery(".boxed-layout-btn").removeClass("active-switcher-btn");
-				jQuery("body").removeClass("boxed-layout container");
-			});
-		}
+    function handleBoxed() {
+      jQuery('.boxed-layout-btn').click(function () {
+        jQuery(this).addClass("active-switcher-btn");
+        jQuery(".wide-layout-btn").removeClass("active-switcher-btn");
+        jQuery("body").addClass("boxed-layout container");
+      });
+      jQuery('.wide-layout-btn').click(function () {
+        jQuery(this).addClass("active-switcher-btn");
+        jQuery(".boxed-layout-btn").removeClass("active-switcher-btn");
+        jQuery("body").removeClass("boxed-layout container");
+      });
+    }
 
-		function handleMegaMenu() {
-			$(document).on('click', '.mega-menu .dropdown-menu', function (e) {
-				e.stopPropagation()
-			})
-		}
+    function handleMegaMenu() {
+      $(document).on('click', '.mega-menu .dropdown-menu', function (e) {
+        e.stopPropagation()
+      })
+    }
 
-		return {
-			init: function () {
-				handleBootstrap();
-				handleSearchV1();
-				handleToggle();
-				handleBoxed();
-				handleMegaMenu();
-			},
+    return {
+      init: function () {
+        handleBootstrap();
+        handleSearchV1();
+        handleToggle();
+        handleBoxed();
+        handleMegaMenu();
+      },
 
-			initScrollBar: function () {
-				jQuery('.mCustomScrollbar').mCustomScrollbar({
-					theme: "minimal",
-					scrollInertia: 300,
-					scrollEasing: "linear"
-				});
-			},
+      initScrollBar: function () {
+        jQuery('.mCustomScrollbar').mCustomScrollbar({
+          theme: "minimal",
+          scrollInertia: 300,
+          scrollEasing: "linear"
+        });
+      },
 
-			initCounter: function () {
-				jQuery('.counter').counterUp({
-					delay: 10,
-					time: 1000
-				});
-			},
+      initCounter: function () {
+        jQuery('.counter').counterUp({
+          delay: 10,
+          time: 1000
+        });
+      },
 
-			initParallaxBg: function () {
-				jQuery('.parallaxBg').parallax("50%", 0.2);
-				jQuery('.parallaxBg1').parallax("50%", 0.4);
-			}
-		};
-	}();
+      initParallaxBg: function () {
+        jQuery('.parallaxBg').parallax("50%", 0.2);
+        jQuery('.parallaxBg1').parallax("50%", 0.4);
+      }
+    };
+  }();
 
-	io.sails.transports = ['polling'];
+  io.sails.transports = ['polling'];
 
-	jQuery(document).ready(function () {
-		App.init();
+  jQuery(document).ready(function () {
+    App.init();
 		App.initScrollBar();
-	});
 
-	io.socket.on('connect', function () {
-		io.socket.on('notification', function (data) {
-			console.log(data)
-		});
-	});
+    $('.clickable').click(function () {
+      window.location.href = $(this).data('url');
+    });
+  });
+
+  io.socket.on('connect', function () {
+    io.socket.on('notification', function (data) {
+      console.log(data)
+    });
+
+    {% if user and user.notifications.length > 0 %}
+    var notificationAlert = $("#notificationAlert");
+    var notificationAlertText = $("#notificationAlertText");
+    $('.close').on('click', function (e) {
+      var notificationToRemove = $(this).parent().parent();
+      getCSRF(function (csrf) {
+        io.socket.post('/profile/notification/' + notificationToRemove.data('id'), {_csrf: csrf});
+        notificationToRemove.slideUp("normal", function () {
+          $.when(notificationToRemove.remove()).then(function() {
+            var totalNotifications = parseInt(notificationAlertText.text()) - 1;
+            if (totalNotifications <= 0) {
+              notificationAlert.fadeOut("normal", function() {
+                notificationAlert.remove();
+              })
+            } else {
+              notificationAlertText.text(totalNotifications);
+            }
+          });
+        });
+      });
+    });
+    {% endif %}
+  });
 </script>
 {% block scripts %}{% endblock %}
 </body>
