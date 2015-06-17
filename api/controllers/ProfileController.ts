@@ -82,12 +82,20 @@ module.exports = {
 
   createAddon: function (req, res) {
     NewRelic.setControllerName('ProfileController.createAddon');
-    res.view({
-      title: "Create Addon",
-      subtitle: "Create and Upload a New Addon",
-      breadcrumbs: [['/profile', 'Your Profile']],
-      activeTab: 'profile.createAddon'
-    })
+    Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
+      .then(function(tags) {
+        res.view({
+          title: "Create Addon",
+          subtitle: "Create and Upload a New Addon",
+          breadcrumbs: [['/profile', 'Your Profile']],
+          activeTab: 'profile.createAddon',
+          popularTags: tags
+        });
+      }).catch(function(err) {
+        PrettyError(err, "An error occurred during Tag.find inside ProfileController.createAddon");
+        req.flash("error", "Something went wrong, please try again");
+        res.redirect("/profile");
+      });
   },
 
   createAddonPOST: function (req, res) {
@@ -195,13 +203,21 @@ module.exports = {
       .then(function (addon) {
         if (addon !== undefined) {
           if (addon.canModify(req.user)) {
-            res.view({
-              title: "Edit Addon",
-              subtitle: "Editing Addon '" + addon.name + "'",
-              breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon']],
-              activeTab: 'profile.addons',
-              addon: addon
-            })
+            Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
+              .then(function(tags) {
+                res.view({
+                  title: "Edit Addon",
+                  subtitle: "Editing Addon '" + addon.name + "'",
+                  breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon']],
+                  activeTab: 'profile.addons',
+                  addon: addon,
+                  popularTags: tags
+                })
+              }).catch(function(err) {
+                PrettyError(err, "An error occurred during Tag.find inside ProfileController.editAddon");
+                req.flash("error", "Something went wrong, please try again");
+                res.redirect("/profile");
+              });
           } else {
             res.send(403)
           }
@@ -242,6 +258,7 @@ module.exports = {
               });
             }
 
+            console.log(req.body.rawTags)
             if (req.body.price) {
               req.body.price = parseFloat(req.body.price) * 100;
             }

@@ -2,6 +2,83 @@
 
 {% block css %}
   {% include 'components/profile/commoncss.swig.html' %}
+  <link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet"/>
+  <style>
+    #tagsInput {
+      -webkit-appearance: none;
+      -webkit-rtl-ordering: logical;
+      align-items: flex-start;
+      background-attachment: scroll;
+      background-clip: border-box;
+      background-color: rgb(255, 255, 255);
+      background-image: none;
+      background-origin: padding-box;
+      background-size: auto;
+      border-bottom-color: rgb(153, 153, 153);
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      border-image-outset: 0px;
+      border-image-repeat: stretch;
+      border-image-slice: 100%;
+      border-image-source: none;
+      border-image-width: 1;
+      border-left-color: rgb(153, 153, 153);
+      border-left-style: solid;
+      border-left-width: 1px;
+      border-right-color: rgb(153, 153, 153);
+      border-right-style: solid;
+      border-right-width: 1px;
+      border-top-color: rgb(153, 153, 153);
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      border-top-style: solid;
+      border-top-width: 1px;
+      box-sizing: border-box;
+      clip: rect(0px 0px 0px 0px);
+      color: rgb(64, 64, 64);
+      cursor: default;
+      display: block;
+      font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-stretch: normal;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: normal;
+      height: 33px;
+      letter-spacing: normal;
+      line-height: 23px;
+      margin-bottom: -1px;
+      margin-left: -1px;
+      margin-right: -1px;
+      margin-top: -1px;
+      outline-color: rgb(64, 64, 64);
+      outline-style: none;
+      outline-width: 0px;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      padding-bottom: 6px;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 6px;
+      position: absolute;
+      text-align: start;
+      text-indent: 0px;
+      text-rendering: auto;
+      text-shadow: none;
+      text-transform: none;
+      transition-delay: 0s;
+      transition-duration: 0.3s;
+      transition-property: border-color;
+      transition-timing-function: ease;
+      white-space: nowrap;
+      width: 707.5px;
+      word-spacing: 0px;
+      writing-mode: lr-tb;
+      -webkit-writing-mode: horizontal-tb;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -80,13 +157,12 @@
                     </section>
 
                     <section>
-                      <label class="label">Tags</label>
-                      <label class="input">
-                        <i class="icon-prepend icon icon-comment"></i>
-                        <input type="text" value="{{ addon.rawTags }}" name="rawTags" required>
-                        <b class="tooltip tooltip-bottom-left">A comma separated list of tags that describe your
-                          addon.</b>
-                      </label>
+                      <label class="label">Tags (Choose popular tags or add your own)</label>
+                      <select name="rawTags" id="tagsInput" multiple="multiple">
+                        {% for tag in popularTags %}
+                          <option value="{{ tag.name }}">{{ tag.name }}</option>
+                        {% endfor %}
+                      </select>
                     </section>
                   </fieldset>
 
@@ -190,6 +266,7 @@
   <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
   <script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
   <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
   <script async>
     // Attach the addon to the window so it can be accessed from client-side Javascript
     window.addon = {{ addon|json|safe }};
@@ -198,6 +275,11 @@
     var $descriptionEditor = $("#descriptionEditor");
     $descriptionEditor.val(window.addon.description);
     $descriptionEditor.markdown({autofocus: false, savable: false, fullscreen: false, iconlibrary: 'mm'})
+
+    $("#tagsInput").select2({
+      tags: true,
+      tokenSeparators: [',', ' ']
+    });
   </script>
   <script async src="{{ assetPrefix }}/js/pages/profile/editAddon.js"></script>
 {% endblock %}
