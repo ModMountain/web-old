@@ -2,10 +2,11 @@
 
 $(function () {
     $(".approveButton").on('click', function (e) {
+      var id = $(this).data('addon-id');
 	    io.socket.get('/csrfToken', function(data) {
 		    io.socket.post('/staff/approveAddon', {
 			    _csrf: data._csrf,
-			    addonId: $(this).data('addon-id')
+			    addonId: id
 		    });
 	    });
 
@@ -15,10 +16,11 @@ $(function () {
         });
     });
     $(".denyButton").on('click', function (e) {
+      var id = $(this).data('addon-id');
 	    io.socket.get('/csrfToken', function(data) {
 		    io.socket.post('/staff/denyAddon', {
 			    _csrf: data._csrf,
-			    addonId: $(this).data('addon-id')
+			    addonId: id
 		    });
 	    });
         var $row = $(this).parent().parent().parent().parent();

@@ -27,47 +27,51 @@ module.exports = {
     approveAddon: function (req, res) {
 	    NewRelic.setControllerName('StaffController.approveAddon');
 	    var addonId = req.param('addonId');
-        Addon.update(addonId, {status: Addon.Status.APPROVED})
-            .then(function (addon) {
-                if (req.isSocket) {
-                    req.socket.emit('notification', {type: 'success', msg: 'Addon approved.'});
-                } else {
-                    req.flash('success', 'Addon approved.');
-                    res.redirect('/staff/addons');
-                }
-            })
-            .catch(function (err) {
-                PrettyError(err, 'An error occurred during Addon.update inside StaffController.approveAddon');
-                if (req.isSocket) {
-                    req.socket.emit('notification', {type: 'error', msg: 'Something went wrong: ' + err});
-                } else {
-                    req.flash('error', 'Something went wrong: ' + err);
-                    res.redirect('/staff/addons');
-                }
-            });
+      Addon.findOne(addonId)
+      .then(function(addon) {
+          addon.status = Addon.Status.APPROVED;
+          addon.save()
+        }).then(function() {
+          if (req.isSocket) {
+            req.socket.emit('notification', {type: 'success', msg: 'Addon approved.'});
+          } else {
+            req.flash('success', 'Addon approved.');
+            res.redirect('/staff/addons');
+          }
+        }).catch(function (err) {
+          PrettyError(err, 'An error occurred inside StaffController.approveAddon');
+          if (req.isSocket) {
+            req.socket.emit('notification', {type: 'error', msg: 'Something went wrong: ' + err});
+          } else {
+            req.flash('error', 'Something went wrong: ' + err);
+            res.redirect('/staff/addons');
+          }
+        });
     },
 
     denyAddon: function (req, res) {
 	    NewRelic.setControllerName('StaffController.denyAddon');
-	    var addonId = req.param('addonId');
-        Addon.update(addonId, {status: Addon.Status.DENIED})
-            .then(function (addon) {
-                if (req.isSocket) {
-                    req.socket.emit('notification', {type: 'success', msg: 'Addon denied.'});
-                } else {
-                    req.flash('success', 'Addon denied.');
-                    res.redirect('/staff/addons');
-                }
-            })
-            .catch(function (err) {
-                PrettyError(err, 'An error occurred during Addon.update inside StaffController.denyAddon');
-                if (req.isSocket) {
-                    req.socket.emit('notification', {type: 'error', msg: 'Something went wrong: ' + err});
-                } else {
-                    req.flash('error', 'Something went wrong: ' + err);
-                    res.redirect('/staff/addons');
-                }
-            });
+      var addonId = req.param('addonId');
+      Addon.findOne(addonId)
+        .then(function(addon) {
+          addon.status = Addon.Status.DENIED;
+          addon.save()
+        }).then(function() {
+          if (req.isSocket) {
+            req.socket.emit('notification', {type: 'success', msg: 'Addon denied.'});
+          } else {
+            req.flash('success', 'Addon approved.');
+            res.redirect('/staff/addons');
+          }
+        }).catch(function (err) {
+          PrettyError(err, 'An error occurred inside StaffController.denyAddon');
+          if (req.isSocket) {
+            req.socket.emit('notification', {type: 'error', msg: 'Something went wrong: ' + err});
+          } else {
+            req.flash('error', 'Something went wrong: ' + err);
+            res.redirect('/staff/addons');
+          }
+        });
     }
 };
 
