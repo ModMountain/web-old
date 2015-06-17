@@ -32,7 +32,7 @@ module.exports = {
         req.user.addons = addons;
         res.view({
           title: "Your Addons",
-          breadcrumbs: [["/profile", "Your Profile"]],
+          breadcrumbs: [["/profile", "Profile"]],
           activeTab: 'profile.addons'
         })
       }).catch(function (err) {
@@ -46,7 +46,7 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.settings');
     res.view({
       title: "Your Settings",
-      breadcrumbs: [["/profile", "Your Profile"]],
+      breadcrumbs: [["/profile", "Profile"]],
       activeTab: 'profile.settings'
     })
   },
@@ -87,7 +87,7 @@ module.exports = {
         res.view({
           title: "Create Addon",
           subtitle: "Create and Upload a New Addon",
-          breadcrumbs: [['/profile', 'Your Profile']],
+          breadcrumbs: [['/profile', 'Profile']],
           activeTab: 'profile.createAddon',
           popularTags: tags
         });
@@ -177,7 +177,7 @@ module.exports = {
               //res.view('/profile/viewAddon', {
               title: "View Addon",
               subtitle: "Viewing Addon '" + addon.name + "'",
-              breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons']],
+              breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons']],
               activeTab: 'profile.addons',
               addon: addon
             })
@@ -208,7 +208,7 @@ module.exports = {
                 res.view({
                   title: "Edit Addon",
                   subtitle: "Editing Addon '" + addon.name + "'",
-                  breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon']],
+                  breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons'], ['/profile/addons/' + addonId, addon.name]],
                   activeTab: 'profile.addons',
                   addon: addon,
                   popularTags: tags
@@ -367,9 +367,10 @@ module.exports = {
           res.forbidden();
         } else {
           res.view('addons/viewaddon', {
-            title: addon.name,
+            title: "Preview " + addon.name,
             activeTab: 'profile.addons',
-            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/addons', 'Your Addons'], ['/profile/addons/' + addonId, 'View Addon'], ['/profile/addons/' + addonId + '/preview', 'Preview Addon']],
+            noTitleCrumb: true,
+            breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons'], ['/profile/addons/' + addonId, addon.name], 'Preview'],
             addon: addon
           })
         }
@@ -407,7 +408,7 @@ module.exports = {
           res.view({
             title: "Messages",
             subtitle: "Read and Reply to Your Messages",
-            breadcrumbs: [['/profile', 'Your Profile']],
+            breadcrumbs: [['/profile', 'Profile']],
             activeTab: 'profile.messages'
           });
         });
@@ -440,7 +441,7 @@ module.exports = {
 
           res.view({
             title: conversation.title,
-            breadcrumbs: [['/profile', 'Your Profile'], ['/profile/messages', "Messages"]],
+            breadcrumbs: [['/profile', 'Profile'], ['/profile/messages', "Messages"]],
             activeTab: 'profile.messages',
             conversation: conversation
           })
@@ -549,7 +550,7 @@ module.exports = {
         req.user.transactions = populatedTransactions;
         res.view({
           title: 'Your Transactions',
-          breadcrumbs: [["/profile", "Your Profile"]],
+          breadcrumbs: [["/profile", "Profile"]],
           activeTab: 'profile.transactions'
         })
       });

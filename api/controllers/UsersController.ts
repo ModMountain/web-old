@@ -18,7 +18,7 @@ module.exports = {
 				res.view({
 					title: "Users",
 					activeTab: 'users',
-					breadcrumbs: [],
+					breadcrumbs: true,
 					users: users
 				});
 			});

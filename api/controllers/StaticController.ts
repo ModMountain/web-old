@@ -38,7 +38,7 @@ module.exports = {
 		res.view({
 			title: 'Privacy Policy',
 			activeTab: 'extra',
-			breadcrumbs: []
+			breadcrumbs: true
 		});
 	},
 
@@ -47,7 +47,7 @@ module.exports = {
 		res.view({
 			title: 'Terms of Service',
 			activeTab: 'extra',
-			breadcrumbs: []
+			breadcrumbs: true
 		});
 	},
 
@@ -56,7 +56,7 @@ module.exports = {
 		res.view({
 			title: 'Code of Conduct',
 			activeTab: 'extra',
-			breadcrumbs: []
+			breadcrumbs: true
 		});
 	}
 };
