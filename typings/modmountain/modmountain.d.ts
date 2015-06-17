@@ -96,8 +96,7 @@ declare class Addon extends Model {
     featured:boolean;
     rawTags:string;
     galleryImages:Array<string>;
-    thinCardImage:string;
-    wideCardImage:string;
+    cardImage:string;
     bannerImage:string;
     author:User;
     purchasers:Array<User>;
@@ -367,6 +366,12 @@ Services
 
 declare class FeeService {
 	static chargeFee(user:User):void;
+}
+
+declare class FileService {
+  static preprocessFile(file:Object);
+  static processFile(file:Object);
+  static processImage(file:Object, width:number, height:number);
 }
 
 declare class NotificationService {

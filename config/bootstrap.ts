@@ -32,6 +32,11 @@ var setGlobals = function () {
             console.error('From promise:', promise)
         });
     });
+    process.on("uncaughtException", function(error) {
+      PrettyError(error, 'An uncaught exception has caused Node.js to crash!', function() {
+        process.exit(1);
+      });
+    });
 
     if (sails.config.environment === 'production') {
         sails.hooks.http.app.locals.assetPrefix = '/assets'

@@ -103,43 +103,32 @@
                                     </fieldset>
 
 	                                <fieldset>
-		                                <section>
-			                                <label class="label">Zip File</label>
-			                                <label for="file" class="input input-file">
-				                                <div class="button"><input type="file" id="zipFileInput" name="zipFile" onchange="this.parentNode.nextSibling.value = this.value" accept="application/zip,application/x-zip,application/x-zip-compressed">Browse</div><input type="text" readonly="">
-				                                <b class="tooltip tooltip-bottom-left">This should be a zip file containing your addon.</b>
-			                                </label>
-		                                </section>
+                                    <section>
+                                      <label class="label">Zip File (Containing your addon)</label>
+                                      <label for="file" class="input input-file">
+                                        <div class="button"><input type="file" id="zipFileInout" name="zipFile" onchange="this.parentNode.nextSibling.value = this.value" accept="application/zip,application/x-zip,application/x-zip-compressed">Browse</div><input type="text" readonly="">
+                                      </label>
+                                    </section>
 	                                </fieldset>
 	                                <fieldset>
 		                                <section>
-			                                <label class="label">Banner Image (Optional)</label>
+			                                <label class="label">Card Image (Aspect ratio 2:3, preferred size is 400 by 600)</label>
 			                                <label for="file" class="input input-file">
-				                                <div class="button"><input type="file" id="bannerImageInput" name="bannerImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
-				                                <b class="tooltip tooltip-bottom-left">Large banner for the homepage. 1170x500 Pixels.</b>
+				                                <div class="button"><input type="file" id="cardImageInput" name="cardImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
 			                                </label>
 		                                </section>
 		                                <section>
-			                                <label class="label">Thin Card Image</label>
-			                                <label for="file" class="input input-file">
-				                                <div class="button"><input type="file" id="cardImageInput" name="thinCardImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
-				                                <b class="tooltip tooltip-bottom-left">Thin card displayed on the home page. 973x1196 Pixels.</b>
-			                                </label>
-		                                </section>
-		                                <section>
-			                                <label class="label">Wide Card Image</label>
-			                                <label for="file" class="input input-file">
-				                                <div class="button"><input type="file" id="cardImageInput" name="wideCardImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
-				                                <b class="tooltip tooltip-bottom-left">Wide card displayed on the addons page. 973x1196 Pixels.</b>
-			                                </label>
-		                                </section>
-		                                <section>
-			                                <label class="label">Gallery Images</label>
+			                                <label class="label">Gallery Images (Aspect ratio 1:1, preferred size is 600 by 600)</label>
 			                                <label for="file" class="input input-file">
 				                                <div class="button"><input type="file" id="galleryImagesInput" name="galleryImages" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*" multiple>Browse</div><input type="text" readonly="">
-				                                <b class="tooltip tooltip-bottom-left">Pictures displayed on your addon's store page. 550x560 Pixels each.</b>
 			                                </label>
 		                                </section>
+                                    <section>
+                                      <label class="label">Banner Image (Optional, only 1920 by 500 will be accepted)</label>
+                                      <label for="file" class="input input-file">
+                                        <div class="button"><input type="file" id="bannerImageInput" name="bannerImage" onchange="this.parentNode.nextSibling.value = this.value" accept="image/*">Browse</div><input type="text" readonly="">
+                                      </label>
+                                    </section>
 	                                </fieldset>
 
 	                                <fieldset>

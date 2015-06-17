@@ -127,7 +127,7 @@ module.exports = {
 			.then(function (addon:Addon) {
 				      if (addon === undefined) res.send(404);
 				      else if (addon.status !== Addon.Status.PUBLISHED && !addon.canModify(req.user)) res.send(403);
-				      else if (addon.galleryImages.indexOf(artwork) === -1 && addon.bannerImage !== artwork && addon.thinCardImage !== artwork && addon.wideCardImage !== artwork) res.send(403);
+				      else if (addon.galleryImages.indexOf(artwork) === -1 && addon.bannerImage !== artwork && addon.cardImage !== artwork) res.send(403);
 				      else {
 					      // Get the file and it's metadata from GridFS
 					      sails.hooks.gfs.findOne({_id: artwork}, function (err, file) {

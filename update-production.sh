@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Make sure system dependencies are installed
+apt-get install -y graphicsmagick
+
 # Flush the temporary direct so the Typescript compiler doesn't shit itself
 rm -rf .tmp
 
