@@ -47,7 +47,8 @@
     "stack-trace": "0.0.9",
     "streamifier": "^0.1.1",
     "stripe": "^3.3.4",
-    "swig": "^1.4.2"
+    "swig": "^1.4.2",
+    "swig-extras": "0.0.1"
   },
   "scripts": {
     "start": "node modmtn.js",

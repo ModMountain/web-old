@@ -83,5 +83,6 @@ module.exports = {
 		token: '***REMOVED***'
 	},
 
-	analytics: false
+	analytics: false,
+  templateCache: false
 };

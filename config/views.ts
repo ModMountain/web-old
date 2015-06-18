@@ -18,13 +18,15 @@ module.exports.views = {
   engine: {
     ext: 'swig.html',
     fn: function(pathName, locals, cb) {
-      var swig = require('swig');
-      swig.setDefaults({
-        root: process.cwd() + '/views',
-        cache: false,
-        loader: swig.loaders.fs(process.cwd() + '/views')
+      var Swig = require('swig');
+      var swigInstance = new Swig.Swig({
+        cache: sails.config.templateCache,
+        loader: Swig.loaders.fs(process.cwd() + '/views')
       });
-      return swig.renderFile(pathName, locals, cb);
+      var extras = require('swig-extras');
+      extras.useFilter(swigInstance, 'markdown');
+      extras.useTag(swigInstance, 'markdown');
+      return swigInstance.renderFile(pathName, locals, cb);
     }
   },
 

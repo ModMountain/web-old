@@ -77,22 +77,6 @@ module.exports = {
 		}
 	},
 
-	// Turn view caching on for production
-	views: {
-		engine: {
-			ext: 'swig.html',
-			fn: function (pathName, locals, cb) {
-				var swig = require('swig');
-				swig.setDefaults({
-					root: process.cwd() + '/views',
-					cache: 'memory',
-					loader: swig.loaders.fs(process.cwd() + '/views')
-				});
-				return swig.renderFile(pathName, locals, cb);
-			}
-		}
-	},
-
 	stripe: {
 		secretKey: '***REMOVED***',
 		publicKey: '***REMOVED***',
@@ -110,5 +94,6 @@ module.exports = {
 		token: '***REMOVED***'
 	},
 
-	analytics: true
+	analytics: true,
+  templateCache: 'memory'
 };
