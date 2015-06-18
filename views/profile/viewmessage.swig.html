@@ -110,6 +110,14 @@
       messagesArea.mCustomScrollbar("scrollTo", "bottom");
       var scrollContentArea = messagesArea.find(".mCSB_container");
 
+      // Handle the enter button being pressed inside the respondInput box
+      respondInput.keypress(function(e) {
+        if (e.which === 13 && !e.shiftKey) {
+          respondButton.click();
+          e.preventDefault();
+        }
+      });
+
       // Handle the respond button being pressed
       respondButton.on('click', function (e) {
         var body = respondInput.val();
