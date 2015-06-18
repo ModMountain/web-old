@@ -1,26 +1,25 @@
 <!--Left Sidebar-->
 <div class="col-md-3 md-margin-bottom-40">
-    <img class="img-responsive profile-img margin-bottom-20" style="margin-left: auto; margin-right: auto;" src="{{ user.steamProfile.photos[2].value }}" alt="">
+  <img class="img-responsive profile-img margin-bottom-20" style="margin-left: auto; margin-right: auto;"
+       src="{{ user.steamProfile.photos[2].value }}" alt="">
 
-    {# Navigation #}
-    <ul class="list-group sidebar-nav-v1 margin-bottom-40" id="sidebar-nav-1">
-        <li class="list-group-item {% if activeTab == "profile.purchases" %}active{% endif %}">
-            <a href="/profile"><i class="icon icon-usd"></i> Purchases</a>
-        </li>
-	    <li class="list-group-item {% if activeTab == "profile.transactions" %}active{% endif %}">
-		    <a href="/profile/finances"><i class="icon icon-bar-chart"></i> Finances</a>
-	    </li>
-        <li class="list-group-item {% if activeTab == "profile.addons" %}active{% endif %}">
-            <span class="badge badge-blue">{{ user.addons.length || 0 }}</span>
-            <a href="/profile/addons"><i class="icon icon-user"></i> Addons </a>
-        </li>
-        <li class="list-group-item {% if activeTab == "profile.messages" %}active{% endif %}">
-            <span class="badge badge-blue">{{ user.conversations.length || 0 }}</span>
-            <a href="/profile/messages"><i class="icon icon-envelope"></i> Messages</a>
-        </li>
-        <li class="list-group-item {% if activeTab == "profile.settings" %}active{% endif %}">
-            <a href="/profile/settings"><i class="icon icon-cog"></i> Settings</a>
-        </li>
-    </ul>
+  {# Navigation #}
+  <ul class="list-group sidebar-nav-v1 margin-bottom-40" id="sidebar-nav-1">
+    <li class="list-group-item {% if activeTab == "profile.purchases" %}active{% endif %}">
+      <a href="/profile"><i class="icon icon-usd"></i> Purchases</a>
+    </li>
+    <li class="list-group-item {% if activeTab == "profile.transactions" %}active{% endif %}">
+      <a href="/profile/finances"><i class="icon icon-bar-chart"></i> Finances</a>
+    </li>
+    <li class="list-group-item {% if activeTab == "profile.addons" %}active{% endif %}">
+      <a href="/profile/addons"><i class="icon icon-user"></i> Addons </a>
+    </li>
+    <li class="list-group-item {% if activeTab == "profile.messages" %}active{% endif %}">
+      <a href="/profile/messages"><i class="icon icon-envelope"></i> Messages</a>
+    </li>
+    <li class="list-group-item {% if activeTab == "profile.settings" %}active{% endif %}">
+      <a href="/profile/settings"><i class="icon icon-cog"></i> Settings</a>
+    </li>
+  </ul>
 </div>
 <!--End Left Sidebar-->

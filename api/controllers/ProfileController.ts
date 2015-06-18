@@ -14,30 +14,48 @@ module.exports = {
 
   purchases: function (req, res) {
     NewRelic.setControllerName('ProfileController.purchases');
-    Promise.all(_.map(req.user.purchases, function (purchase) {
-      return Addon.findOne(purchase.id).populate('author');
-    }))
-      .then(function (populatedPurchases) {
+    User.findOne(req.user.id).populate('purchases')
+      .then(function (user) {
+        res.locals.user = user;
+        req.user = user;
+
+        return Promise.all(_.map(req.user.purchases, function (purchase) {
+          return Addon.findOne(purchase.id).populate('author');
+        }))
+      }).then(function (populatedPurchases) {
         req.user.purchases = populatedPurchases;
-        res.view({title: "Purchases", activeTab: 'profile.purchases', breadcrumbs: true});
-      })
+        res.view({
+          title: "Purchases",
+          activeTab: 'profile.purchases',
+          breadcrumbs: true
+        });
+      }).catch(function (error) {
+        PrettyError(error, "Error occurred during ProfileController.purchases");
+        req.flash('error', "Something went wrong while displaying your purchases, please try again.");
+        res.redirect('/');
+      });
   },
 
   addons: function (req, res) {
     NewRelic.setControllerName('ProfileController.addons');
-    Promise.all(_.map(req.user.addons, (addon) => {
-      return Addon.findOne(addon.id).populate('purchasers')
-    }))
-      .then(function (addons) {
+    User.findOne(req.user.id).populate('addons')
+      .then(function (user) {
+        res.locals.user = user;
+        req.user = user;
+
+        return Promise.all(_.map(req.user.addons, (addon) => {
+          return Addon.findOne(addon.id).populate('purchasers')
+        }));
+      }).then(function (addons) {
         req.user.addons = addons;
         res.view({
           title: "Addons",
           breadcrumbs: [["/profile", "Profile"]],
           activeTab: 'profile.addons'
         })
-      }).catch(function (err) {
-        PrettyError(err, "An error occurred during Promise.all inside ProfileController.addons")
-        req.flash('error', "Something went wrong, please try again.")
+      }).catch(function (error) {
+        PrettyError(error, "Error occurred during ProfileController.addons");
+        req.flash('error', "Something went wrong while displaying your addons, please try again.");
         res.redirect('/profile');
       });
   },
@@ -64,7 +82,6 @@ module.exports = {
     if (req.body.social_skype) req.user.social.skype = req.body.social_skype;
     if (req.body.social_youtube) req.user.social.youtube = req.body.social_youtube;
     if (req.body.social_email) req.user.social.email = req.body.social_email;
-    console.log(req.body, req.user.social)
 
     req.user.save()
       .then(function () {
@@ -83,7 +100,7 @@ module.exports = {
   createAddon: function (req, res) {
     NewRelic.setControllerName('ProfileController.createAddon');
     Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
-      .then(function(tags) {
+      .then(function (tags) {
         res.view({
           title: "Create Addon",
           subtitle: "Create and Upload a New Addon",
@@ -91,7 +108,7 @@ module.exports = {
           activeTab: 'profile.createAddon',
           popularTags: tags
         });
-      }).catch(function(err) {
+      }).catch(function (err) {
         PrettyError(err, "An error occurred during Tag.find inside ProfileController.createAddon");
         req.flash("error", "Something went wrong, please try again");
         res.redirect("/profile");
@@ -168,30 +185,23 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.viewAddon');
     var addonId = req.param('id');
     Addon.findOne(addonId)
-      .then(function (addon) {
-        // Addon exists
-        if (addon !== undefined) {
-          // and is owned by the current user
-          if (addon.author === req.user.id) {
-            res.view({
-              //res.view('/profile/viewAddon', {
-              title: "View Addon",
-              subtitle: "Viewing Addon '" + addon.name + "'",
-              breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons']],
-              activeTab: 'profile.addons',
-              addon: addon
-            })
-          } else {
-            req.flash('error', "You do not have permission to access that addon.");
-            res.redirect('/profile/addons')
-          }
+      .then(function (addon:Addon) {
+        if (addon === undefined) {
+          res.notFound();
+        } else if (!addon.canModify(req.user)) {
+          res.forbidden();
         } else {
-          req.flash('error', "The addon you are looking for does not exist.");
-          res.redirect('/profile/addons')
+          res.view({
+            title: addon.name,
+            subtitle: "Viewing Addon '" + addon.name + "'",
+            breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons']],
+            activeTab: 'profile.addons',
+            addon: addon
+          });
         }
       }).catch(function (err) {
         PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.viewAddon');
-        req.flash('error', "An error occurred while trying to view that addon. Please try again.");
+        req.flash('error', "Something went wrong while trying to view addon '" + addonId + "', please try again");
         res.redirect('/profile/addons')
       });
   },
@@ -200,33 +210,27 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.editAddon');
     var addonId = req.param('id');
     Addon.findOne(addonId)
-      .then(function (addon) {
-        if (addon !== undefined) {
-          if (addon.canModify(req.user)) {
-            Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
-              .then(function(tags) {
-                res.view({
-                  title: "Edit Addon",
-                  subtitle: "Editing Addon '" + addon.name + "'",
-                  breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons'], ['/profile/addons/' + addonId, addon.name]],
-                  activeTab: 'profile.addons',
-                  addon: addon,
-                  popularTags: tags
-                })
-              }).catch(function(err) {
-                PrettyError(err, "An error occurred during Tag.find inside ProfileController.editAddon");
-                req.flash("error", "Something went wrong, please try again");
-                res.redirect("/profile");
-              });
-          } else {
-            res.send(403)
-          }
+      .then(function (addon:Addon) {
+        if (addon === undefined) {
+          res.notFound();
+        } else if (!addon.canModify(req.user)) {
+          res.forbidden();
         } else {
-          res.send(404)
+          Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
+            .then(function (tags) {
+              res.view({
+                title: "Edit Addon",
+                subtitle: "Editing Addon '" + addon.name + "'",
+                breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons'], ['/profile/addons/' + addonId, addon.name]],
+                activeTab: 'profile.addons',
+                addon: addon,
+                popularTags: tags
+              })
+            });
         }
       }).catch(function (err) {
-        PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.editAddon');
-        req.flash('error', "Something went wrong while trying to edit addon " + addonId);
+        PrettyError(err, 'An error occurred inside ProfileController.editAddon');
+        req.flash('error', "Something went wrong while trying to edit addon '" + addonId + "', please try again");
         res.redirect('/profile/addons/' + addonId);
       });
   },
@@ -236,59 +240,56 @@ module.exports = {
     var addonId = req.param('id');
     Addon.findOne(addonId)
       .then(function (addon:Addon) {
-        if (addon !== undefined) {
-          if (addon.canModify(req.user)) {
-            req.body.outsideServers = req.body.outsideServers !== undefined;
-            req.body.containsDrm = req.body.containsDrm !== undefined;
-            req.body.status = Addon.Status.PENDING;
-            if (req.files.zipFile !== undefined) {
-              req.body.zipFile = req.files.zipFile[0].objectId.toString();
-              req.body.size = req.files.zipFile[0].size;
-            }
-
-            if (req.files.bannerImage !== undefined) {
-              req.body.bannerImage = req.files.bannerImage[0].objectId.toString();
-            }
-            if (req.files.cardImage !== undefined) {
-              req.body.cardImage = req.files.cardImage[0].objectId.toString();
-            }
-            if (req.files.galleryImages !== undefined) {
-              req.body.galleryImages = _.map(req.files.galleryImages, function (file) {
-                return file.objectId.toString();
-              });
-            }
-
-            console.log(req.body.rawTags)
-            if (req.body.price) {
-              req.body.price = parseFloat(req.body.price) * 100;
-            }
-
-            var oldStatus = addon.status;
-            Addon.update(addonId, req.body)
-              .then(function () {
-                if (oldStatus === Addon.Status.PUBLISHED) {
-                  addon.decrementTags(function () {
-                    req.flash('success', "Addon " + addonId + " updated successfully");
-                  })
-                } else {
-                  req.flash('success', "Addon " + addonId + " updated successfully");
-                }
-              })
-              .catch(function (err) {
-                req.flash('error', "Something went wrong while trying to update addon " + addonId);
-                PrettyError(err, 'An error occurred during Addon.update inside ProfileController.editAddonPOST')
-              }).finally(function () {
-                res.redirect('/profile/addons/' + addonId);
-              })
-          } else {
-            res.send(403)
-          }
+        if (addon === undefined) {
+          res.notFound();
+        } else if (!addon.canModify(req.user)) {
+          res.forbidden();
         } else {
-          res.send(404)
+          req.body.outsideServers = req.body.outsideServers !== undefined;
+          req.body.containsDrm = req.body.containsDrm !== undefined;
+          req.body.status = Addon.Status.PENDING;
+          if (req.files.zipFile !== undefined) {
+            req.body.zipFile = req.files.zipFile[0].objectId.toString();
+            req.body.size = req.files.zipFile[0].size;
+          }
+
+          if (req.files.bannerImage !== undefined) {
+            req.body.bannerImage = req.files.bannerImage[0].objectId.toString();
+          }
+          if (req.files.cardImage !== undefined) {
+            req.body.cardImage = req.files.cardImage[0].objectId.toString();
+          }
+          if (req.files.galleryImages !== undefined) {
+            req.body.galleryImages = _.map(req.files.galleryImages, function (file) {
+              return file.objectId.toString();
+            });
+          }
+
+          if (req.body.price) {
+            req.body.price = parseFloat(req.body.price) * 100;
+          }
+
+          var oldStatus = addon.status;
+          Addon.update(addonId, req.body)
+            .then(function () {
+              if (oldStatus === Addon.Status.PUBLISHED) {
+                addon.decrementTags(function () {
+                  req.flash('success', "Addon " + addonId + " updated successfully");
+                })
+              } else {
+                req.flash('success', "Addon " + addonId + " updated successfully");
+              }
+            })
+            .catch(function (err) {
+              req.flash('error', "Something went wrong while trying to update addon " + addonId);
+              PrettyError(err, 'An error occurred during Addon.update inside ProfileController.editAddonPOST')
+            }).finally(function () {
+              res.redirect('/profile/addons/' + addonId);
+            })
         }
       }).catch(function (err) {
         PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.editAddonPOST');
-        req.flash('error', "Something went wrong while trying to update addon " + addonId);
+        req.flash('error', "Something went wrong while trying to update addon '" + addonId + "', please try again");
         res.redirect('/profile/addons/' + addonId);
       });
   },
@@ -297,30 +298,22 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.removeAddon');
     var addonId = req.param('id');
     Addon.findOne(addonId)
-      .then(function (addon) {
-        if (addon !== undefined) {
-          if (addon.canModify(req.user)) {
-            Addon.destroy(addonId)
-              .then(function () {
-                req.flash('success', "Addon " + addonId + " removed successfully");
-              })
-              .catch(function (err) {
-                req.flash('error', "Something went wrong while trying to remove addon " + addonId);
-                return PrettyError(err, 'An error occurred during Addon.update inside ProfileController.removeAddonPOST:')
-              }).finally(function () {
-                res.redirect('/profile/addons/');
-              })
-          } else {
-            res.send(403)
-          }
+      .then(function (addon:Addon) {
+        if (addon === undefined) {
+          res.notFound();
+        } else if (!addon.canModify(req.user)) {
+          res.forbidden();
         } else {
-          res.send(404)
+          return Addon.destroy(addonId)
         }
+      }).then(function () {
+        req.flash('success', "Addon '" + addonId + "' removed successfully");
       }).catch(function (err) {
         PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.removeAddon');
-        req.flash('error', "Something went wrong while trying to remove addon " + addonId);
-        res.redirect('/profile/addons/' + addonId);
-      });
+        req.flash('error', "Something went wrong while trying to remove addon '" + addonId + "', please try again");
+      }).finally(function () {
+        res.redirect('/profile/addons/');
+      })
   },
 
   publishAddon: function (req, res) {
@@ -328,26 +321,24 @@ module.exports = {
     var addonId = req.param('id');
     Addon.findOne(addonId)
       .then(function (addon:Addon) {
-        if (addon !== undefined) {
-          if (addon.canModify(req.user)) {
-            if (addon.status === Addon.Status.APPROVED) {
-              addon.status = Addon.Status.PUBLISHED;
-              addon.save()
-                .then(function () {
-                  addon.incrementTags(function () {
-                    req.flash('success', "Addon '" + addon.name + "' has been published");
-                    res.redirect('/profile/addons/' + addonId);
-                  });
-                });
-            } else {
-              req.flash('error', "You cannot publish an addon that is not approved.");
-              res.redirect('/profile/addons/' + addonId);
-            }
-          } else {
-            res.send(403)
-          }
+        if (addon === undefined) {
+          res.notFound();
+        } else if (!addon.canModify(req.user)) {
+          res.forbidden();
         } else {
-          res.send(404)
+          if (addon.status === Addon.Status.APPROVED) {
+            addon.status = Addon.Status.PUBLISHED;
+            addon.save()
+              .then(function () {
+                addon.incrementTags(function () {
+                  req.flash('success', "Addon '" + addon.name + "' has been published");
+                  res.redirect('/profile/addons/' + addonId);
+                });
+              });
+          } else {
+            req.flash('error', "You cannot publish an addon that is not approved.");
+            res.redirect('/profile/addons/' + addonId);
+          }
         }
       }).catch(function (err) {
         PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.publishAddon');
@@ -383,36 +374,37 @@ module.exports = {
 
   messages: function (req, res) {
     NewRelic.setControllerName('ProfileController.messages');
-    if (req.isSocket) {
-      //Conversation.subscribe(req.socket, req.user.conversations);
-    } else {
-      var promises = _.map(req.user.conversations, function(conversation) {
-        return Conversation.findOne(conversation.id).populateAll();
-      });
-      Promise.all(promises)
-      .then(function(conversations) {
-          req.user.conversations = conversations;
-          req.user.conversations.forEach(function(conversation) {
-            // Clean up the participants
-            var usernameMap = {};
-            conversation.participants = conversation.participants.map(function(participant) {
-              usernameMap[participant.id] = participant.username;
-              return participant.username;
-            });
-            conversation.participants.join(', ');
+    User.findOne(req.user.id).populate('conversations')
+      .then(function (user) {
+        res.locals.user = user;
+        req.user = user;
 
-            // Set the last reply
-            conversation.lastReply = conversation.messages[conversation.messages.length - 1];
-            conversation.lastReply.username = usernameMap[conversation.lastReply.user];
+        return Promise.all(_.map(req.user.conversations, function (conversation) {
+          return Conversation.findOne(conversation.id).populateAll();
+        }));
+      }).then(function (conversations) {
+        req.user.conversations = conversations;
+        req.user.conversations.forEach(function (conversation) {
+          // Clean up the participants
+          var usernameMap = {};
+          conversation.participants = conversation.participants.map(function (participant) {
+            usernameMap[participant.id] = participant.username;
+            return participant.username;
           });
-          res.view({
-            title: "Messages",
-            subtitle: "Read and Reply to Your Messages",
-            breadcrumbs: [['/profile', 'Profile']],
-            activeTab: 'profile.messages'
-          });
+          conversation.participants.join(', ');
+
+          // Set the last reply
+          conversation.lastReply = conversation.messages[conversation.messages.length - 1];
+          conversation.lastReply.username = usernameMap[conversation.lastReply.user];
         });
-    }
+
+        res.view({
+          title: "Messages",
+          subtitle: "Read and Reply to Your Messages",
+          breadcrumbs: [['/profile', 'Profile']],
+          activeTab: 'profile.messages'
+        });
+      });
   },
 
   viewMessage: function (req, res) {
@@ -429,11 +421,11 @@ module.exports = {
           Conversation.subscribe(req.socket, conversationId);
         } else {
           var usernameMap = {};
-          conversation.participants.forEach(function(participant:User) {
+          conversation.participants.forEach(function (participant:User) {
             usernameMap[participant.id] = participant;
           });
 
-          conversation.messages = conversation.messages.map(function(message) {
+          conversation.messages = conversation.messages.map(function (message) {
             message.avatar = usernameMap[message.user].steamProfile.photos[2].value;
             message.username = usernameMap[message.user].username;
             return message;
@@ -456,9 +448,9 @@ module.exports = {
   respondToMessage: function (req, res) {
     var conversationId = req.param('id');
     var body = SanitizeHTML(req.param('body'), {
-      allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
+      allowedTags: ['b', 'i', 'em', 'strong', 'a'],
       allowedAttributes: {
-        'a': [ 'href' ]
+        'a': ['href']
       }
     });
 
@@ -495,7 +487,7 @@ module.exports = {
       });
   },
 
-  addUserToConversation: function(req, res) {
+  addUserToConversation: function (req, res) {
     var conversationId = req.param('id');
     var userToAdd = req.param('user');
 
@@ -507,11 +499,14 @@ module.exports = {
           res.forbidden();
         } else {
           User.findOne(userToAdd)
-          .then(function(user:User) {
+            .then(function (user:User) {
               if (user === undefined) {
                 req.socket.emit('addUserResponse', {sent: false, reason: "That user does not exist"});
               } else if (conversation.isParticipant(user)) {
-                req.socket.emit('addUserResponse', {sent: false, reason: user.username + " is already in this conversation"});
+                req.socket.emit('addUserResponse', {
+                  sent: false,
+                  reason: user.username + " is already in this conversation"
+                });
               } else {
                 conversation.participants.add(user);
                 conversation.addMessage(req.user, req.user.username + " has added " + user.username + " to the conversation")
@@ -527,7 +522,10 @@ module.exports = {
                     req.socket.emit('messageResponse', {sent: true});
                   }).catch(function (err) {
                     PrettyError(err, "Error occurred during Conversation.addMessage inside ProfileController.viewMessage");
-                    req.socket.emit('messageResponse', {sent: false, reason: "Failed to add response, please try again"});
+                    req.socket.emit('messageResponse', {
+                      sent: false,
+                      reason: "Failed to add response, please try again"
+                    });
                   });
               }
             });

@@ -20,18 +20,18 @@
 
 
 module.exports.policies = {
-    '*': ['flashToSwig', 'emailNagger'],
-    ProfileController: {
-      '*': ['sessionAuth', 'socketUser', 'flashToSwig', 'emailNagger', 'profileCommonTemplate'],
-      'deleteNotification': ['socketOnly', 'sessionAuth', 'socketUser'],
-      'viewMessage': ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'profileCommonTemplate'],
-      'respondToMessage': ['socketOnly', 'sessionAuth', 'socketUser'],
-      'addUserToConversation': ['socketOnly', 'sessionAuth', 'socketUser']
-    },
-    StaffController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'staffOnly'],
-    AddonsController: ['socketUser', 'flashToSwig', 'emailNagger'],
-    UsersController: {
-        'message': ['socketUser'],
-        'report': ['socketOnly', 'socketUser']
-    }
+  '*': ['flashToSwig', 'emailNagger'],
+  ProfileController: {
+    '*': ['sessionAuth', 'socketUser', 'flashToSwig', 'emailNagger'],
+    'deleteNotification': ['socketOnly', 'sessionAuth', 'socketUser'],
+    'viewMessage': ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger'],
+    'respondToMessage': ['socketOnly', 'sessionAuth', 'socketUser'],
+    'addUserToConversation': ['socketOnly', 'sessionAuth', 'socketUser']
+  },
+  StaffController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'staffOnly'],
+  AddonsController: ['socketUser', 'flashToSwig', 'emailNagger'],
+  UsersController: {
+    'message': ['socketUser'],
+    'report': ['socketOnly', 'socketUser']
+  }
 };
