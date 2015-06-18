@@ -19,7 +19,7 @@ module.exports = {
     }))
       .then(function (populatedPurchases) {
         req.user.purchases = populatedPurchases;
-        res.view({title: "Your Purchases", activeTab: 'profile.purchases', breadcrumbs: true});
+        res.view({title: "Purchases", activeTab: 'profile.purchases', breadcrumbs: true});
       })
   },
 
@@ -31,7 +31,7 @@ module.exports = {
       .then(function (addons) {
         req.user.addons = addons;
         res.view({
-          title: "Your Addons",
+          title: "Addons",
           breadcrumbs: [["/profile", "Profile"]],
           activeTab: 'profile.addons'
         })
@@ -45,7 +45,7 @@ module.exports = {
   settings: function (req, res) {
     NewRelic.setControllerName('ProfileController.settings');
     res.view({
-      title: "Your Settings",
+      title: "Settings",
       breadcrumbs: [["/profile", "Profile"]],
       activeTab: 'profile.settings'
     })
@@ -549,9 +549,9 @@ module.exports = {
       .then(function (populatedTransactions) {
         req.user.transactions = populatedTransactions;
         res.view({
-          title: 'Your Transactions',
+          title: 'Finances',
           breadcrumbs: [["/profile", "Profile"]],
-          activeTab: 'profile.transactions'
+          activeTab: 'profile.finances'
         })
       });
 
