@@ -176,6 +176,8 @@ declare class Tag extends Model {
   name:string;
   totalAddons:number;
   addons:Array<Addon>;
+
+  static getPopularTags():Promise<Array<Tag>>;
 }
 
 

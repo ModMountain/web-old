@@ -99,7 +99,7 @@ module.exports = {
 
   createAddon: function (req, res) {
     NewRelic.setControllerName('ProfileController.createAddon');
-    Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
+    Tag.getPopularTags()
       .then(function (tags) {
         res.view({
           title: "Create Addon",
@@ -109,7 +109,7 @@ module.exports = {
           popularTags: tags
         });
       }).catch(function (err) {
-        PrettyError(err, "An error occurred during Tag.find inside ProfileController.createAddon");
+        PrettyError(err, "An error occurred inside ProfileController.createAddon");
         req.flash("error", "Something went wrong, please try again");
         res.redirect("/profile");
       });
@@ -216,7 +216,7 @@ module.exports = {
         } else if (!addon.canModify(req.user)) {
           res.forbidden();
         } else {
-          Tag.find({totalAddons: {'>': 0}}).sort({totalAddons: 'desc'}).limit(10)
+          Tag.getPopularTags()
             .then(function (tags) {
               res.view({
                 title: "Edit Addon",
