@@ -108,7 +108,7 @@
         }
       });
       messagesArea.mCustomScrollbar("scrollTo", "bottom");
-      var scrollContentArea = $("#mCSB_1_container");
+      var scrollContentArea = messagesArea.find(".mCSB_container");
 
       // Handle the respond button being pressed
       respondButton.on('click', function (e) {
