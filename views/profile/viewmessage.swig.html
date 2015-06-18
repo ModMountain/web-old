@@ -33,7 +33,7 @@
                         <strong><a href="/users/{{ message.user }}">{{ message.username }}</a></strong>
                         <small>{{ message.date.toDateString() }}</small>
                       </h4>
-                      <p data-linkify="this">{{ message.body }}</p>
+                      <p data-linkify="this">{{ message.body|striptags|nl2br }}</p>
                     </div>
                   </div>
                 </div>
@@ -220,6 +220,7 @@
 
       // Utility Functions
       function addNewResponse(message) {
+        message.body = message.body.replace(/(?:\r\n|\r|\n)/g, '<br />');
         message.body = emoji.replace_colons(message.body);
 
         var responseHTML = "";

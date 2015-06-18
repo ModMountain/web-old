@@ -24,6 +24,7 @@ module.exports.views = {
         loader: Swig.loaders.fs(process.cwd() + '/views')
       });
       var extras = require('swig-extras');
+      extras.useFilter(swigInstance, 'nl2br');
       extras.useFilter(swigInstance, 'markdown');
       extras.useTag(swigInstance, 'markdown');
       return swigInstance.renderFile(pathName, locals, cb);
