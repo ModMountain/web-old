@@ -78,16 +78,18 @@
 
           {# Addon tags #}
           <ul class="list-inline add-to-wishlist add-to-wishlist-brd">
-            <li class="wishlist-in">
-              <i class="icon icon-heart"></i>
-              <a id="wishlistLink" href="#">
-                {% if user.wishesForAddon(addon) %}
-                  Remove from Wishlist
-                {% else %}
-                  Add to Wishlist
-                {% endif %}
-              </a>
-            </li>
+            {% if user %}
+              <li class="wishlist-in">
+                <i class="icon icon-heart"></i>
+                <a id="wishlistLink">
+                  {% if user.wishesForAddon(addon) %}
+                    Remove from Wishlist
+                  {% else %}
+                    Add to Wishlist
+                  {% endif %}
+                </a>
+              </li>
+            {% endif %}
           </ul>
           <p class="wishlist-category"><strong>Tags:</strong> {{ addon.prettyTags() }}</p>
         </div>

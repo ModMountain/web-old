@@ -1,332 +1,368 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-	<!-- CSS Page Style -->
-	<link rel="stylesheet" href="{{ assetPrefix }}/css/pages/log-reg-v3.css">
+  <!-- CSS Page Style -->
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/log-reg-v3.css">
 {% endblock %}
 
 {% block content %}
-	<!--=== Content Part ===-->
-	<div class="content container">
-		<div class="row">
-			{% include 'components/flashhandler.swig.html' %}
-			{# Filter options #}
-			<div class="col-md-3 filter-by-block md-margin-bottom-60">
-				<h1>Filter By</h1>
-				{# Gamemodes #}
-				<div class="panel-group" id="accordion">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h2 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-									Gamemodes
-									<i class="icon icon-angle-down"></i>
-								</a>
-							</h2>
-						</div>
-						<div id="collapseOne" class="panel-collapse collapse in">
-							<div class="panel-body">
-								<ul class="list-unstyled checkbox-list">
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="gamemode.sandbox"/>
-											<i></i>
-											Sandbox Based
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="gamemode.darkrp"/>
-											<i></i>
-											Dark RP
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="gamemode.ttt"/>
-											<i></i>
-											TTT
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="gamemode.murder"/>
-											<i></i>
-											Murder
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="gamemode.other"/>
-											<i></i>
-											Other
-										</label>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--/end panel group-->
+  <!--=== Content Part ===-->
+  <div class="content container">
+    <div class="row">
+      {% include 'components/flashhandler.swig.html' %}
+      {# Filter options #}
+      <div class="col-md-3 filter-by-block md-margin-bottom-60">
+        <h1>Filter By</h1>
+        {# Gamemodes #}
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                  Gamemodes
+                  <i class="icon icon-angle-down"></i>
+                </a>
+              </h2>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <ul class="list-unstyled checkbox-list">
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="gamemode.sandbox"/>
+                      <i></i>
+                      Sandbox Based
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="gamemode.darkrp"/>
+                      <i></i>
+                      Dark RP
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="gamemode.ttt"/>
+                      <i></i>
+                      TTT
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="gamemode.murder"/>
+                      <i></i>
+                      Murder
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="gamemode.other"/>
+                      <i></i>
+                      Other
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/end panel group-->
 
-				{# Addon type (chatbox, weapon, utility, etc) #}
-				<div class="panel-group" id="accordion-v2">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h2 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion-v2" href="#collapseTwo">
-									Type
-									<i class="icon icon-angle-down"></i>
-								</a>
-							</h2>
-						</div>
-						<div id="collapseTwo" class="panel-collapse collapse in">
-							<div class="panel-body">
-								<ul class="list-unstyled checkbox-list">
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="type.chatbox"/>
-											<i></i>
-											Chatbox
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="type.weapon"/>
-											<i></i>
-											Weapon
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="type.utility"/>
-											<i></i>
-											Utility
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="type.miscellaneous"/>
-											<i></i>
-											Miscellaneous
-										</label>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--/end panel group-->
+        {# Addon type (chatbox, weapon, utility, etc) #}
+        <div class="panel-group" id="accordion-v2">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion-v2" href="#collapseTwo">
+                  Type
+                  <i class="icon icon-angle-down"></i>
+                </a>
+              </h2>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <ul class="list-unstyled checkbox-list">
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="type.chatbox"/>
+                      <i></i>
+                      Chatbox
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="type.weapon"/>
+                      <i></i>
+                      Weapon
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="type.utility"/>
+                      <i></i>
+                      Utility
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="type.miscellaneous"/>
+                      <i></i>
+                      Miscellaneous
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/end panel group-->
 
-				{# Features (specific to Mod Mountain) #}
-				<div class="panel-group" id="accordion-v3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h2 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion-v3" href="#collapseThree">
-									Features
-									<i class="icon icon-angle-down"></i>
-								</a>
-							</h2>
-						</div>
-						<div id="collapseThree" class="panel-collapse collapse in">
-							<div class="panel-body">
-								<ul class="list-unstyled checkbox-list">
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="feature.autoUpdater"/>
-											<i></i>
-											Auto Updater
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="feature.configurator"/>
-											<i></i>
-											Configurator Enabled
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="feature.leakProtection"/>
-											<i></i>
-											Leak Protection
-										</label>
-									</li>
-									<li>
-										<label class="checkbox">
-											<input type="checkbox" name="feature.statTracker"/>
-											<i></i>
-											Stat Tracker
-										</label>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--/end panel group-->
+        {# Features (specific to Mod Mountain) #}
+        <div class="panel-group" id="accordion-v3">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion-v3" href="#collapseThree">
+                  Features
+                  <i class="icon icon-angle-down"></i>
+                </a>
+              </h2>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <ul class="list-unstyled checkbox-list">
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="feature.autoUpdater"/>
+                      <i></i>
+                      Auto Updater
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="feature.configurator"/>
+                      <i></i>
+                      Configurator Enabled
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="feature.leakProtection"/>
+                      <i></i>
+                      Leak Protection
+                    </label>
+                  </li>
+                  <li>
+                    <label class="checkbox">
+                      <input type="checkbox" name="feature.statTracker"/>
+                      <i></i>
+                      Stat Tracker
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/end panel group-->
 
-				{# Minimum rating #}
-				<div class="panel-group margin-bottom-30" id="accordion-v6">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h2 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion-v6" href="#collapseSix">
-									Minimum Rating
-									<i class="icon icon-angle-down"></i>
-								</a>
-							</h2>
-						</div>
-						<div id="collapseSix" class="panel-collapse collapse in">
-							<div class="panel-body">
-								<div class="stars-ratings stars-ratings-label">
-									<input type="radio" name="stars-rating" id="stars-rating-5">
-									<label for="stars-rating-5"><i class="icon icon-star"></i></label>
-									<input type="radio" name="stars-rating" id="stars-rating-4">
-									<label for="stars-rating-4"><i class="icon icon-star"></i></label>
-									<input type="radio" name="stars-rating" id="stars-rating-3">
-									<label for="stars-rating-3"><i class="icon icon-star"></i></label>
-									<input type="radio" name="stars-rating" id="stars-rating-2">
-									<label for="stars-rating-2"><i class="icon icon-star"></i></label>
-									<input type="radio" name="stars-rating" id="stars-rating-1">
-									<label for="stars-rating-1"><i class="icon icon-star"></i></label>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--/end panel group-->
+        {# Minimum rating #}
+        <div class="panel-group margin-bottom-30" id="accordion-v6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion-v6" href="#collapseSix">
+                  Minimum Rating
+                  <i class="icon icon-angle-down"></i>
+                </a>
+              </h2>
+            </div>
+            <div id="collapseSix" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <div class="stars-ratings stars-ratings-label">
+                  <input type="radio" name="stars-rating" id="stars-rating-5">
+                  <label for="stars-rating-5"><i class="icon icon-star"></i></label>
+                  <input type="radio" name="stars-rating" id="stars-rating-4">
+                  <label for="stars-rating-4"><i class="icon icon-star"></i></label>
+                  <input type="radio" name="stars-rating" id="stars-rating-3">
+                  <label for="stars-rating-3"><i class="icon icon-star"></i></label>
+                  <input type="radio" name="stars-rating" id="stars-rating-2">
+                  <label for="stars-rating-2"><i class="icon icon-star"></i></label>
+                  <input type="radio" name="stars-rating" id="stars-rating-1">
+                  <label for="stars-rating-1"><i class="icon icon-star"></i></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/end panel group-->
 
-				{# Reset button #}
-				<button type="button" class="btn-u btn-brd btn-brd-hover btn-u-lg btn-u-sea-shop btn-block">Reset
-				</button>
-			</div>
+        {# Reset button #}
+        <button type="button" class="btn-u btn-brd btn-brd-hover btn-u-lg btn-u-sea-shop btn-block">Reset
+        </button>
+      </div>
 
-			<div class="col-md-9">
-				<div class="row margin-bottom-5">
-					<div class="col-sm-4 result-category">
-						<h2>ADDONS</h2>
-						{#<small class="shop-bg-red badge-results">45 Results</small>#}
-					</div>
-					<div class="col-sm-8 col-offset-4">
-						<ul class="list-inline clear-both">
-							<li class="sort-list-btn">
-								<h3>Sort By :</h3>
+      <div class="col-md-9">
+        <div class="row margin-bottom-5">
+          <div class="col-sm-4 result-category">
+            <h2>ADDONS</h2>
+            {#<small class="shop-bg-red badge-results">45 Results</small>#}
+          </div>
+          <div class="col-sm-8 col-offset-4">
+            <ul class="list-inline clear-both">
+              <li class="sort-list-btn">
+                <h3>Sort By :</h3>
 
-								<div class="btn-group">
-									<button type="button" class="btn btn-default dropdown-toggle"
-									        data-toggle="dropdown">
-										Popularity <span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" role="menu">
-										<li><a href="#">Rating</a></li>
-										<li><a href="#">Highest Price to Lowest</a></li>
-										<li><a href="#">Lowest Price to Highest</a></li>
-									</ul>
-								</div>
-							</li>
-							{#<li class="sort-list-btn">#}
-							{#<h3>Show :</h3>#}
-							{#<div class="btn-group">#}
-							{#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
-							{#20 <span class="caret"></span>#}
-							{#</button>#}
-							{#<ul class="dropdown-menu" role="menu">#}
-							{#<li><a href="#">All</a></li>#}
-							{#<li><a href="#">10</a></li>#}
-							{#<li><a href="#">5</a></li>#}
-							{#<li><a href="#">3</a></li>#}
-							{#</ul>#}
-							{#</div>#}
-							{#</li>#}
-						</ul>
-					</div>
-				</div>
-				<!--/end result category-->
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle"
+                          data-toggle="dropdown">
+                    Popularity <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Rating</a></li>
+                    <li><a href="#">Highest Price to Lowest</a></li>
+                    <li><a href="#">Lowest Price to Highest</a></li>
+                  </ul>
+                </div>
+              </li>
+              {#<li class="sort-list-btn">#}
+              {#<h3>Show :</h3>#}
+              {#<div class="btn-group">#}
+              {#<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+              {#20 <span class="caret"></span>#}
+              {#</button>#}
+              {#<ul class="dropdown-menu" role="menu">#}
+              {#<li><a href="#">All</a></li>#}
+              {#<li><a href="#">10</a></li>#}
+              {#<li><a href="#">5</a></li>#}
+              {#<li><a href="#">3</a></li>#}
+              {#</ul>#}
+              {#</div>#}
+              {#</li>#}
+            </ul>
+          </div>
+        </div>
+        <!--/end result category-->
 
-				<div class="filter-results">
-					{% for addon in addons %}
-						<div class="list-product-description product-description-brd margin-bottom-30">
-							<div class="row">
-								<div class="col-sm-4">
-									<a href="/addons/{{ addon.id }}"><img class="img-responsive sm-margin-bottom-20"
-									                                      src="/addons/{{ addon.id }}/artwork/{{ addon.cardImage }}" alt=""></a>
-								</div>
-								<div class="col-sm-8 product-description">
-									<div class="overflow-h margin-bottom-5">
-										<ul class="list-inline overflow-h">
-											<li><h4 class="title-price"><a
-															href="/addons/{{ addon.id }}">{{ addon.name }}</a>
-												</h4></li>
-											<li><span class="gender text-uppercase">{{ addon.author.username }}</span>
-											</li>
-											{#<li class="pull-right">#}
-											{#<ul class="list-inline product-ratings">#}
-											{#<li><i class="rating-selected icon icon-star"></i></li>#}
-											{#<li><i class="rating-selected icon icon-star"></i></li>#}
-											{#<li><i class="rating-selected icon icon-star"></i></li>#}
-											{#<li><i class="rating icon icon-star"></i></li>#}
-											{#<li><i class="rating icon icon-star"></i></li>#}
-											{#</ul>#}
-											{#</li>#}
-										</ul>
-										<div class="margin-bottom-10">
-											{% if addon.price > 0.0 %}
-												{% if addon.discount > 0.0 %}
-													<span class="title-price margin-right-10">${{ addon.price / 100 * (1.0 - addon.discount) }}</span>
-													<span class="title-price line-through">${{ addon.price / 100 }}</span>
-												{% else %}
-													<span class="title-price margin-right-10">${{ addon.price / 100 }}</span>
-												{% endif %}
-											{% else %}
-												<span class="title-price margin-right-10">Free</span>
-											{% endif %}
-										</div>
-										<p class="margin-bottom-20">{{ addon.shortDescription }}</p>
-										<ul class="list-inline add-to-wishlist margin-bottom-20">
-											{#<li class="wishlist-in">#}
-											{#<i class="icon icon-heart"></i>#}
-											{#<a href="#">Add to Wishlist</a>#}
-											{#</li>#}
-											{#<li class="compare-in">#}
-											{#<i class="icon icon-exchange"></i>#}
-											{#<a href="#">Add to Compare</a>#}
-											{#</li>#}
-										</ul>
-										<button type="button" class="btn-u btn-u-sea-shop" onclick="window.location.href = '/addons/{{ addon.id }}';">View</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					{% endfor %}
-				</div>
-				<!--/end filter resilts-->
+        <div class="filter-results">
+          {% for addon in addons %}
+            <div class="list-product-description product-description-brd margin-bottom-30">
+              <div class="row">
+                <div class="col-sm-4">
+                  <a href="/addons/{{ addon.id }}"><img class="img-responsive sm-margin-bottom-20"
+                                                        src="/addons/{{ addon.id }}/artwork/{{ addon.cardImage }}"
+                                                        alt=""></a>
+                </div>
+                <div class="col-sm-8 product-description">
+                  <div class="overflow-h margin-bottom-5">
+                    <ul class="list-inline overflow-h">
+                      <li><h4 class="title-price"><a
+                            href="/addons/{{ addon.id }}">{{ addon.name }}</a>
+                        </h4></li>
+                      <li><span class="gender text-uppercase">{{ addon.author.username }}</span>
+                      </li>
+                      {#<li class="pull-right">#}
+                      {#<ul class="list-inline product-ratings">#}
+                      {#<li><i class="rating-selected icon icon-star"></i></li>#}
+                      {#<li><i class="rating-selected icon icon-star"></i></li>#}
+                      {#<li><i class="rating-selected icon icon-star"></i></li>#}
+                      {#<li><i class="rating icon icon-star"></i></li>#}
+                      {#<li><i class="rating icon icon-star"></i></li>#}
+                      {#</ul>#}
+                      {#</li>#}
+                    </ul>
+                    <div class="margin-bottom-10">
+                      {% if addon.price > 0.0 %}
+                        {% if addon.discount > 0.0 %}
+                          <span
+                            class="title-price margin-right-10">${{ addon.price / 100 * (1.0 - addon.discount) }}</span>
+                          <span class="title-price line-through">${{ addon.price / 100 }}</span>
+                        {% else %}
+                          <span class="title-price margin-right-10">${{ addon.price / 100 }}</span>
+                        {% endif %}
+                      {% else %}
+                        <span class="title-price margin-right-10">Free</span>
+                      {% endif %}
+                    </div>
+                    <p class="margin-bottom-20">{{ addon.shortDescription }}</p>
+                    <ul class="list-inline add-to-wishlist margin-bottom-20">
+                      {% if user %}
+                        <li class="wishlist-in">
+                          <i class="icon icon-heart"></i>
+                          <a data-addon="{{ addon.id }}" id="wishlistLink-{{ addon.id }}" class="wishlistLink">
+                            {% if user.wishesForAddon(addon) %}
+                              Remove from Wishlist
+                            {% else %}
+                              Add to Wishlist
+                            {% endif %}
+                          </a>
+                        </li>
+                      {% endif %}
+                    </ul>
+                    <button type="button" class="btn-u btn-u-sea-shop"
+                            onclick="window.location.href = '/addons/{{ addon.id }}';">View
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <!--/end filter resilts-->
 
-				<div class="text-center">
-					<ul class="pagination pagination-v2">
-						{% if totalAddons > 5 %}
-							{% set array = Array(totalAddons / 5)  %}
+        <div class="text-center">
+          <ul class="pagination pagination-v2">
+            {% if totalAddons > 5 %}
+              {% set array = Array(totalAddons / 5) %}
 
-							<li><a href="#"><i class="icon icon-angle-left"></i></a></li>
-							{% for i,x in array %}
-								{% if loop.first %}
-									<li class="active"><a href="#">{{ i }}</a></li>
-								{% else %}
-									<li><a href="#">{{ i }}</a></li>
-								{% endif %}
-							{% endfor %}
-							<li><a href="#"><i class="icon icon-angle-right"></i></a></li>
-						{% endif %}
-					</ul>
-				</div>
-				<!--/end pagination-->
-			</div>
-		</div>
-		<!--/end row-->
-	</div><!--/end container-->
-	<!--=== End Content Part ===-->
+              <li><a href="#"><i class="icon icon-angle-left"></i></a></li>
+              {% for i,x in array %}
+                {% if loop.first %}
+                  <li class="active"><a href="#">{{ i }}</a></li>
+                {% else %}
+                  <li><a href="#">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              <li><a href="#"><i class="icon icon-angle-right"></i></a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <!--/end pagination-->
+      </div>
+    </div>
+    <!--/end row-->
+  </div><!--/end container-->
+  <!--=== End Content Part ===-->
 {% endblock %}
 
-        {% block scripts %}
-        {% endblock %}
+{% block scripts %}
+  <script>
+    var $wishlistLink = $(".wishlistLink");
+
+    var waitingForWishlistResponse = false;
+    $wishlistLink.on('click', function (e) {
+      if (waitingForWishlistResponse) return;
+
+      $link = $(this);
+      waitingForWishlistResponse = true;
+      getCSRF(function (csrf) {
+        io.socket.post('/addons/' + $link.data('addon') + '/toggleWishlist', {_csrf: csrf});
+      });
+    });
+
+    io.socket.on('wishlistResponse', function (data) {
+      waitingForWishlistResponse = false;
+      if (data.error) {
+        addAlert('error', 'Wishlist Error', data.reason);
+      } else {
+        addAlert('success', 'Wishlist Success', data.reason);
+        if (data.removed) {
+          $("#wishlistLink-" + data.addon).text('Add to Wishlist');
+        } else {
+          $("#wishlistLink-" + data.addon).text('Remove from Wishlist');
+        }
+      }
+    });
+  </script>
+{% endblock %}

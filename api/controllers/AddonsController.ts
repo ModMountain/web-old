@@ -22,28 +22,32 @@ module.exports = {
   index: function (req, res) {
     NewRelic.setControllerName('AddonsController.index');
     Promise.join(Addon.count({status: Addon.Status.PUBLISHED}), Addon.find({status: Addon.Status.PUBLISHED}).paginate({
-      page: 0,
-      limit: 10
-    }).populate('author').populate('tags'), function (totalAddons, addons) {
-      addons.forEach(function (addon) {
-        addon.author = {
-          id: addon.author.id,
-          username: addon.author.username
-        };
-        addon.coupons = undefined;
-      });
+        page: 0,
+        limit: 10
+      }).populate('author').populate('tags'), User.findOne(req.user.id).populate('wishlist'),
+      function (totalAddons, addons, user) {
+        res.locals.user = _.merge(res.locals.user, user);
+        req.user = _.merge(req.user, user);
 
-      res.view({
-        title: "Addons",
-        activeTab: 'addons',
-        totalAddons: totalAddons,
-        addons: addons,
-        breadcrumbs: true
+        addons.forEach(function (addon) {
+          addon.author = {
+            id: addon.author.id,
+            username: addon.author.username
+          };
+          addon.coupons = undefined;
+        });
+
+        res.view({
+          title: "Addons",
+          activeTab: 'addons',
+          totalAddons: totalAddons,
+          addons: addons,
+          breadcrumbs: true
+        });
+      }).catch(function (err) {
+        PrettyError(err, 'Error occured during Addon.find().paginate() inside AddonsController.index');
+        res.redirect('/');
       });
-    }).catch(function (err) {
-      PrettyError(err, 'Error occured during Addon.find().paginate() inside AddonsController.index');
-      res.redirect('/');
-    });
   },
 
   viewAddon: function (req, res) {
@@ -491,7 +495,9 @@ module.exports = {
             return req.socket.emit('wishlistResponse', {
               error: false,
               removed: false,
-              reason: "Wishlist updated"});
+              reason: "Wishlist updated",
+              addon: addon.id
+            });
           }).catch(function (err) {
             // Failed to add, let's try and remove it instead
             req.user.wishlist.remove(addon.id);
@@ -500,13 +506,15 @@ module.exports = {
                 return req.socket.emit('wishlistResponse', {
                   error: false,
                   removed: true,
-                  reason: "Wishlist updated"});
+                  reason: "Wishlist updated",
+                  addon: addon.id
+                });
               }).catch(function(error) {
-                console.error(error)
                 PrettyError(error, "An error occurred during user.save inside AddonsController.toggleWishlist");
                 return req.socket.emit('wishlistResponse', {
                   error: true,
-                  reason: "Something went wrong while updating your wishlist, please try again."
+                  reason: "Something went wrong while updating your wishlist, please try again.",
+                  addon: addon.id
                 });
               });
           })
