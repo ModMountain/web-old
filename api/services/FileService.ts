@@ -46,7 +46,6 @@ var Service = {
     // Multer will pass data chunks into here
     var imageStream = GM(file.path)
       .resize(width, height, "!")
-      .minify()
       .noProfile()
       .stream();
 
