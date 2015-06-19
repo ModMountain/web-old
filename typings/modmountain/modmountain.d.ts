@@ -280,6 +280,12 @@ declare class ConversationMessage {
   date:Date;
 }
 
+declare class Badge {
+  name:string;
+  unlocked:boolean;
+  progress:number;
+}
+
 /*
  Enumerations
  */
@@ -305,6 +311,13 @@ declare module Addon {
     CHATBOX = 1,
     UTILITY = 2,
     OTHER = 3
+  }
+}
+
+declare module Badge {
+  export enum Type {
+    ALPHA = 0,
+    BETA = 1
   }
 }
 
@@ -386,6 +399,10 @@ declare enum TransactionType {
 /*
  Services
  */
+
+declare class BadgeService {
+  static DEFAULT_BADGES:Array<Object>;
+}
 
 declare class FeeService {
   static chargeFee(user:User):void;

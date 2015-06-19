@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <div class="row margin-bottom-20">
+          <div class="row">
             {# Contact info #}
             <div class="col-sm-6">
               <div class="panel panel-profile">
@@ -90,6 +90,25 @@
               </div>
             </div>
             {# End Reputation #}
+          </div>
+
+          <hr>
+
+          <div class="row margin-bottom-20">
+            <div class="panel panel-profile">
+              <div class="panel-heading overflow-h">
+                <h2 class="panel-title heading-sm pull-left"> Badges</h2>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                  {% for badge in loadedUser.badges %}
+                    <div class="col-sm-3 col-xs-6">
+                      <img class="img-responsive rounded-x" src="{{ assetPrefix }}/img/badges/{{ badge.image }}" alt="{{ badge.name }}" title="{{ badge.description }}">
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
           </div>
 
           <hr>
