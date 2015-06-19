@@ -126,7 +126,7 @@ module.exports = {
     } else if (req.body.explanation === undefined) {
       req.flash('error', 'You must provide an explanation with your addon!');
       res.redirect('/profile/addons/create');
-    } else if (req.body.tags === undefined) {
+    } else if (req.body.rawTags === undefined) {
       req.flash('error', 'You must specify tags with your addon!');
       res.redirect('/profile/addons/create');
     } else if (req.files.galleryImages === undefined || req.files.cardImage === undefined) {
@@ -160,7 +160,7 @@ module.exports = {
         containsDrm: (req.body.containsDrm !== undefined),
         // Associations
         author: req.session.passport.user,
-        rawTags: req.body.tags,
+        rawTags: req.body.rawTags,
         galleryImages: galleryImages,
         cardImage: req.files.cardImage[0].objectId.toString(),
         bannerImage: bannerImage
