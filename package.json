@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "bluebird": "^2.9.24",
+    "chokidar": "^1.0.3",
     "connect-mongo": "^0.8.1",
     "connect-redis": "1.4.5",
     "gm": "^1.18.1",
