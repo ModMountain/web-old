@@ -27,7 +27,7 @@ module.exports = {
 	viewUser: function (req, res) {
 		NewRelic.setControllerName('UsersController.viewUser');
 		var userId = req.param('id');
-		User.findOne(userId).populate('addons')
+		User.findOne(userId).populate('addons').populate('wishlist')
 			.then(function (user:User) {
 				if (user === undefined) res.notFound();
 				else {

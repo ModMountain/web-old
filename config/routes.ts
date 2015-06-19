@@ -67,6 +67,7 @@ module.exports.routes = {
     'POST   /addons/:id/checkout':                              'AddonsController.checkout',
     'POST   /addons/:id/validateCoupon':                        'AddonsController.validateCoupon',
     'GET    /addons/:id/artwork/:artwork':                      'AddonsController.artwork',
+    'POST   /addons/:id/toggleWishlist':                        'AddonsController.toggleWishlist',
 
 	  // Public users routes
 	  'GET    /users':                                            'UsersController.index',

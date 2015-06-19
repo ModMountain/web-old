@@ -16,6 +16,32 @@ $(function () {
 	var $payWithPayPalCheckbox = $("#payWithPayPal");
 	var $payWithStripeCheckbox = $("#payWithCreditCard");
 
+  var $wishlistLink = $("#wishlistLink");
+
+  var waitingForWishlistResponse = false;
+  $wishlistLink.on('click', function (e) {
+    if (waitingForWishlistResponse) return;
+
+    waitingForWishlistResponse = true;
+    getCSRF(function (csrf) {
+      io.socket.post('/addons/' + window.addon.id + '/toggleWishlist', {_csrf: csrf});
+    });
+  });
+
+  io.socket.on('wishlistResponse', function (data) {
+    waitingForWishlistResponse = false;
+    if (data.error) {
+      addAlert('error', 'Wishlist Error', data.reason);
+    } else {
+      addAlert('success', 'Wishlist Success', data.reason);
+      if (data.removed) {
+        $wishlistLink.text('Add to Wishlist');
+      } else {
+        $wishlistLink.text('Remove from Wishlist');
+      }
+    }
+  });
+
 	// Coupon logic
 	var couponTimer;
 	var coupon = {code: ''};

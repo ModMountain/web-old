@@ -29,7 +29,10 @@ module.exports.policies = {
     'addUserToConversation': ['socketOnly', 'sessionAuth', 'socketUser']
   },
   StaffController: ['socketUser', 'sessionAuth', 'flashToSwig', 'emailNagger', 'staffOnly'],
-  AddonsController: ['socketUser', 'flashToSwig', 'emailNagger'],
+  AddonsController: {
+    '*': ['socketUser', 'flashToSwig', 'emailNagger'],
+    'toggleWishlist': ['socketOnly', 'sessionAuth', 'socketUser']
+  },
   UsersController: {
     'message': ['socketUser'],
     'report': ['socketOnly', 'socketUser']

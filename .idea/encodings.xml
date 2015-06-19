@@ -26,6 +26,7 @@
     <file url="file://$PROJECT_DIR$/api/services/BadgeService.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api/services/FileService.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api/services/NotificationService.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/assets/js/pages/addons/viewaddon.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/assets/js/pages/staff/addons.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/assets/plugins/emoji/emoji.css" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/assets/plugins/emoji/emoji.js" charset="UTF-8" />
@@ -47,6 +48,7 @@
     <file url="file://$PROJECT_DIR$/tasks/config/purify.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tasks/config/purifycss.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tasks/config/purifycss.ts" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tasks/config/watch.js" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tasks/register/build.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tasks/register/buildProd.ts" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tasks/register/compileAssets.ts" charset="UTF-8" />

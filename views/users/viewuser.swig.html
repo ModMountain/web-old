@@ -95,17 +95,38 @@
           <hr>
 
           <div class="row margin-bottom-20">
-            <div class="panel panel-profile">
-              <div class="panel-heading overflow-h">
-                <h2 class="panel-title heading-sm pull-left"> Badges</h2>
+            <div class="col-sm-6">
+              <div class="panel panel-profile">
+                <div class="panel-heading overflow-h">
+                  <h2 class="panel-title heading-sm pull-left"> Badges</h2>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    {% for badge in loadedUser.badges %}
+                      <div class="col-sm-3 col-xs-6">
+                        <img class="img-responsive rounded-x" src="{{ assetPrefix }}/img/badges/{{ badge.image }}"
+                             alt="{{ badge.name }}" title="{{ badge.description }}">
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
               </div>
-              <div class="panel-body">
-                <div class="row">
-                  {% for badge in loadedUser.badges %}
-                    <div class="col-sm-3 col-xs-6">
-                      <img class="img-responsive rounded-x" src="{{ assetPrefix }}/img/badges/{{ badge.image }}" alt="{{ badge.name }}" title="{{ badge.description }}">
-                    </div>
-                  {% endfor %}
+            </div>
+            <div class="col-sm-6">
+              <div class="panel panel-profile">
+                <div class="panel-heading overflow-h">
+                  <h2 class="panel-title heading-sm pull-left">Wishlist</h2>
+                </div>
+                <div class="panel-body">
+                  <ul class="list-unstyled social-contacts-v2">
+                    {% if loadedUser.wishlist.length > 0 %}
+                      {% for addon in loadedUser.wishlist %}
+                        <li><a href="/addons/{{ addon.id }}">{{ addon.name }}</a></li>
+                      {% endfor %}
+                    {% else %}
+                      <li>{{ loadedUser.username }}'s wishlist is empty</li>
+                    {% endif %}
+                  </ul>
                 </div>
               </div>
             </div>

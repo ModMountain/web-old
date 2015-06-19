@@ -95,6 +95,9 @@ var UserModel = {
       type: 'array',
       defaultsTo: []
     },
+    wishlist: {
+      collection: 'Addon'
+    },
 
     // Instance methods
     isModerator: function () {
@@ -147,6 +150,13 @@ var UserModel = {
       this.getBadge(type).unlocked = false;
       return this.save()
     },
+    wishesForAddon: function(addon) {
+      for (var i = 0; i < this.wishlist.length; i++) {
+        console.log(this.wishlist[i].id, addon.id)
+        if (this.wishlist[i].id === addon.id) return true;
+      }
+      return false;
+    }
   },
 
   beforeCreate: function (user, cb) {
