@@ -16,8 +16,8 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.purchases');
     User.findOne(req.user.id).populate('purchases')
       .then(function (user) {
-        res.locals.user = user;
-        req.user = user;
+        res.locals.user = _.merge(res.locals.user, user);
+        req.user = _.merge(req.user, user);
 
         return Promise.all(_.map(req.user.purchases, function (purchase) {
           return Addon.findOne(purchase.id).populate('author');
@@ -40,8 +40,8 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.addons');
     User.findOne(req.user.id).populate('addons')
       .then(function (user) {
-        res.locals.user = user;
-        req.user = user;
+        res.locals.user = _.merge(res.locals.user, user);
+        req.user = _.merge(req.user, user);
 
         return Promise.all(_.map(req.user.addons, (addon) => {
           return Addon.findOne(addon.id).populate('purchasers')
@@ -376,8 +376,8 @@ module.exports = {
     NewRelic.setControllerName('ProfileController.messages');
     User.findOne(req.user.id).populate('conversations')
       .then(function (user) {
-        res.locals.user = user;
-        req.user = user;
+        res.locals.user = _.merge(res.locals.user, user);
+        req.user = _.merge(req.user, user);
 
         return Promise.all(_.map(req.user.conversations, function (conversation) {
           return Conversation.findOne(conversation.id).populateAll();
