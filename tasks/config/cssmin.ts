@@ -11,13 +11,22 @@
 module.exports = function(grunt) {
 
 	grunt.config.set('cssmin', {
-		dist: {
-			cwd: '.tmp/public/',
-			src: '**/*.css',
-			dest: '.tmp/public/',
-			expand: true,
-			flatten: true
-		}
+		//dist: {
+		//	cwd: '.tmp/public/',
+		//	src: '**/*.css',
+		//	dest: '.tmp/public/',
+		//	expand: true,
+		//	flatten: true
+		//}
+    dist: {
+      files: [{
+        src: '.tmp/public/styles.css',
+        dest: '.tmp/public/styles.css'
+      }],
+      options: {
+        keepSpecialComments: 0
+      }
+    }
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-cssmin');

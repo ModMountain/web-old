@@ -13,8 +13,6 @@
  */
 
 module.exports = function(grunt) {
-
-
 	// Load the include-all library in order to require all of our grunt
 	// configurations and task registrations dynamically.
 	var includeAll;
@@ -36,7 +34,6 @@ module.exports = function(grunt) {
 		}
 	}
 
-
 	/**
 	 * Loads Grunt configuration modules from the specified
 	 * relative path. These modules should export a function
@@ -57,13 +54,10 @@ module.exports = function(grunt) {
 	function invokeConfigFn(tasks) {
 		for (var taskName in tasks) {
 			if (tasks.hasOwnProperty(taskName)) {
-				tasks[taskName](grunt);
+        tasks[taskName](grunt);
 			}
 		}
 	}
-
-
-
 
 	// Load task functions
 	var taskConfigurations = loadTasks('./tasks/config'),
@@ -77,5 +71,4 @@ module.exports = function(grunt) {
 	// Run task functions to configure Grunt.
 	invokeConfigFn(taskConfigurations);
 	invokeConfigFn(registerDefinitions);
-
 };
