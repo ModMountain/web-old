@@ -9,6 +9,7 @@
       <w>gamemode</w>
       <w>gridfs</w>
       <w>gruntjs</w>
+      <w>minification</w>
       <w>modmountain</w>
       <w>mongo</w>
       <w>multer</w>
