@@ -4,6 +4,7 @@ module.exports = function (grunt) {
 		'less',
 		'concat:bootstrap',
 		'copy:dev',
+    'cssmin'
     //'purifycss'
 	]);
 };
