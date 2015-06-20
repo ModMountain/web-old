@@ -1,367 +1,50 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.css">
-	<link rel="stylesheet" href="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/css/settings.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.css">
 {% endblock %}
 
 {% block content %}
-	<!--=== Slider ===-->
-	<div id="slider" class="tp-banner-container">
-		<div class="tp-banner">
-			<ul>
-				{% if featuredAddons.length === 0 %}
-					<li class="revolution-mch-1" data-transition="fade" data-slotamount="5" data-masterspeed="1000"
-				    data-title="Slide 1">
-					<!-- MAIN IMAGE -->
-					<img src="{{ assetPrefix }}/img/noaddons.jpg" alt="darkblurbg"
-					     data-bgfit="cover" data-bgposition="left top"
-					     data-bgrepeat="no-repeat">
+  {% if featuredAddons.length > 0 %}
+    <a href="/addons/{{ featuredAddons[0].id }}"><img class="img-responsive"
+        src="/addons/{{ featuredAddons[0].id }}/artwork/{{ featuredAddons[0].bannerImage }}"></a>
+  {% endif %}
 
-					<div class="tp-caption revolution-ch1 sft start"
-					     data-x="center"
-					     data-hoffset="0"
-					     data-y="100"
-					     data-speed="1500"
-					     data-start="500"
-					     data-easing="Back.easeInOut"
-					     data-endeasing="Power1.easeIn"
-					     data-endspeed="300">
-						No Featured Addons<br>
-						{#<strong>Addons</strong><br>#}
-						Submit Yours Now
-					</div>
+  <div class="container content-md">
+    <div class="row margin-bottom-50">
+      {% include 'components/flashhandler.swig.html' %}
 
-					<!-- LAYER -->
-					<div class="tp-caption sft"
-					     data-x="center"
-					     data-hoffset="0"
-					     data-y="380"
-					     data-speed="1600"
-					     data-start="1800"
-					     data-easing="Power4.easeOut"
-					     data-endspeed="300"
-					     data-endeasing="Power1.easeIn"
-					     data-captionhidden="off"
-					     style="z-index: 6">
-						<a href="/profile/addons/create" class="btn-u btn-brd btn-brd-hover btn-u-light">Create Addon</a>
-					</div>
-				</li>
-				{% else %}
-					{% for index,addon in featuredAddons %}
-						{#{% if index % 2 === 0%}#}
-							<li class="revolution-mch-1" data-transition="fade" data-slotamount="5" data-masterspeed="1000"
-						    data-title="Slide 2">
-							<!-- MAIN IMAGE -->
-							<img src="/addons/{{ addon.id }}/artwork/{{ addon.bannerImage }}" alt="darkblurbg" data-bgfit="cover"
-							     data-bgposition="left top"
-							     data-bgrepeat="no-repeat">
+      {% if popularTags.length > 0 %}
+        {% include 'components/home/populartags.swig.html' %}
+      {% endif %}
+    </div>
 
-							<div class="tp-caption revolution-ch3 sft start"
-							     data-x="center"
-							     data-hoffset="0"
-							     data-y="140"
-							     data-speed="1500"
-							     data-start="500"
-							     data-easing="Back.easeInOut"
-							     data-endeasing="Power1.easeIn"
-							     data-endspeed="300">
-								{{ addon.name }}
-							</div>
+    {% if featuredAddons.length > 0 %}
+      {% include 'components/home/featuredaddons.swig.html' %}
+    {% endif %}
 
-							<!-- LAYER -->
-							<div class="tp-caption revolution-ch4 sft"
-							     data-x="center"
-							     data-hoffset="-14"
-							     data-y="210"
-							     data-speed="1400"
-							     data-start="2000"
-							     data-easing="Power4.easeOut"
-							     data-endspeed="300"
-							     data-endeasing="Power1.easeIn"
-							     data-captionhidden="off"
-							     style="z-index: 6">
-								{{ addon.shortDescription }}
-							</div>
-
-							<!-- LAYER -->
-							<div class="tp-caption sft"
-							     data-x="center"
-							     data-hoffset="0"
-							     data-y="300"
-							     data-speed="1600"
-							     data-start="1800"
-							     data-easing="Power4.easeOut"
-							     data-endspeed="300"
-							     data-endeasing="Power1.easeIn"
-							     data-captionhidden="off"
-							     style="z-index: 6">
-								<a href="/addons/{{ addon.id }}" class="btn-u btn-brd btn-brd-hover btn-u-light">Take a Look</a>
-							</div>
-						</li>
-						{#{% else %}#}
-							{#<li class="revolution-mch-1" data-transition="fade" data-slotamount="5" data-masterspeed="1000"#}
-							    {#data-title="Slide 5">#}
-								{#<!-- MAIN IMAGE -->#}
-								{#<img src="//placehold.it/1920x720&text=I+Am+The+Last+One+lol" alt="darkblurbg" data-bgfit="cover"#}
-								     {#data-bgposition="right top"#}
-								     {#data-bgrepeat="no-repeat">#}
-
-								{#<div class="tp-caption revolution-ch5 sft start"#}
-								     {#data-x="right"#}
-								     {#data-hoffset="5"#}
-								     {#data-y="130"#}
-								     {#data-speed="1500"#}
-								     {#data-start="500"#}
-								     {#data-easing="Back.easeInOut"#}
-								     {#data-endeasing="Power1.easeIn"#}
-								     {#data-endspeed="300">#}
-									{#{{ addon.name }}#}
-								{#</div>#}
-
-								{#<!-- LAYER -->#}
-								{#<div class="tp-caption revolution-ch4 sft"#}
-								     {#data-x="right"#}
-								     {#data-hoffset="-14"#}
-								     {#data-y="210"#}
-								     {#data-speed="1400"#}
-								     {#data-start="2000"#}
-								     {#data-easing="Power4.easeOut"#}
-								     {#data-endspeed="300"#}
-								     {#data-endeasing="Power1.easeIn"#}
-								     {#data-captionhidden="off"#}
-								     {#style="z-index: 6">#}
-									{#{{ addon.shortDescription }}#}
-								{#</div>#}
-
-								{#<!-- LAYER -->#}
-								{#<div class="tp-caption sft"#}
-								     {#data-x="right"#}
-								     {#data-hoffset="0"#}
-								     {#data-y="300"#}
-								     {#data-speed="1600"#}
-								     {#data-start="2800"#}
-								     {#data-easing="Power4.easeOut"#}
-								     {#data-endspeed="300"#}
-								     {#data-endeasing="Power1.easeIn"#}
-								     {#data-captionhidden="off"#}
-								     {#style="z-index: 6">#}
-									{#<a href="/addons/{{ addon.id }}" class="btn-u btn-brd btn-brd-hover btn-u-light">Take a Look</a>#}
-								{#</div>#}
-							{#</li>#}
-						{#{% endif %}#}
-					{% endfor %}
-				{% endif %}
-			</ul>
-			<div class="tp-bannertimer tp-bottom"></div>
-		</div>
-	</div>
-
-	<div class="container content-md">
-		<div class="row margin-bottom-50">
-			{% include 'components/flashhandler.swig.html' %}
-
-			{% if popularTags.length > 0 %}
-				{% include 'components/home/populartags.swig.html' %}
-			{% endif %}
-		</div>
-
-		{% if featuredAddons.length > 0 %}
-			{% include 'components/home/featuredaddons.swig.html' %}
-		{% endif %}
-
-		{% if latestAddons.length > 0 %}
-			{% include 'components/home/latestaddons.swig.html' %}
-		{% endif %}
-	</div>
+    {% if latestAddons.length > 0 %}
+      {% include 'components/home/latestaddons.swig.html' %}
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block scripts %}
-	<script src="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
-	<script src="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.tools.min.js"></script>
-	<script src="{{ assetPrefix }}/plugins/revolution-slider/rs-plugin/js/jquery.themepunch.revolution.js"></script>
-
-	<script async>
-		var OwlCarousel = function () {
-
-			return {
-
-				//Owl Carousel
-				initOwlCarousel: function () {
-					//Owl Slider v1
-					var owl = jQuery(".owl-slider").owlCarousel({
-						itemsDesktop : [1000,5],
-						itemsDesktopSmall : [900,4],
-						itemsTablet: [600,3],
-						itemsMobile : [479,2],
-					});
-					jQuery(".next-v1").click(function(){
-						owl.trigger('owl.next');
-					})
-					jQuery(".prev-v1").click(function(){
-						owl.trigger('owl.prev');
-					})
-
-
-					//Owl Slider v2
-					var owl1 = jQuery(".owl-slider-v2").owlCarousel({
-						itemsDesktop : [1000,5],
-						itemsDesktopSmall : [900,4],
-						itemsTablet: [600,3],
-						itemsMobile : [479,2],
-						slideSpeed: 1000
-					});
-					jQuery(".next-v2").click(function(){
-						owl1.trigger('owl.next');
-					})
-					jQuery(".prev-v2").click(function(){
-						owl1.trigger('owl.prev');
-					})
-
-
-					//Owl Slider v3
-					jQuery(".owl-slider-v3").owlCarousel({
-						items : 9,
-						autoPlay : 5000,
-						itemsDesktop : [1000,5],
-						itemsDesktopSmall : [900,4],
-						itemsTablet: [600,3],
-						itemsMobile : [300,2]
-					});
-
-
-					//Owl Slider v4
-					jQuery(".owl-slider-v4").owlCarousel({
-						items:3,
-						itemsDesktop : [1000,3],
-						itemsTablet : [600,2],
-						itemsMobile : [479,1]
-					});
-
-
-					//Owl Slider v5
-					jQuery(document).ready(function() {
-						var owl = jQuery(".owl-slider-v5");
-						owl.owlCarousel({
-							items:1,
-							itemsDesktop : [1000,1],
-							itemsDesktopSmall : [900,1],
-							itemsTablet: [600,1],
-							itemsMobile : [479,1]
-						});
-					});
-
-
-					//Owl Slider v6
-					jQuery(document).ready(function() {
-						var owl = jQuery(".owl-slider-v6");
-						owl.owlCarousel({
-							items:5,
-							itemsDesktop : [1000,4],
-							itemsDesktopSmall : [979,3],
-							itemsTablet: [600,2],
-						});
-					});
-
-
-					//Owl Twitter v1
-					jQuery(".owl-twitter-v1").owlCarousel({
-						singleItem : true,
-						slideSpeed : 1000,
-						autoPlay : 10000,
-					});
-
-
-					//Owl Testimonials v1
-					jQuery(".owl-ts-v1").owlCarousel({
-						slideSpeed : 600,
-						singleItem : true,
-						navigation : true,
-						navigationText : ["",""],
-					});
-
-
-					//Owl Clients v1
-					jQuery(".owl-clients-v1").owlCarousel({
-						items : 7,
-						autoPlay : 5000,
-						itemsDesktop : [1000,5],
-						itemsDesktopSmall : [900,4],
-						itemsTablet: [600,3],
-						itemsMobile : [300,2]
-					});
-
-
-					//Owl Clients v2
-					jQuery(".owl-clients-v2").owlCarousel({
-						items : 5,
-						autoPlay : 10000,
-						itemsDesktop : [1000,5],
-						itemsDesktopSmall : [900,4],
-						itemsTablet: [600,3],
-						itemsMobile : [300,2]
-					});
-
-
-					//Owl Video
-					jQuery(".owl-video").owlCarousel({
-						items : 1,
-						itemsDesktop : [1000,1],
-						itemsDesktopSmall : [900,1],
-						itemsTablet: [600,1],
-						itemsMobile : [300,1]
-					});
-				}
-
-			};
-
-		}();
-		var RevolutionSlider = function () {
-
-			return {
-
-				//Revolution Slider - Full Width
-				initRSfullWidth: function () {
-					var revapi;
-					jQuery(document).ready(function() {
-						revapi = jQuery('.tp-banner').revolution(
-								{
-									delay:9000,
-									startwidth:1170,
-									startheight:500,
-									hideThumbs:10,
-									navigationStyle:"preview4"
-								});
-					});
-				},
-
-				//Revolution Slider - Full Screen Offset Container
-				initRSfullScreenOffset: function () {
-					var revapi;
-					jQuery(document).ready(function() {
-						revapi = jQuery('.tp-banner').revolution(
-								{
-									delay:15000,
-									startwidth:1170,
-									startheight:400,
-									hideThumbs:10,
-									fullWidth:"off",
-									fullScreen:"on",
-									hideCaptionAtLimit: "",
-									dottedOverlay:"twoxtwo",
-									navigationStyle:"preview4",
-									fullScreenOffsetContainer: ".header"
-								});
-					});
-				}
-
-			};
-		}();
-
-		jQuery(document).ready(function () {
-			RevolutionSlider.initRSfullWidth();
-			OwlCarousel.initOwlCarousel();
-			$("#slider").fadeIn();
-		});
-	</script>
+  <script src="{{ assetPrefix }}/plugins/owl-carousel/owl-carousel/owl.carousel.js"></script>
+  <script async>
+    $(function () {
+      var owl = $(".owl-slider").owlCarousel({
+        itemsDesktop: [1000, 5],
+        itemsDesktopSmall: [900, 4],
+        itemsTablet: [600, 3],
+        itemsMobile: [479, 2]
+      });
+      $(".next-v1").click(function () {
+        owl.trigger('owl.next');
+      });
+      $(".prev-v1").click(function () {
+        owl.trigger('owl.prev');
+      });
+    });
+  </script>
 {% endblock %}

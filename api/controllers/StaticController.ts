@@ -1,6 +1,7 @@
 /// <reference path='../../typings/node/node.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
+/// <reference path='../../typings/lodash/lodash.d.ts' />
 
 var NewRelic = require('newrelic');
 
@@ -18,16 +19,9 @@ module.exports = {
 			Addon.find({status: Addon.Status.PUBLISHED}).sort({createdAt: 'asc'}).limit(10)
 			, function (featuredAddons, latestAddons) {
 
-				featuredAddons.forEach(function (addon) {
-					addon.coupons = undefined;
-				});
-				latestAddons.forEach(function (addon) {
-					addon.coupons = undefined;
-				});
-
 				res.view({
 					activeTab: 'home',
-					featuredAddons: featuredAddons,
+					featuredAddons: _.shuffle(featuredAddons),
 					latestAddons: latestAddons
 				});
 			});
