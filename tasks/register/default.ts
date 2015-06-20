@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-	grunt.registerTask('development', [
+	grunt.registerTask('default', [
 		'compileAssets',
     'watch'
 	]);
