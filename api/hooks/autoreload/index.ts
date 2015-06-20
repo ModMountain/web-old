@@ -77,6 +77,13 @@ module.exports = function (sails) {
         sails.hooks.services.loadModules();
       }, 100));
 
+      Chokidar.watch(path.resolve(sails.config.appPath, 'views'), sails.config[this.configKey].chokidar)
+        .on('all', sails.util.debounce(function (action, path, stats) {
+          sails.log.info("Detected view change, reloading views...");
+
+          sails.hooks.swig.invalidateCache();
+        }, 100));
+
       // We're done initializing.
       return cb();
     }

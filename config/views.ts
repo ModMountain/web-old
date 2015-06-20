@@ -1,4 +1,5 @@
 /// <reference path='../typings/node/node.d.ts' />
+/// <reference path='../typings/modmountain/modmountain.d.ts' />
 
 /**
  * View Engine Configuration
@@ -20,13 +21,15 @@ module.exports.views = {
     fn: function(pathName, locals, cb) {
       var Swig = require('swig');
       var swigInstance = new Swig.Swig({
-        cache: sails.config.templateCache,
         loader: Swig.loaders.fs(process.cwd() + '/views')
       });
       var extras = require('swig-extras');
       extras.useFilter(swigInstance, 'nl2br');
       extras.useFilter(swigInstance, 'markdown');
       extras.useTag(swigInstance, 'markdown');
+
+      sails.hooks.swig = swigInstance;
+
       return swigInstance.renderFile(pathName, locals, cb);
     }
   },

@@ -94,6 +94,5 @@ module.exports = {
 		token: '***REMOVED***'
 	},
 
-	analytics: true,
-  templateCache: 'memory'
+	analytics: true
 };
