@@ -191,9 +191,7 @@
                   <section>
                     <label class="label">Zip File (Containing your addon)</label>
                     <label for="file" class="input input-file">
-                      <div class="button"><input type="file" id="zipFileInout" name="zipFile"
-                                                 onchange="this.parentNode.nextSibling.value = this.value"
-                                                 accept="application/zip,application/x-zip,application/x-zip-compressed">Browse
+                      <div class="button"><input type="file" id="zipFileInput" name="zipFile" accept="application/zip,application/x-zip,application/x-zip-compressed">Browse
                       </div>
                       <input type="text" readonly="">
                     </label>
@@ -203,9 +201,7 @@
                   <section>
                     <label class="label">Card Image (Aspect ratio 2:3, preferred size is 400 by 600)</label>
                     <label for="file" class="input input-file">
-                      <div class="button"><input type="file" id="cardImageInput" name="cardImage"
-                                                 onchange="this.parentNode.nextSibling.value = this.value"
-                                                 accept="image/*">Browse
+                      <div class="button"><input type="file" id="cardImageInput" name="cardImage" accept="image/*">Browse
                       </div>
                       <input type="text" readonly="">
                     </label>
@@ -213,9 +209,7 @@
                   <section>
                     <label class="label">Gallery Images (Aspect ratio 1:1, preferred size is 600 by 600)</label>
                     <label for="file" class="input input-file">
-                      <div class="button"><input type="file" id="galleryImagesInput" name="galleryImages"
-                                                 onchange="this.parentNode.nextSibling.value = this.value"
-                                                 accept="image/*" multiple>Browse
+                      <div class="button"><input type="file" id="galleryImagesInput" name="galleryImages" accept="image/*" multiple>Browse
                       </div>
                       <input type="text" readonly="">
                     </label>
@@ -223,9 +217,8 @@
                   <section>
                     <label class="label">Banner Image (Optional, only 1920 by 500 will be accepted)</label>
                     <label for="file" class="input input-file">
-                      <div class="button"><input type="file" id="bannerImageInput" name="bannerImage"
-                                                 onchange="this.parentNode.nextSibling.value = this.value"
-                                                 accept="image/*">Browse
+                      <div class="button">
+                        <input type="file" id="bannerImageInput" name="bannerImage" accept="image/*">Browse
                       </div>
                       <input type="text" readonly="">
                     </label>
@@ -289,6 +282,10 @@
       tags: true,
       tokenSeparators: [',', ' ']
     });
+
+    $("input:file").on('change', function(e) {
+      $(this).parent().next().val($(this).val());
+    })
   </script>
   <script async src="{{ assetPrefix }}/js/pages/profile/createAddon.js"></script>
 {% endblock %}
