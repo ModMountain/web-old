@@ -152,7 +152,6 @@ var UserModel = {
     },
     wishesForAddon: function(addon) {
       for (var i = 0; i < this.wishlist.length; i++) {
-        console.log(this.wishlist[i].id, addon.id)
         if (this.wishlist[i].id === addon.id) return true;
       }
       return false;
