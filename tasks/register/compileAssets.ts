@@ -2,9 +2,10 @@ module.exports = function (grunt) {
 	grunt.registerTask('compileAssets', [
 		'clean:dev',
 		'less',
-		'concat:bootstrap',
+		'concat',
 		'copy:dev',
-    'cssmin'
+    'cssmin',
+    'uglify'
     //'purifycss'
 	]);
 };
