@@ -22,14 +22,14 @@ var setGlobals = function () {
   Promise.promisifyAll(Mapstrace);
   global.PrettyError = function (err, msg, cb) {
     return Mapstrace.build(err, true, function (result) {
-      console.error(msg);
-      console.error(err.toString() + ':\n' + Mapstrace.stringify(result));
+      sails.log.error(msg);
+      sails.log.error(err.toString() + ':\n' + Mapstrace.stringify(result));
       if (cb) cb();
     })
   };
   process.on("unhandledRejection", function (error, promise) {
     PrettyError(error, '[Bluebird]Unhandled rejection:', function () {
-      console.error('From promise:', promise)
+      sails.log.error('From promise:', promise)
     });
   });
   process.on("uncaughtException", function (error) {
