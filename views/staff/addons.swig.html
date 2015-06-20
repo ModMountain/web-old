@@ -1,77 +1,75 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-    <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/page_search_inner_tables.css">
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/page_search_inner_tables.css">
 {% endblock %}
 
 {% block content %}
-    <!--=== Profile ===-->
-    <div class="container content profile">
-        <div class="row">
-            {% include 'components/flashhandler.swig.html' %}
-            <div class="table-search-v2 margin-bottom-30">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>Authors</th>
-                            <th>About</th>
-                            <th>Grade</th>
-                            <th>Download</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for addon in addons %}
-                            <tr>
-                                <td>
-                                    <div class="user-names">
-                                        <span>{{ addon.author.username }}</span>
-                                        <small>({{ addon.author.steamIdentifier }})</small>
-                                    </div>
-                                </td>
-                                <td class="td-width">
-                                    <h3><a href="#">{{ addon.name }}</a></h3>
+  <div class="container content profile">
+    <div class="row">
+      {% include 'components/flashhandler.swig.html' %}
+      <div class="table-search-v2 margin-bottom-30">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th>Authors</th>
+              <th>About</th>
+              <th>Grade</th>
+              <th>Download</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for addon in addons %}
+              <tr>
+                <td>
+                  <div class="user-names">
+                    <a href="/users/{{ addon.author.id }}"><span>{{ addon.author.username }}</span></a>
+                    <small>({{ addon.author.steamIdentifier }})</small>
+                  </div>
+                </td>
+                <td class="td-width">
+                  <h3><a href="/profile/addons/{{ addon.id }}/preview">{{ addon.name }}</a></h3>
 
-                                    <p>{{ addon.reasonForUpdate || addon.explanation }}</p>
-                                    <small class="hex">
-                                        {% if addon.reasonForUpdate %}
-                                        Updated {{ addon.updatedAt.toDateString() }}
-                                    {% else %}
-                                        Created {{ addon.createdAt.toDateString() }}
-                                        {% endif %}
-                                    </small>
-                                </td>
-                                <td>
-                                    <span class="label label-warning">TODO</span>
-                                </td>
-                                <td><span class="label label-success"><a
-                                                href="/addons/{{ addon.id }}/download">Download</a></span></td>
-                                <td>
-                                    <ul class="list-inline table-buttons">
-                                        <li>
-                                            <button type="button" class="btn-u btn-u-sm btn-u-dark approveButton"
-                                                    data-addon-id="{{ addon.id }}"><i class="icon icon-thumbs-up"></i>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button type="button" class="btn-u btn-u-sm btn-u-dark denyButton"
-                                                    data-addon-id="{{ addon.id }}"><i class="icon icon-thumbs-down"></i>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                  <p>{{ addon.reasonForUpdate || addon.explanation }}</p>
+                  <small class="hex">
+                    {% if addon.reasonForUpdate %}
+                      Updated {{ addon.updatedAt.toDateString() }}
+                    {% else %}
+                      Created {{ addon.createdAt.toDateString() }}
+                    {% endif %}
+                  </small>
+                </td>
+                <td>
+                  <span class="label label-warning">TODO</span>
+                </td>
+                <td><span class="label label-success"><a
+                      href="/addons/{{ addon.id }}/download">Download</a></span></td>
+                <td>
+                  <ul class="list-inline table-buttons">
+                    <li>
+                      <button type="button" class="btn-u btn-u-sm btn-u-dark approveButton"
+                              data-addon-id="{{ addon.id }}"><i class="icon icon-thumbs-up"></i>
+                      </button>
+                    </li>
+                    <li>
+                      <button type="button" class="btn-u btn-u-sm btn-u-dark denyButton"
+                              data-addon-id="{{ addon.id }}"><i class="icon icon-thumbs-down"></i>
+                      </button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
         </div>
-    </div><!--/container-->
-    <!--=== End Profile ===-->
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block scripts %}
-    <script async src="{{ assetPrefix }}/js/pages/staff/addons.js"></script>
+  <script async src="{{ assetPrefix }}/js/pages/staff/addons.js"></script>
 {% endblock %}
