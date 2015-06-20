@@ -13,14 +13,6 @@
 module.exports = function(grunt) {
 
 	grunt.config.set('concat', {
-		js: {
-			src: require('../pipeline').jsFilesToInject,
-			dest: '.tmp/public/concat/production.js'
-		},
-		css: {
-			src: require('../pipeline').cssFilesToInject,
-			dest: '.tmp/public/concat/production.css'
-		},
 		bootstrap: {
 			src: [
 				'assets/plugins/bootstrap-3.3.4/js/transition.js',
