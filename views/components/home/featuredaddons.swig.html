@@ -1,49 +1,49 @@
 <div class="heading heading-v1 margin-bottom-40">
-	<h2>Featured Addons</h2>
+  <h2>Featured Addons</h2>
 
-	<p>Some of Mod Mountains best addons. These are handpicked and highly recommended.</p>
+  <p>Some of Mod Mountains best addons. These are handpicked and highly recommended.</p>
 </div>
 
 <div class="row illustration-v2 margin-bottom-60">
-	{% for addon in featuredAddons %}
-		<div class="col-md-3 col-sm-6 md-margin-bottom-30">
-			<div class="product-img">
-				<a href="/addons/{{ addon.id }}"><img class="full-width img-responsive" src="/addons/{{ addon.id }}/artwork/{{ addon.cardImage }}"
-				                                  alt=""></a>
-				{#<a class="product-review" href="">Quick review</a>#}
-			</div>
-			<div class="product-description product-description-brd">
-				<div class="overflow-h margin-bottom-5">
-					<div class="pull-left">
-						<h4 class="title-price"><a href="/addons/{{ addon.id }}">{{ addon.name }}</a></h4>
-						<span class="gender text-uppercase">{{ addon.prettyGamemode() }}</span>
-						<span class="gender">{{ addon.author.username }}</span>
-					</div>
-
-					<div class="product-price">
-						{% if addon.price > 0.0 %}
-							{% if addon.discount > 0.0 %}
-								<span class="title-price">${{ addon.price / 100 * (1.0 - addon.discount) }}</span>
-								<span class="title-price line-through">${{ addon.price / 100 }}</span>
+  {% for addon in featuredAddons %}
+    <div class="col-md-3 col-sm-6 md-margin-bottom-30">
+      <div class="product-img">
+        <a href="/addons/{{ addon.id }}"><img class="full-width img-responsive"
+                                              src="/addons/{{ addon.id }}/artwork/{{ addon.cardImage }}"
+                                              alt=""></a>
+        {#<a class="product-review" href="">Quick review</a>#}
+      </div>
+      <div class="product-description product-description-brd">
+        <div class="overflow-h margin-bottom-5">
+          <div class="pull-left">
+            <h4 class="title-price"><a href="/addons/{{ addon.id }}">{{ addon.name }}</a></h4>
+            <span class="gender text-uppercase">{{ addon.prettyGamemode() }}</span>
+            <span class="gender">{{ addon.author.username }}</span>
+            <span class="gender">
+              {% if addon.price > 0.0 %}
+                {% if addon.discount > 0.0 %}
+                  <span class="title-price">${{ addon.price / 100 * (1.0 - addon.discount) }}</span>
+                  <span class="title-price line-through">${{ addon.price / 100 }}</span>
 							{% else %}
-								<span class="title-price">${{ addon.price / 100 }}</span>
-							{% endif %}
+                  <span class="title-price">${{ addon.price / 100 }}</span>
+                {% endif %}
 						{% else %}
-							<span class="title-price">Free</span>
-						{% endif %}
-					</div>
-				</div>
-				{#<ul class="list-inline product-ratings">#}
-					{#<li><i class="rating-selected icon icon-star"></i></li>#}
-					{#<li><i class="rating-selected icon icon-star"></i></li>#}
-					{#<li><i class="rating-selected icon icon-star"></i></li>#}
-					{#<li><i class="rating icon icon-star"></i></li>#}
-					{#<li><i class="rating icon icon-star"></i></li>#}
-					{#<li class="like-icon"><a data-original-title="Add to wishlist" data-toggle="tooltip"#}
-					                         {#data-placement="left" class="tooltips" href="#"><i#}
-									{#class="icon icon-heart"></i></a></li>#}
-				{#</ul>#}
-			</div>
-		</div>
-	{% endfor %}
+                <span class="title-price">Free</span>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+        {#<ul class="list-inline product-ratings">#}
+        {#<li><i class="rating-selected icon icon-star"></i></li>#}
+        {#<li><i class="rating-selected icon icon-star"></i></li>#}
+        {#<li><i class="rating-selected icon icon-star"></i></li>#}
+        {#<li><i class="rating icon icon-star"></i></li>#}
+        {#<li><i class="rating icon icon-star"></i></li>#}
+        {#<li class="like-icon"><a data-original-title="Add to wishlist" data-toggle="tooltip"#}
+        {#data-placement="left" class="tooltips" href="#"><i#}
+        {#class="icon icon-heart"></i></a></li>#}
+        {#</ul>#}
+      </div>
+    </div>
+  {% endfor %}
 </div>
