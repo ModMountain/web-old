@@ -21,10 +21,13 @@ module.exports = {
 
   index: function (req, res) {
     NewRelic.setControllerName('AddonsController.index');
+    var wishlistPromise = null;
+    if (req.user !== undefined) wishlistPromise = User.findOne(req.user.id).populate('wishlist');
+
     Promise.join(Addon.count({status: Addon.Status.PUBLISHED}), Addon.find({status: Addon.Status.PUBLISHED}).paginate({
         page: 0,
         limit: 10
-      }).populate('author').populate('tags'), User.findOne(req.user.id).populate('wishlist'),
+      }).populate('author').populate('tags'), wishlistPromise,
       function (totalAddons, addons, user) {
         res.locals.user = _.merge(res.locals.user, user);
         req.user = _.merge(req.user, user);
