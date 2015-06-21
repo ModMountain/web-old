@@ -20,7 +20,8 @@ module.exports.http = {
     passportInit: require('passport').initialize(),
     passportSession: require('passport').session(),
     userToTemplate: function (req, res, next) {
-      res.locals.user = req.user;
+      if (req.user === undefined) req.user = {};
+      else res.locals.user = req.user;
       next();
     },
     morgan: require('morgan')('dev', {
