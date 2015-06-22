@@ -55,9 +55,12 @@ module.exports = {
 
   viewAddon: function (req, res) {
     NewRelic.setControllerName('AddonsController.viewAddon');
+    var wishlistPromise = null;
+    if (req.user !== undefined) wishlistPromise = User.findOne(req.user.id).populate('wishlist');
+
     var addonId:String = req.param('id');
-    Promise.join(User.findOne(req.user.id).populate('wishlist'),  Addon.findOne(addonId).populate('author').populate('reviews').populate('tags').populate('purchasers'),
-      function (user:User, addon:Addon) {
+    Promise.join(Addon.findOne(addonId).populate('author').populate('reviews').populate('tags').populate('purchasers'), wishlistPromise,
+      function (addon:Addon, user:User) {
         res.locals.user = _.merge(res.locals.user, user);
         req.user = _.merge(req.user, user);
 
