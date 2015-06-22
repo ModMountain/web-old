@@ -311,23 +311,23 @@
         </div>
         <!--/end filter resilts-->
 
-        <div class="text-center">
-          <ul class="pagination pagination-v2">
-            {% if totalAddons > 5 %}
-              {% set array = Array(totalAddons / 5) %}
+        {#<div class="text-center">#}
+          {#<ul class="pagination pagination-v2">#}
+            {#{% if totalAddons > 5 %}#}
+              {#{% set array = Array(totalAddons / 5) %}#}
 
-              <li><a href="#"><i class="icon icon-angle-left"></i></a></li>
-              {% for i,x in array %}
-                {% if loop.first %}
-                  <li class="active"><a href="#">{{ i }}</a></li>
-                {% else %}
-                  <li><a href="#">{{ i }}</a></li>
-                {% endif %}
-              {% endfor %}
-              <li><a href="#"><i class="icon icon-angle-right"></i></a></li>
-            {% endif %}
-          </ul>
-        </div>
+              {#<li><a href="#"><i class="icon icon-angle-left"></i></a></li>#}
+              {#{% for i,x in array %}#}
+                {#{% if loop.first %}#}
+                  {#<li class="active"><a href="#">{{ i }}</a></li>#}
+                {#{% else %}#}
+                  {#<li><a href="#">{{ i }}</a></li>#}
+                {#{% endif %}#}
+              {#{% endfor %}#}
+              {#<li><a href="#"><i class="icon icon-angle-right"></i></a></li>#}
+            {#{% endif %}#}
+          {#</ul>#}
+        {#</div>#}
         <!--/end pagination-->
       </div>
     </div>
