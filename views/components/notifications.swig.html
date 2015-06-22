@@ -4,10 +4,10 @@
     <span id="notificationAlertText" class="badge badge-sea rounded-x">{{ user.notifications.length }}</span>
     <ul class="list-unstyled badge-open mCustomScrollbar" data-mcs-theme="minimal-dark">
       {% for notification in user.notifications %}
-      <li class="clickable" data-id="{{ notification.id }}" data-url="/profile/notification/{{ notification.id }}">
+      <li data-id="{{ notification.id }}" data-url="/profile/notification/{{ notification.id }}">
         <div class="overflow-h">
           <button type="button" class="close">×</button>
-          <span>{{ notification.message }}</span>
+          <span class="clickable">{{ notification.message }}</span>
         </div>
       </li>
       {% endfor %}
