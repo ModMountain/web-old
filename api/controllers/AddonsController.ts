@@ -86,6 +86,10 @@ module.exports = {
             addon: addon
           })
         }
+      }).catch(function(err) {
+        PrettyError(err, "An error occurred inside AddonsController.viewAddon");
+        req.flash('error', "Something went wrong, please try again");
+        res.redirect('/addons');
       });
   },
 
