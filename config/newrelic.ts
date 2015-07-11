@@ -9,7 +9,7 @@ module.exports.newrelic = {
 	logging: {
 		level: 'trace', // can be error, warn, info, debug or trace
 		rules: {
-			ignore: ['^/socket.io/*/xhr-polling']
+			ignore: ['^/socket.io/*/xhr-polling', '^/assets/*']
 		}
 	},
 	capture_params: true,
