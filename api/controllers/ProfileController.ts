@@ -15,6 +15,7 @@ module.exports = {
 
   //TODO fix this mess of a function
   liveEdit: function (req, res) {
+    NewRelic.setControllerName('ProfileController.liveEdit');
     if (req.session.addonEditor === undefined) req.session.addonEditor = {};
 
     if (req.param('id')) {
@@ -77,6 +78,7 @@ module.exports = {
 
   //TODO fix this mess of a function
   liveEditPOST: function (req, res) {
+    NewRelic.setControllerName('ProfileController.liveEditPOST');
     var objToUpdate;
     if (req.param('id')) objToUpdate = req.session.addonEditor[req.param('id')];
     else objToUpdate = req.session.addonEditor.new;
