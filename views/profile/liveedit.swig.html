@@ -1,0 +1,607 @@
+{% extends 'components/layout.swig.html' %}
+
+{% block css %}
+  {# Default CSS #}
+  <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/log-reg-v3.css">
+
+  {# Markdown editor CSS #}
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css'>
+
+  {# Animated buttons CSS #}
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/ladda/css/themeless.css'>
+
+  {# Dropzone CSS #}
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/dropzone/dropzone.css'>
+  <style>
+    #galleryDropzoneContainer {
+      margin-bottom: 3rem;
+    }
+
+    .dropzone {
+      border: 2px dashed #9B6BCC;
+      border-radius: 5px;
+      background: white;
+    }
+
+    .dropzone .dz-message {
+      font-weight: 400;
+    }
+  </style>
+
+  {# Highlight reel CSS #}
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/master-slider/style/masterslider.css'>
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/master-slider/skins/default/style.css'>
+
+  {# Common profile CSS #}
+  {% include 'components/profile/commoncss.swig.html' %}
+{% endblock %}
+
+{% block content %}
+  <div class="shop-product">
+    <div class="container">
+      <div class="row">
+        {# Big alert block up top with a save button #}
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            <h4>Welcome to the Addon Editor</h4>
+
+            <p>You can edit fields by clicking on them. Currently you can edit the title, short description, tags, full
+              description, type, and gamemode. Any changes you make will stick around if you leave this page, so feel
+              free to take your time. When you are done, click "Finalize Addon" to create your addon.</p>
+
+            <p>
+              <button id="finalizeButton" class="ladda-button btn-u btn-u-sea-shop" data-style="expand-right">
+                <span class="ladda-label">Finalize Addon</span>
+                <span class="ladda-spinner"></span>
+              </button>
+            </p>
+          </div>
+        </div>
+        {# End big alert block #}
+
+        {% include 'components/flashhandler.swig.html' %}
+
+        {# Highlight reel #}
+        <div class="col-md-6 md-margin-bottom-50">
+          <div id="highlightReelContainer" class="ms-showcase2-template">
+          </div>
+        </div>
+        {# End highlight reel #}
+
+        <div class="col-md-6">
+          <div class="shop-product-heading">
+            <h1 class="editable" data-field="name">{{ addon.name }}</h1>
+          </div>
+
+          <p class="editable" data-field="shortDescription">{{ addon.shortDescription }}</p><br>
+
+          {# Addon price + sale price (if specificed) #}
+          <ul class="list-inline shop-product-prices margin-bottom-30">
+            {% if addon.price > 0.0 %}
+              {% if addon.discount > 0.0 %}
+                <li class="shop-red editable" data-field="price">${{ addon.price / 100 * (1.0 - addon.discount) }}</li>
+                <li class="line-through editable" data-field="price">${{ addon.price / 100 }}</li>
+              {% else %}
+                <li class="editable" data-field="price">${{ addon.price / 100 }}</li>
+              {% endif %}
+            {% else %}
+              <li class="shop-red editable" data-field="price">Free</li>
+            {% endif %}
+          </ul>
+
+          {# Addon tags #}
+          <p class="wishlist-category"><strong>Tags:</strong> <span class="editable"
+                                                                    data-field="rawTags">{{ addon.rawTags }}</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Tabs area down at the bottom #}
+  <div class="content-md container">
+    <div class="tab-v5">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#descriptionPane" role="tab" data-toggle="tab">Description</a></li>
+        <li><a href="#mediaPane" role="tab" data-toggle="tab">Media</a></li>
+        <li><a href="#statisticsPane" role="tab" data-toggle="tab">Statistics</a></li>
+        <li><a href="#commentsPane" role="tab" data-toggle="tab">Comments</a></li>
+        <li><a href="#reviewsPane" role="tab" data-toggle="tab">Reviews</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane fade active in" id="descriptionPane">
+          <div class="row">
+            <div class="col-md-7">
+              <textarea id="description" rows="10"></textarea><br>
+            </div>
+
+            <div class="col-md-5">
+              <h3 class="heading-md margin-bottom-20">Specifics</h3>
+
+              <ul class="list-unstyled specifies-list">
+                <li><i class="icon icon-caret-right"></i>Author:
+                  <span>{{ user.username }}</span></li>
+                <li><i class="icon icon-caret-right"></i>Gamemode:
+                  <span>{{ addon.prettyGamemode() }}</span></li>
+                <li><i class="icon icon-caret-right"></i>Contains DRM:
+                  <span>{% if addon.containsDrm %}Yes{% else %}No{% endif %}</span></li>
+                <li><i class="icon icon-caret-right"></i>Contacts Outside Servers:
+                  <span>{% if addon.outsideServers %}Yes{% else %}No{% endif %}</span></li>
+                <li><i class="icon icon-caret-right"></i>Size:
+                  <span>{{ (addon.size / 1024).toFixed(2) }} KB</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {# Media Pane #}
+        <div class="tab-pane fade" id="mediaPane">
+          <div class="row">
+            <div class="col-md-12" id="mediaAlertArea"></div>
+
+            <div class="col-md-6">
+              <h2>Images</h2>
+
+              <p>Drag and drop images here. Make sure to select some images to display in your gallery, along with a
+                banner image and a card image.</p>
+
+
+              <div id="galleryDropzoneContainer">
+                <form id="galleryDropzone" class="dropzone" method="post"
+                      enctype="multipart/form-data">
+                  <div class="dz-message">
+                    Drop files here or click to upload.
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <form action="" class="sky-form" style="border: none">
+                <h2>Videos</h2>
+
+                <p>Enter a video URL, then press enter. Youtube and Vimeo are currently supported.</p>
+                <label class="input">
+                  <i class="icon-prepend icon icon-youtube"></i>
+                  <input type="url" id="videoInput">
+                </label>
+              </form>
+            </div>
+          </div>
+          <div id="mediaArea" class="row"></div>
+        </div>
+
+        {# Statistics pane #}
+        <div class="tab-pane fade" id="statisticsPane">
+          <div class="row">
+            <div class="col-md-6">
+              <h2>Statistics</h2>
+            </div>
+          </div>
+        </div>
+
+        {# Comments pane #}
+        <div class="tab-pane fade" id="commentsPane">
+          <div class="row">
+            <div class="col-md-12">
+              <h2>Comments</h2>
+              {% if !addon.comments || addon.comments.length === 0 %}
+              <p>Your addon does not have any comments yet. Have you considered advertising?</p>
+              {% else %}
+                <p>Comments go here!</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {# Reviews pane #}
+        <div class="tab-pane fade" id="reviewsPane">
+          <div class="row">
+            <div class="col-md-6">
+              <h2>Reviews</h2>
+              {% if !addon.reviews || addon.reviews.length === 0 %}
+              <p>Your addon does not have any reviews yet. Have you considered advertising?</p>
+              {% else %}
+                <p>Reviews go here!</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Begin templates #}
+  <div id="highlightReelTemplate" style="display: none;">
+    <div class="master-slider ms-skin-default"></div>
+  </div>
+
+  <div id="videoPreview" style="display: none;">
+    <div class="col-md-4">
+      <div class="thumbnails thumbnail-style">
+        <div class="responsive-video">
+          <iframe width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="caption">
+          <h3></h3>
+
+          <div class="btn-group">
+            <button type="button" class="btn-u btn-u-blue dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              Set as...
+              <i class="icon icon-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a class="action-button" data-action="modify" data-desired-type="0">Normal Video</a></li>
+              <li><a class="action-button" data-action="modify" data-desired-type="1">Highlighted Video</a></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn-u btn-u-red action-button" data-action="remove">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="imagePreview" style="display: none;">
+    <div class="col-md-4" style="display:flex;justify-content:center;align-items:center;">
+      <div class="thumbnails thumbnail-style">
+        <img class="img-responsive" src=""/>
+
+        <div class="caption">
+          <h3 data-dz-name></h3>
+
+          <div class="btn-group">
+            <button type="button" class="btn-u btn-u-blue dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              Set as...
+              <i class="icon icon-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a class="action-button" data-action="modify" data-desired-type="0">Normal Image</a></li>
+              <li class="divider"></li>
+              <li><a class="action-button" data-action="modify" data-desired-type="2">Card Image</a></li>
+              <li><a class="action-button" data-action="modify" data-desired-type="3">Banner Image</a></li>
+              <li class="divider"></li>
+              <li><a class="action-button" data-action="modify" data-desired-type="1">Highlighted Image</a></li>
+            </ul>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn-u btn-u-red action-button" data-action="remove">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="videoSlideTemplate" style="display: none;">
+    <div class="ms-slide">
+      <img src="{{ assetPrefix }}/plugins/master-slider/style/blank.gif">
+      <a href="" data-type="video"></a>
+      <img class="ms-thumb responsive-image" alt="thumb" src="">
+    </div>
+  </div>
+  <div id="imageSlideTemplate" style="display: none;">
+    <div class="ms-slide">
+      <img src="{{ assetPrefix }}/plugins/master-slider/style/blank.gif"/>
+      <img class="ms-thumb responsive-image" alt="thumb" src="">
+    </div>
+  </div>
+  {# End templates #}
+
+{% endblock %}
+
+{% block scripts %}
+  {# In-place editing of HTML elements #}
+  <script src="{{ assetPrefix }}/plugins/jeditable/jquery.jeditable.js"></script>
+
+  {# Markdown eidtor #}
+  <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/markdown.js"></script>
+  <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/to-markdown.js"></script>
+  <script src="{{ assetPrefix }}/plugins/jquery-hotkeys/jquery.hotkeys.js"></script>
+  <script src="{{ assetPrefix }}/plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+
+  {# Used for file uploading #}
+  <script src="{{ assetPrefix }}/plugins/dropzone/dropzone.js"></script>
+
+  {# Animated buttons #}
+  <script src="{{ assetPrefix }}/plugins/ladda/js/ladda.spin.js"></script>
+  <script src="{{ assetPrefix }}/plugins/ladda/js/ladda.js"></script>
+  <script src="{{ assetPrefix }}/plugins/ladda/js/jquery.ladda.js"></script>
+
+  {# Used for the highlight reel #}
+  <script src="{{ assetPrefix }}/plugins/master-slider/js/jquery.easing.js"></script>
+  <script src="{{ assetPrefix }}/plugins/master-slider/js/masterslider.js"></script>
+
+  <script async>
+    var addon = {{ addon|safe|json }};
+    var mediaArea = $("#mediaArea");
+    var mediaAlertArea = $("#mediaAlertArea");
+    var mediaMap = {};
+
+    // setupMediaActions is a bit different, it will setup a Socket.io listener
+    // and then make a function to handle the action buttons on our media
+    var actionHandler = setupMediaActions();
+
+    setupEditableFields();
+    setupDescriptionEditor();
+    setupImages();
+    setupVideos();
+    setupFinalize();
+    setupHighlights();
+
+    function setupEditableFields() {
+      $(".editable").editable(saveEdit, {
+        type: 'text',
+        indicator: 'Saving...',
+        tooltip: 'Click to edit...'
+      });
+
+      function saveEdit(value, settings) {
+        var field = $(this).data('field');
+        io.socket.post(window.location.pathname, {
+          _csrf: "{{ _csrf }}",
+          type: 'update',
+          field: field,
+          value: value
+        });
+        return value;
+      }
+    }
+    function setupDescriptionEditor() {
+      var description = $("#description");
+      description.val(addon.description);
+      description.markdown({
+        savable: true,
+        onSave: function (e) {
+          io.socket.post(window.location.pathname, {
+            _csrf: "{{ _csrf }}",
+            type: 'update',
+            field: "description",
+            value: e.getContent()
+          });
+        }
+      });
+    }
+    function setupImages() {
+      $("#galleryDropzone").attr("action", window.location.pathname)
+      var imagePreview = document.getElementById("imagePreview").innerHTML;
+
+      // Add pre-existing videos the media area
+      addon.images.forEach(function (image) {
+        addImage(image);
+      });
+
+      // Dropzone configuration
+      Dropzone.options.galleryDropzone = {
+        acceptedFiles: 'image/*',
+        thumbnailHeight: null,
+        thumbnailWidth: null,
+        addedfile: function (file) {
+        },
+        init: function () {
+          // Before Dropzone submits the file
+          this.on('sending', function (file, xhr, formData) {
+            formData.append("_csrf", "{{ _csrf }}");
+            formData.append("type", "update");
+            formData.append("field", "image");
+            formData.append("action", "new");
+          });
+
+          // When a file was submitted successfully
+          this.on('success', function (file, response) {
+            addImage(response);
+            addon.images.push(response);
+          });
+
+          this.on('error', function (file, error, xhr) {
+            addAlert('error', "Image Upload Error", xhr.statusText + ". Please try again.", mediaAlertArea);
+          });
+        }
+      };
+
+      function addImage(image) {
+        var previewElement = $(imagePreview);
+        previewElement.find('.img-responsive').attr('src', "/addons/{{ addon.id }}/artwork/" + image.objectId);
+        previewElement.data("id", image.originalId);
+        previewElement.appendTo(mediaArea);
+        previewElement.find(".action-button").on('click', actionHandler);
+
+        mediaMap[image.originalId] = previewElement;
+      }
+    }
+    function setupVideos() {
+      var videoInput = $("#videoInput");
+      var videoPreview = document.getElementById("videoPreview").innerHTML;
+
+      // Add pre-existing videos the media area
+      addon.videos.forEach(function (video) {
+        addVideo(video.id);
+      });
+
+      // Setup logic so the user can enter a URL and have it appear in the media area
+      videoInput.on('keypress', function (e) {
+        if (e.which === 13) {
+          e.preventDefault();
+          io.socket.post(window.location.pathname, {
+            _csrf: "{{ _csrf }}",
+            type: 'update',
+            field: 'video',
+            action: 'new',
+            value: videoInput.val()
+          });
+        }
+      });
+      io.socket.on('updateResponse', function (data) {
+        if (data.error) {
+          addAlert('error', data.type, data.msg, mediaAlertArea);
+          videoInput.parent().addClass('state-error');
+        } else {
+          addVideo(data.id);
+          videoInput.parent().removeClass('state-error');
+          videoInput.val("");
+          addon.videos.push({
+            id: data.id,
+            type: 0
+          });
+        }
+      });
+
+      function addVideo(id) {
+        var previewElement = $(videoPreview);
+        previewElement.find('iframe').attr('src', 'https://www.youtube.com/embed/' + id);
+        previewElement.data('id', id);
+        previewElement.appendTo(mediaArea);
+        previewElement.find(".action-button").on('click', actionHandler);
+
+        mediaMap[id] = previewElement;
+      }
+    }
+    function setupFinalize() {
+      // Finalization logic
+      var finalizeButton = $("#finalizeButton");
+      var l = finalizeButton.ladda();
+
+      finalizeButton.on('click', function (e) {
+        l.ladda('start');
+        e.preventDefault();
+        io.socket.post(window.location.pathname, {
+          _csrf: "{{ _csrf }}",
+          type: 'finalize'
+        })
+      });
+      io.socket.on('finalizeResponse', function (data) {
+        if (data.error) {
+          addAlert('error', data.type, data.msg);
+          l.ladda('stop');
+        } else {
+          window.location.replace('/profile/addons/' + data.addonId);
+        }
+      });
+    }
+    function setupMediaActions() {
+      io.socket.on('actionResponse', function (data) {
+        var action = data.action.toUpperCase();
+        if (action === 'REMOVE') {
+          var media = mediaMap[data.originalId] || mediaMap[data.id];
+          media.fadeOut("normal", function () {
+            media.remove();
+            media = undefined;
+          });
+
+          //TODO don't run two for loops
+          // Remove the image (if it's an image)
+          for (var i = 0; i < addon.images.length; i++) {
+            if (addon.images[i].originalId === data.originalId) {
+              addon.images.splice(i, 1);
+              break;
+            }
+          }
+          // Remove the video (if it's a video)
+          for (i = 0; i < addon.videos.length; i++) {
+            if (addon.videos[i].id === data.id) {
+              addon.videos.splice(i, 1);
+              break;
+            }
+          }
+        } else if (action === 'MODIFY') {
+          if (data.originalId) {
+            mediaMap[data.originalId].find('img').attr('src', '/addons/{{ addon.id }}/artwork/' + data.objectId);
+            for (i = 0; i < addon.images.length; i++) {
+              if (addon.images[i].originalId === data.originalId) {
+                addon.images[i].objectId = data.objectId;
+                addon.images[i].type = data.type;
+                break;
+              }
+            }
+          } else {
+            for (i = 0; i < addon.videos.length; i++) {
+              if (addon.videos[i].id === data.id) {
+                addon.videos[i].type = data.type;
+                break;
+              }
+            }
+          }
+        }
+
+        setupHighlights();
+      });
+
+      // We need to encapsulate the action handler in a separate function
+      function actionHandler(e) {
+        var btn = $(e.target);
+        var id = btn.closest('.col-md-4').data('id');
+        var field = 'image';
+        if (id.length < 24) field = 'video';
+        var action = btn.data('action');
+        var desiredType = btn.data('desired-type');
+
+        io.socket.post(window.location.pathname, {
+          _csrf: "{{ _csrf }}",
+          type: 'update',
+          field: field,
+          action: action,
+          originalId: id,
+          desiredType: desiredType
+        });
+      }
+
+      return actionHandler;
+    }
+    function setupHighlights() {
+      var highlightReelContainer = $("#highlightReelContainer");
+      var highlightReelTemplate = document.getElementById("highlightReelTemplate").innerHTML;
+      var videoSlideTemplate = document.getElementById("videoSlideTemplate").innerHTML;
+      var imageSlideTemplate = document.getElementById("imageSlideTemplate").innerHTML;
+
+      // Remove the old master slider
+      highlightReelContainer.find('div').masterslider('destroy');
+      var highlightReel = $(highlightReelTemplate);
+
+      // Add image and video slides
+      var slides = 0;
+      addon.videos.forEach(function (video) {
+        if (video.type === 1) {
+          var videoSlide = $(videoSlideTemplate);
+          videoSlide.find("img").data("src", "//img.youtube.com/vi/" + video.id + "/hqdefault.jpg");
+          videoSlide.find("a").attr("href", "//www.youtube.com/embed/" + video.id + "?hd=1&wmode=opaque&controls=1&showinfo=0");
+          videoSlide.find(".ms-thumb").attr("src", "//img.youtube.com/vi/" + video.id + "/hqdefault.jpg");
+          videoSlide.appendTo(highlightReel);
+          slides++;
+        }
+      });
+      addon.images.forEach(function (image) {
+        if (image.type === 1) {
+          var imageSlide = $(imageSlideTemplate);
+          imageSlide.find("img").data("src", "/addons/{{ addon.id }}/artwork/" + image.objectId);
+          imageSlide.find(".ms-thumb").attr("src", "/addons/{{ addon.id }}/artwork/" + image.objectId);
+          imageSlide.appendTo(highlightReel);
+          slides++;
+        }
+      });
+      console.log("Total of", slides, "slides")
+
+      if (slides <= 0) return;
+      highlightReel.masterslider({
+        width: 550,
+        height: 550,
+        space: 5,
+        view: 'fade',
+        controls: {
+          arrows: {
+            autohide: false
+          },
+          thumblist: {
+            autohide: false,
+            dir: 'h',
+            arrows: false,
+            align: 'bottom',
+            width: 180,
+            height: 170,
+            margin: 5,
+            space: 5
+          }
+        }
+      });
+      highlightReel.appendTo(highlightReelContainer);
+    }
+  </script>
+{% endblock %}

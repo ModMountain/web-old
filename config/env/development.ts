@@ -17,7 +17,7 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'verbose'
+        level: 'info'
     },
 
     connections: {
@@ -58,10 +58,88 @@ module.exports = {
         }
     },
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     auth: {
         steam: {
-            returnURL: "http://modmtn.com:1337/auth/steamCallback",
-            realm: 'http://modmtn.com:1337/',
+            returnURL: "http://modmtn.jessesavary.com:1337/auth/steamCallback",
+            realm: 'http://modmtn.jessesavary.com:1337/',
             apiKey: '***REMOVED***'
         }
     },
@@ -75,7 +153,7 @@ module.exports = {
 	paypal: {
 		clientId: '***REMOVED***',
 		secret: '***REMOVED***',
-		urlRoot: 'http://modmtn.com:1337'
+		urlRoot: 'http://modmtn.jessesavary.com:1337'
 	},
 
 	slack: {

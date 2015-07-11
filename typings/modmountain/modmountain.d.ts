@@ -78,7 +78,6 @@ declare class Addon extends Model {
   price:number;
   discount:number;
   gamemode:Addon.Gamemode;
-  type:Addon.Type;
   zipFile:string;
   size:number;
   shortDescription:string;
@@ -87,7 +86,6 @@ declare class Addon extends Model {
   reasonForUpdate:string;
   outsideServers:boolean;
   containsDrm:boolean;
-  youtubeLink:string;
   autoUpdaterEnabled:boolean;
   configuratorEnabled:boolean;
   leakProtectionEnabled:boolean;
@@ -97,9 +95,6 @@ declare class Addon extends Model {
   downloads:number;
   featured:boolean;
   rawTags:string;
-  galleryImages:Array<string>;
-  cardImage:string;
-  bannerImage:string;
   author:User;
   purchasers:Array<User>;
   transactions:Array<Transaction>;
@@ -108,6 +103,8 @@ declare class Addon extends Model {
   reviews:Array<Review>;
   tags:Array<Tag>;
   coupons:Array<Object>;
+  images:Array<Addon.Image>;
+  videos:Array<Addon.Video>;
 
   canDownload(user:User):boolean;
 
@@ -306,11 +303,37 @@ declare module Addon {
     OTHER = 4
   }
 
-  export enum Type {
-    WEAPON = 0,
-    CHATBOX = 1,
-    UTILITY = 2,
-    OTHER = 3
+  class Image {
+    objectId:string;
+    originalId:string;
+    type:Image.Type;
+  }
+
+  module Image {
+    export enum Type {
+      NORMAL = 0,
+      HIGHLIGHT = 1,
+      CARD = 2,
+      BANNER = 3
+    }
+  }
+
+  class Video {
+    id:string;
+    provider:Video.Provider;
+    type:Video.Type;
+  }
+
+  module Video {
+    export enum Type {
+      NORMAL = 0,
+      HIGHLIGHT = 1
+    }
+
+    export enum Provider {
+      YOUTUBE = 0,
+      VIMEO = 1
+    }
   }
 }
 
@@ -410,10 +433,11 @@ declare class FeeService {
 
 declare class FileService {
   static preprocessFile(file:Object);
-
   static processFile(file:Object);
-
-  static processImage(file:Object, width:number, height:number);
+  static modifyImage(image:Addon.Image, newType:Addon.Image.Type, krake:boolean):Promise<any>;
+  static sendFile(objectId:string, res:Object);
+  static removeFile(objectId:string):Promise<any>;
+  static removeOldImage(image:Addon.Image):Promise<any>;
 }
 
 declare class NotificationService {

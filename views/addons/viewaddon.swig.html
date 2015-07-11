@@ -1,45 +1,60 @@
 {% extends 'components/layout.swig.html' %}
 
 {% block css %}
-  <!-- CSS Page Style -->
+  {# Default CSS #}
   <link rel="stylesheet" href="{{ assetPrefix }}/css/pages/log-reg-v3.css">
-  <link rel="stylesheet"
-        href="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/style/masterslider.css">
-  <link rel="stylesheet"
-        href="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/skins/default/style.css">
 
+  {# Highlight reel CSS #}
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/master-slider/style/masterslider.css'>
+  <link rel='stylesheet' href='{{ assetPrefix }}/plugins/master-slider/skins/default/style.css'>
+
+  {# Common profile CSS #}
   {% include 'components/profile/commoncss.swig.html' %}
 {% endblock %}
 
 {% block content %}
-  <!--=== Shop Product ===-->
   <div class="shop-product">
     <div class="container">
       <div class="row">
         {% include 'components/flashhandler.swig.html' %}
+
+        {# Highlight reel #}
         <div class="col-md-6 md-margin-bottom-50">
           <div class="ms-showcase2-template">
-            {# Master Slider #}
-            <div class="master-slider ms-skin-default" id="masterslider">
-              {% for image in addon.galleryImages %}
-                <div class="ms-slide">
-                  <img class="ms-brd" src="/addons/{{ addon.id }}/artwork/{{ image }}"
-                       data-src="/addons/{{ addon.id }}/artwork/{{ image }}" alt="lorem ipsum dolor sit">
-                  <img class="ms-thumb" src="/addons/{{ addon.id }}/artwork/{{ image }}" alt="thumb" width="180"
-                       height="180">
-                </div>
+            <div id="highlightReel" class="master-slider ms-skin-default">
+              {% for video in addon.videos %}
+                {% if video.type === 1 %}
+                  <div class="ms-slide">
+                    <img src="{{ assetPrefix }}/plugins/master-slider/style/blank.gif"
+                         data-src="//img.youtube.com/vi/{{ video.id }}/hqdefault.jpg">
+                    <a href="//www.youtube.com/embed/{{ video.id }}?hd=1&wmode=opaque&controls=1&showinfo=0"
+                       data-type="video"></a>
+                    <img class="ms-thumb responsive-image" src="//img.youtube.com/vi/{{ video.id }}/hqdefault.jpg">
+                  </div>
+                {% endif %}
+              {% endfor %}
+
+              {% for image in addon.images %}
+                {% if image.type === 1 %}
+                  <div class="ms-slide">
+                    <img src="{{ assetPrefix }}/plugins/master-slider/style/blank.gif"
+                         data-src="/addons/{{ addon.id }}/artwork/{{ image.objectId }}"/>
+                    <img class="ms-thumb responsive-image" src="/addons/{{ addon.id }}/artwork/{{ image.objectId }}">
+                  </div>
+                {% endif %}
               {% endfor %}
             </div>
-            {# End Master Slider #}
           </div>
         </div>
+        {# End highlight reel #}
 
         <div class="col-md-6">
+          {# Addon name and short description #}
           <div class="shop-product-heading">
-            <h2>{{ addon.name }}</h2>
+            <h1>{{ addon.name }}</h1>
           </div>
-
           <p>{{ addon.shortDescription }}</p><br>
+          {# End addon name and short description #}
 
           {# Addon price + sale price (if specificed) #}
           <ul class="list-inline shop-product-prices margin-bottom-30">
@@ -54,7 +69,9 @@
               <li class="shop-red">Free</li>
             {% endif %}
           </ul>
+          {# End addon price #}
 
+          {# Download / purchase / donate buttons #}
           <div class="margin-bottom-40">
             {% if addon.price > 0.0 %}
               {% if addon.canDownload(user) %}
@@ -74,9 +91,9 @@
               </button>
             {% endif %}
           </div>
-          <!--/end product quantity-->
+          {# End download / purchase / donate buttons #}
 
-          {# Addon tags #}
+          {# Addon wishlist and tags #}
           <ul class="list-inline add-to-wishlist add-to-wishlist-brd">
             {% if user %}
               <li class="wishlist-in">
@@ -92,133 +109,120 @@
             {% endif %}
           </ul>
           <p class="wishlist-category"><strong>Tags:</strong> {{ addon.prettyTags() }}</p>
+          {# End addon wishlist and tags #}
         </div>
       </div>
-      <!--/end row-->
     </div>
   </div>
-  <!--=== End Shop Product ===-->
 
-  <!--=== Content Medium ===-->
+  {# Tabs area #}
   <div class="content-md container">
     <div class="tab-v5">
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#description" role="tab" data-toggle="tab">Description</a></li>
-        {#<li><a href="#reviews" role="tab" data-toggle="tab">Reviews (1)</a></li>#}
+        <li class="active"><a href="#descriptionPane" role="tab" data-toggle="tab">Description</a></li>
+        <li><a href="#mediaPane" role="tab" data-toggle="tab">Media</a></li>
+        {#<li><a href="#statisticsPane" role="tab" data-toggle="tab">Statistics</a></li>#}
+        {#<li><a href="#commentsPane" role="tab" data-toggle="tab">Comments</a></li>#}
+        {#<li><a href="#reviewsPane" role="tab" data-toggle="tab">Reviews</a></li>#}
       </ul>
 
       <div class="tab-content">
-        <!-- Description -->
-        <div class="tab-pane fade in active" id="description">
+        <div class="tab-pane fade active in" id="descriptionPane">
           <div class="row">
             <div class="col-md-7">
-              <p>{{ addon.description|markdown }}</p><br>
+              {{ addon.description|markdown }}
+            </div>
 
+            <div class="col-md-5">
               <h3 class="heading-md margin-bottom-20">Specifics</h3>
 
-              <div class="row">
-                <div class="col-sm-6">
-                  <ul class="list-unstyled specifies-list">
-                    <li><i class="icon icon-caret-right"></i>Author:
-                      <span>{{ addon.author.username }}</span></li>
-                    <li><i class="icon icon-caret-right"></i>Gamemode:
-                      <span>{{ addon.prettyGamemode() }}</span></li>
-                    <li><i class="icon icon-caret-right"></i>Type:
-                      <span>{{ addon.prettyType() }}</span></li>
-                    <li><i class="icon icon-caret-right"></i>Contains DRM:
-                      <span>{% if addon.containsDrm %}Yes{% else %}No{% endif %}</span></li>
-                    <li><i class="icon icon-caret-right"></i>Contacts Outside Servers:
-                      <span>{% if addon.outsideServers %}Yes{% else %}No{% endif %}</span></li>
-                    <li><i class="icon icon-caret-right"></i>Size:
-                      <span>{{ (addon.size / 1024).toFixed(2) }} KB</span></li>
-                  </ul>
-                </div>
-              </div>
+              <ul class="list-unstyled specifies-list">
+                <li><i class="icon icon-caret-right"></i>Author:
+                  <span>{{ user.username }}</span></li>
+                <li><i class="icon icon-caret-right"></i>Gamemode:
+                  <span>{{ addon.prettyGamemode() }}</span></li>
+                <li><i class="icon icon-caret-right"></i>Contains DRM:
+                  <span>{% if addon.containsDrm %}Yes{% else %}No{% endif %}</span></li>
+                <li><i class="icon icon-caret-right"></i>Contacts Outside Servers:
+                  <span>{% if addon.outsideServers %}Yes{% else %}No{% endif %}</span></li>
+                <li><i class="icon icon-caret-right"></i>Size:
+                  <span>{{ (addon.size / 1024).toFixed(2) }} KB</span></li>
+              </ul>
             </div>
-            <div class="col-md-5">
-              {% if addon.youtubeLink %}
-                <div class="responsive-video">
-                  <iframe width="100%" src="{{ addon.youtubeLink }}" frameborder="0"
-                          allowfullscreen=""></iframe>
+          </div>
+        </div>
+
+        {# Media Pane #}
+        <div class="tab-pane fade" id="mediaPane">
+          <div class="row">
+            {% for video in addon.videos %}
+              {% if video.type === 0 %}
+                <div class="col-md-8">
+                  <div class="thumbnails thumbnail-style">
+                    <div class="responsive-video">
+                      <iframe width="100%" height="100%" frameborder="0" allowfullscreen
+                              src="https://www.youtube.com/embed/{{ video.id }}"></iframe>
+                    </div>
+                  </div>
                 </div>
+              {% endif %}
+
+            {% endfor %}
+
+            {% for image in addon.images %}
+              {% if image.type === 0 %}
+                <div class="col-md-4" style="display:flex;justify-content:center;align-items:center;">
+                  <div class="thumbnails thumbnail-style">
+                    <img class="img-responsive" src="/addons/{{ addon.id }}/artwork/{{ image.objectId }}"/>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {# Statistics pane #}
+        <div class="tab-pane fade" id="statisticsPane">
+          <div class="row">
+            <div class="col-md-6">
+              <h2>Statistics</h2>
+            </div>
+          </div>
+        </div>
+
+        {# Comments pane #}
+        <div class="tab-pane fade" id="commentsPane">
+          <div class="row">
+            <div class="col-md-12">
+              <h2>Comments</h2>
+              {% if !addon.comments || addon.comments.length === 0 %}
+              <p>Your addon does not have any comments yet. Have you considered advertising?</p>
+              {% else %}
+                <p>Comments go here!</p>
               {% endif %}
             </div>
           </div>
         </div>
-        <!-- End Description -->
 
-        {#<!-- Reviews -->#}
-        {#<div class="tab-pane fade" id="reviews">#}
-        {#<div class="product-comment margin-bottom-40">#}
-        {#<div class="product-comment-in">#}
-        {#<img class="product-comment-img rounded-x" src="assets/img/team/01.jpg" alt="">#}
-        {#<div class="product-comment-dtl">#}
-        {#<h4>Mickel <small>22 days ago</small></h4>#}
-        {#<p>I like the green colour, it's very likeable and reminds me of Hollister. A little loose though but I am very skinny</p>#}
-        {#<ul class="list-inline product-ratings">#}
-        {#<li class="reply"><a href="#">Reply</a></li>#}
-        {#<li class="pull-right">#}
-        {#<ul class="list-inline">#}
-        {#<li><i class="rating-selected icon icon-star"></i></li>#}
-        {#<li><i class="rating-selected icon icon-star"></i></li>#}
-        {#<li><i class="rating-selected icon icon-star"></i></li>#}
-        {#<li><i class="rating icon icon-star"></i></li>#}
-        {#<li><i class="rating icon icon-star"></i></li>#}
-        {#</ul>#}
-        {#</li>#}
-        {#</ul>#}
-        {#</div>#}
-        {#</div>#}
-        {#</div>#}
-        {#<h3 class="heading-md margin-bottom-30">Add a review</h3>#}
-        {#<form action="assets/php/demo-contacts-process.php" method="post" id="sky-form3" class="sky-form sky-changes-4">#}
-        {#<fieldset>#}
-        {#<div class="margin-bottom-30">#}
-        {#<label class="label-v2">Name</label>#}
-        {#<label class="input">#}
-        {#<input type="text" name="name" id="name">#}
-        {#</label>#}
-        {#</div>#}
-
-        {#<div class="margin-bottom-30">#}
-        {#<label class="label-v2">Email</label>#}
-        {#<label class="input">#}
-        {#<input type="email" name="email" id="email">#}
-        {#</label>#}
-        {#</div>#}
-
-        {#<div class="margin-bottom-30">#}
-        {#<label class="label-v2">Review</label>#}
-        {#<label class="textarea">#}
-        {#<textarea rows="7" name="message" id="message"></textarea>#}
-        {#</label>#}
-        {#</div>#}
-        {#</fieldset>#}
-
-        {#<footer class="review-submit">#}
-        {#<label class="label-v2">Review</label>#}
-        {#<div class="stars-ratings">#}
-        {#<input type="radio" name="stars-rating" id="stars-rating-5">#}
-        {#<label for="stars-rating-5"><i class="icon icon-star"></i></label>#}
-        {#<input type="radio" name="stars-rating" id="stars-rating-4">#}
-        {#<label for="stars-rating-4"><i class="icon icon-star"></i></label>#}
-        {#<input type="radio" name="stars-rating" id="stars-rating-3">#}
-        {#<label for="stars-rating-3"><i class="icon icon-star"></i></label>#}
-        {#<input type="radio" name="stars-rating" id="stars-rating-2">#}
-        {#<label for="stars-rating-2"><i class="icon icon-star"></i></label>#}
-        {#<input type="radio" name="stars-rating" id="stars-rating-1">#}
-        {#<label for="stars-rating-1"><i class="icon icon-star"></i></label>#}
-        {#</div>#}
-        {#<button type="button" class="btn-u btn-u-sea-shop btn-u-sm pull-right">Submit</button>#}
-        {#</footer>#}
-        {#</form>#}
-        {#</div>#}
-        {#<!-- End Reviews -->#}
+        {# Reviews pane #}
+        <div class="tab-pane fade" id="reviewsPane">
+          <div class="row">
+            <div class="col-md-6">
+              <h2>Reviews</h2>
+              {% if !addon.reviews || addon.reviews.length === 0 %}
+              <p>Your addon does not have any reviews yet. Have you considered advertising?</p>
+              {% else %}
+                <p>Reviews go here!</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div><!--/end container-->
-  <!--=== End Content Medium ===-->
+  </div>
+  {# End tabs area #}
 
+  {# Payment modal #}
   <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
        aria-hidden="true">
     <div class="modal-dialog">
@@ -272,50 +276,45 @@
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+  </div>
+  {# End payment modal #}
 {% endblock %}
 
 {% block scripts %}
+  {# Stripe Checkout #}
   <script src="https://checkout.stripe.com/checkout.js"></script>
-  <script src="{{ assetPrefix }}/plugins/master-slider/quick-start/masterslider/masterslider.js"></script>
+
+  {# Used for the highlight reel #}
+  <script src="{{ assetPrefix }}/plugins/master-slider/js/jquery.easing.js"></script>
+  <script src="{{ assetPrefix }}/plugins/master-slider/js/masterslider.js"></script>
+
   <script async>
     // Attach the addon to the window so it can be accessed from client-side Javascript
     window.addon = {{ addon|json|raw }};
     window.stripePublicKey = '{{ sails.config.stripe.publicKey }}';
 
-    var MasterSliderShowcase2 = function () {
-
-      return {
-
-        //Master Slider
-        initMasterSliderShowcase2: function () {
-          var slider = new MasterSlider();
-
-          slider.control('arrows');
-          slider.control('thumblist', {
-            autohide: false,
-            dir: 'h',
-            arrows: false,
-            align: 'bottom',
-            width: 180,
-            height: 170,
-            margin: 5,
-            space: 5
-          });
-
-          slider.setup('masterslider', {
-            width: 550,
-            height: 550,
-            space: 5,
-            view: 'fade'
-          });
+    var highlightReel = $("#highlightReel");
+    highlightReel.masterslider({
+      width: 550,
+      height: 550,
+      space: 5,
+      view: 'fade',
+      controls: {
+        arrows: {
+          autohide: false
+        },
+        thumblist: {
+          autohide: false,
+          dir: 'h',
+          arrows: false,
+          align: 'bottom',
+          width: 180,
+          height: 170,
+          margin: 5,
+          space: 5
         }
-
-      };
-
-    }();
-
-    MasterSliderShowcase2.initMasterSliderShowcase2();
+      }
+    });
   </script>
   <script async src="{{ assetPrefix }}/js/pages/addons/viewaddon.js"></script>
 {% endblock %}

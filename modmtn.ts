@@ -20,7 +20,7 @@
  * `node modmtn.js --silent --port=80 --prod`
  */
 
-// Load New Relic
+  // Load New Relic
 require("sails-hook-newrelic/register");
 
 // Ensure we're in the project directory, so relative paths work as expected
@@ -28,7 +28,7 @@ require("sails-hook-newrelic/register");
 process.chdir(__dirname);
 
 // Ensure a "sails" can be located:
-(function() {
+(function () {
   var sails;
   try {
     sails = require("sails");
@@ -54,10 +54,32 @@ process.chdir(__dirname);
       console.error("Your `.sailsrc` file(s) will be ignored.");
       console.error("To resolve this, run:");
       console.error("npm install rc --save");
-      rc = function () { return {}; };
+      rc = function () {
+        return {};
+      };
     }
   }
 
-  // Start server
+  //var Cluster = require('cluster');
+  //
+  //if (Cluster.isMaster) {
+  //  var cpuCount = require('os').cpus().length;
+  //  console.log("Detected", cpuCount, "CPU cores, spinning up", cpuCount, "workers...");
+  //  for (var i = 0; i < cpuCount; i++) {
+  //    Cluster.fork();
+  //  }
+  //
+  //  Cluster.on('online', function(worker) {
+  //    console.log("Worker", worker.id, "is online");
+  //  });
+  //  Cluster.on('exit', function(worker) {
+  //    console.error("Worker", worker.id, "died, spinning up a new worker...");
+  //    Cluster.fork();
+  //  });
+  //} else {
+  //  // Start server
+  //  sails.lift(rc("sails"));
+  //}
+
   sails.lift(rc("sails"));
 })();

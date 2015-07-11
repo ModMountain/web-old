@@ -5,7 +5,7 @@ module.exports = function (grunt) {
 		'concat',
 		'copy:dev',
     'cssmin',
-    'uglify'
+    //'uglify'
     //'purifycss'
 	]);
 };

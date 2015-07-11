@@ -107,30 +107,7 @@ module.exports = {
           res.send(403);
         } else {
           // Get the file and it's metadata from GridFS
-          sails.hooks.gfs.findOne({_id: addon.zipFile}, function (err, file) {
-            if (err) {
-              PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
-              res.send(500);
-            } else if (!file) {
-              res.send(404);
-            }
-            else {
-              // Increment download count
-              addon.downloads++;
-              addon.save();
-
-              // Build the response
-              res.type(file.contentType);
-              res.set({
-                'Content-Disposition': 'attachment; filename="' + file.filename + '"',
-                'Content-Length': file.length
-              });
-              sails.hooks.gfs.createReadStream({
-                _id: addon.zipFile,
-                chunkSize: 1024 * 1024
-              }).pipe(res);
-            }
-          });
+          FileService.sendFile(addon.zipFile, res);
         }
       })
       .catch(function (err) {
@@ -143,42 +120,49 @@ module.exports = {
     NewRelic.setControllerName('AddonsController.artwork');
     var addonId:string = req.param('id');
     var artwork:string = req.param('artwork');
-    Addon.findOne(addonId)
-      .then(function (addon:Addon) {
-		    if (addon === undefined) {
-          res.send(404);
-        } else if (addon.status !== Addon.Status.PUBLISHED && !addon.canModify(req.user)) {
-          res.send(403);
-        } else if (addon.galleryImages.indexOf(artwork) === -1 && addon.bannerImage !== artwork && addon.cardImage !== artwork) {
-          res.send(403);
-        } else {
-          // Get the file and it's metadata from GridFS
-          sails.hooks.gfs.findOne({_id: artwork}, function (err, file) {
-            if (err) {
-              PrettyError(err, 'An error occurred during sails.hooks.gfs.exist inside AddonsController.download');
-              res.send(500);
-            } else if (!file) {
-              res.send(404);
+
+    // Handle artwork from an addon live editing session
+    if (addonId === 'session') {
+      if (req.session.newAddon === undefined || req.session.newAddon.images === undefined) return res.send(404);
+      for (var i = 0; i < req.session.newAddon.images.length; i++) {
+        var image = req.session.newAddon.images[i];
+        if (image && image.objectId === artwork) return FileService.sendFile(image.objectId, res);
+      }
+      return res.send(404);
+    // Handle artwork from other places
+    } else {
+      Addon.findOne(addonId)
+        .then(function (addon:Addon) {
+          if (addon === undefined) { // Addon doesn't exist
+            res.send(404);
+          } else {
+            // If the addon is published, any artwork currently attached to the model can be loaded by any user
+            if (addon.status === Addon.Status.PUBLISHED) {
+              for (var i = 0; i < addon.images.length; i++) {
+                var image = addon.images[i];
+                // Return and break out of the loop so we don't send a 404
+                if (image.objectId === artwork) return FileService.sendFile(image.objectId, res);
+              }
             }
-            else {
-              // Build the response
-              res.type(file.contentType);
-              res.set({
-                'Content-Disposition': 'inline; filename="' + file.filename + '"',
-                'Content-Length': file.length,
-                'ETag': file.md5
-              });
-              sails.hooks.gfs.createReadStream({
-                _id: artwork,
-                chunkSize: 1024 * 1024
-              }).pipe(res);
+
+            // If we couldn't find the artwork, it might be in the session store
+            if (addon.canModify(req.user)) {
+              // Attempt to load from session first
+              if (!req.session.addonEditor[addonId] || !req.session.addonEditor[addonId].images) return res.send(404);
+              for (var i = 0; i < req.session.addonEditor[addonId].images.length; i++) {
+                var image = req.session.addonEditor[addonId].images[i];
+                if (image && image.objectId === artwork) return FileService.sendFile(image.objectId, res);
+              }
             }
-          });
-        }
-      }).catch(function (err) {
-        PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
-        res.send(500);
-      });
+
+            // Artwork was not attached to model or in session store
+            res.send(404);
+          }
+        }).catch(function (err) {
+          PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
+          res.send(500);
+        });
+    }
   },
 
   validateCoupon: function (req, res) {

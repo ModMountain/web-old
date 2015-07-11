@@ -4,12 +4,273 @@
 
 var NewRelic = require('newrelic');
 var SanitizeHTML = require('sanitize-html');
+var QS = require('querystring');
 
 module.exports = {
   _config: {
     actions: false,
     shortcuts: false,
     rest: false
+  },
+
+  //TODO fix this mess of a function
+  liveEdit: function (req, res) {
+    if (req.session.addonEditor === undefined) req.session.addonEditor = {};
+
+    if (req.param('id')) {
+      var addonId = req.param('id');
+      Addon.findOne(addonId)
+      .then(function(addon:Addon) {
+          if (addon === undefined) res.notFound();
+          else if (!addon.canModify(req.user)) res.forbidden();
+          else {
+            if (req.session.addonEditor[addonId] === undefined) req.session.addonEditor[addonId] = addon;
+            return req.session.save();
+          }
+        }).then(function() {
+          res.view({
+            title: "Addon Editor",
+            addon: req.session.addonEditor[addonId],
+            activeTab: 'profile.addons',
+            breadcrumbs: [["/profile", "Profile"], ["/addons", "Addons"]],
+          });
+        }).catch(function(err) {
+          PrettyError(err, "Something went wrong during liveEdit")
+          res.serverError();
+        });
+    } else {
+      // Stick default addon into session
+      if (req.session.addonEditor.new === undefined) {
+        req.session.addonEditor.new = {
+          id: 'session',
+          author: req.user.id,
+          name: "New Addon",
+          price: 0,
+          shortDescription: "This is your addon's short description. It will be displayed various places around the site. Keep it short and concise.",
+          description: "This is your addon's full description. Feel free to use Markdown so things look pretty!",
+          rawTags: "some, sample, tags",
+          activeTab: 'profile.liveedit',
+          images: [],
+          videos: []
+        };
+        return req.session.save(function(err) {
+          if (err) res.serverError();
+          else {
+            res.view({
+              title: "Addon Editor",
+              addon: req.session.addonEditor.new,
+              activeTab: 'profile.addons',
+              breadcrumbs: [["/profile", "Profile"], ["/addons", "Addons"]],
+            });
+          }
+        });
+      }
+
+      res.view({
+        title: "Addon Editor",
+        addon: req.session.addonEditor.new,
+        activeTab: 'profile.addons',
+        breadcrumbs: [["/profile", "Profile"], ["/addons", "Addons"]],
+      });
+    }
+  },
+
+  //TODO fix this mess of a function
+  liveEditPOST: function (req, res) {
+    var objToUpdate;
+    if (req.param('id')) objToUpdate = req.session.addonEditor[req.param('id')];
+    else objToUpdate = req.session.addonEditor.new;
+
+    var type = req.param('type');
+
+    // A field has been updated
+    if (type === 'update') {
+      var field = req.param('field');
+
+      if (field === 'image') {
+        var action = req.param('action').toUpperCase();
+
+        if (action === "NEW") {
+          var objectId = req.files.file[0].objectId;
+          objToUpdate.images.push({
+            objectId: objectId,
+            originalId: objectId,
+            type: Addon.Image.Type.NORMAL
+          });
+          // Save the session and respond with the index of this image
+          req.session.save(() => res.json({
+            objectId: objectId,
+            originalId: objectId,
+            type: Addon.Image.Type.NORMAL
+          }));
+        } else if (action === "REMOVE") {
+          // Get the ID of the image the user wants to remove
+          var originalId = req.param('originalId');
+          // Iterate over all images in the session
+          for (var i = 0; i < objToUpdate.images.length; i++) {
+            var image = objToUpdate.images[i];
+            // If the current image is a match
+            if (image.originalId === originalId) {
+              // Remove it from the session and from GridFS
+              objToUpdate.images.splice(i, 1);
+              Promise.join(req.session.save(), FileService.removeFile(image.originalId), FileService.removeFile(image.originalId))
+                .then(() => req.socket.emit('actionResponse', {action: 'remove', originalId: originalId}))
+                .catch(function (err) {
+                  PrettyError(err, "An error occurred while removing an image");
+                  res.serverError();
+                });
+              // Break the loop early
+              break;
+            }
+          }
+        } else if (action === "MODIFY") {
+          var originalId = req.param('originalId');
+          var desiredType = req.param('desiredType');
+          // Iterate over all images in the session
+          for (var i = 0; i < objToUpdate.images.length; i++) {
+            var image = objToUpdate.images[i];
+
+            // Ensure we don't  have duplicate cards or banners
+            if (desiredType === Addon.Image.Type.CARD && image.type === Addon.Image.Type.CARD) image.type = Addon.Image.Type.NORMAL;
+            if (desiredType === Addon.Image.Type.BANNER && image.type === Addon.Image.Type.BANNER) image.type = Addon.Image.Type.NORMAL;
+
+            // If the current image is a match
+            if (image.originalId === originalId) {
+              image.type = desiredType;
+              if (desiredType === Addon.Image.Type.NORMAL) {
+                // Lazily remove the old image
+                FileService.removeOldImage(image);
+                image.objectId = image.originalId;
+                req.session.save(function(err) {
+                  if (err) {
+                    PrettyError(err, "An error occurred while modifying an image");
+                    res.serverError();
+                  } else {
+                    req.socket.emit('actionResponse', {
+                      action: 'modify',
+                      objectId: image.objectId,
+                      originalId: originalId,
+                      type: desiredType
+                    });
+                  }
+                });
+                break;
+              } else {
+                FileService.modifyImage(image, desiredType)
+                  .then(function (newId) {
+                    // Lazily remove the old image
+                    FileService.removeOldImage(image);
+                    image.objectId = newId;
+                    return req.session.save();
+                  }).then(function () {
+                    req.socket.emit('actionResponse', {
+                      action: 'modify',
+                      objectId: image.objectId,
+                      originalId: originalId,
+                      type: desiredType
+                    });
+                  }).catch(function (err) {
+                    PrettyError(err, "An error occurred while modifying an image");
+                    res.serverError();
+                  });
+                if (desiredType === Addon.Image.Type.HIGHLIGHT) break;
+              }
+            }
+          }
+        }
+      } else if (field === 'video') {
+        var action = req.param('action').toUpperCase();
+        if (action === "NEW") {
+          var value = req.param('value');
+
+          // Must validate the URl we were given
+          // Every Youtube url contains "watch?", we need its location to validate and find the URL parameters
+          var watchIndex = value.indexOf("watch?");
+          if (watchIndex <= 0) {
+            return req.socket.emit('updateResponse', {
+              error: true,
+              type: "Youtube Error",
+              msg: "The URL you specified was not a valid Youtube URL."
+            })
+          }
+
+          // Now that we know this a Youtube URL, we need to extract the paramets from it
+          var params = QS.parse(value.substr(watchIndex + 6));
+          var videoId = params.v;
+
+          for (var i = 0; i < objToUpdate.videos.length; i++) {
+            if (objToUpdate.videos[i].id === videoId) {
+              return req.socket.emit('updateResponse', {
+                error: true,
+                type: "Youtube Error",
+                msg: "You have already added that video."
+              });
+            }
+          }
+
+          objToUpdate.videos.push({
+            id: videoId,
+            provider: Addon.Video.Provider.YOUTUBE,
+            type: Addon.Video.Type.NORMAL
+          });
+          req.session.save(() => req.socket.emit('updateResponse', {error: false, type: 'video', id: videoId}));
+        } else if (action === "REMOVE") {
+          var id = req.param('originalId');
+          for (var i = 0; i < objToUpdate.videos.length; i++) {
+            if (objToUpdate.videos[i].id === id) {
+              objToUpdate.videos.splice(i, 1);
+              return req.session.save(() => req.socket.emit('actionResponse', {action: 'remove', id: id}))
+            }
+          }
+        } else if (action === "MODIFY") {
+          var id = req.param('originalId');
+          var desiredType = req.param('desiredType');
+          for (var i = 0; i < objToUpdate.videos.length; i++) {
+            var video = objToUpdate.videos[i];
+            if (video.id === id) {
+              video.type = desiredType;
+              return req.session.save(() => req.socket.emit('actionResponse', {action: 'modify', id: id}))
+            }
+          }
+        }
+      } else if (field === "price") {
+        var value = req.param('value');
+        if (value.substr(0,1) === "$") value = parseFloat(value.substr(1, value.length));
+        objToUpdate[field] = value * 100;
+        req.session.save();
+      } else {
+        objToUpdate[field] = req.param('value');
+        req.session.save();
+      }
+    } else if (type === 'finalize') {
+      // Figure out the banner and card images
+      objToUpdate.cardImage = undefined;
+      objToUpdate.bannerImage = undefined;
+      for (var i = 0; i < objToUpdate.images.length; i++) {
+        var image = objToUpdate.images[i];
+        if (image.type === Addon.Image.Type.CARD) objToUpdate.cardImage = image.objectId;
+        else if (image.type === Addon.Image.Type.BANNER) objToUpdate.bannerImage = image.objectId;
+      }
+
+      // Make sure the addon will validate
+      if (!objToUpdate.cardImage) return req.socket.emit('finalizeResponse', {error: true, type: "Validation Error", msg: "Your addon must have a card image."});
+      if (objToUpdate.images.length < 3) return req.socket.emit('finalizeResponse', {error: true, type: "Validation Error", msg: "Your add must have at least 3 images."});
+
+      var promise;
+      if (objToUpdate.id) promise = Addon.update(objToUpdate.id, objToUpdate);
+      else promise = Addon.create(objToUpdate);
+      promise
+        .then(function (addon) {
+          objToUpdate = undefined;
+          return [req.session.save(), addon];
+        })
+        .spread(function (session, addon) {
+          req.socket.emit('finalizeResponse', {error: false, addonId: addon.id || addon[0].id})
+        }).catch(function (error) {
+          req.socket.emit('finalizeResponse', {error: true, type: "Finalization Error", msg: "Something went wrong while finalizing your addon, please try again."});
+          PrettyError(error, "Something went wrong while finalizing an addon")
+        })
+    }
   },
 
   purchases: function (req, res) {
@@ -97,90 +358,6 @@ module.exports = {
       })
   },
 
-  createAddon: function (req, res) {
-    NewRelic.setControllerName('ProfileController.createAddon');
-    Tag.getPopularTags()
-      .then(function (tags) {
-        res.view({
-          title: "Create Addon",
-          subtitle: "Create and Upload a New Addon",
-          breadcrumbs: [['/profile', 'Profile']],
-          activeTab: 'profile.createAddon',
-          popularTags: tags
-        });
-      }).catch(function (err) {
-        PrettyError(err, "An error occurred inside ProfileController.createAddon");
-        req.flash("error", "Something went wrong, please try again");
-        res.redirect("/profile");
-      });
-  },
-
-  createAddonPOST: function (req, res) {
-    NewRelic.setControllerName('ProfileController.createAddonPOST');
-    if (req.files.zipFile === undefined) {
-      req.flash('error', 'You must attach a file with your addon!');
-      res.redirect('/profile/addons/create');
-    } else if (req.body.price < 0) {
-      req.flash('error', 'You cannot enter a negative price!');
-      res.redirect('/profile/addons/create');
-    } else if (req.body.explanation === undefined) {
-      req.flash('error', 'You must provide an explanation with your addon!');
-      res.redirect('/profile/addons/create');
-    } else if (req.body.rawTags === undefined) {
-      req.flash('error', 'You must specify tags with your addon!');
-      res.redirect('/profile/addons/create');
-    } else if (req.files.galleryImages === undefined || req.files.cardImage === undefined) {
-      req.flash('error', 'You must provide a card image and at least 3 gallery images with your addon!');
-      res.redirect('/profile/addons/create');
-    } else if (!Array.isArray(req.files.galleryImages) || req.files.galleryImages.length < 3) {
-      req.flash('error', 'You must provide at least 3 gallery images!');
-      res.redirect('/profile/addons/create');
-    } else {
-      var bannerImage = '';
-      if (req.files.bannerImage !== undefined) bannerImage = req.files.bannerImage[0].objectId.toString();
-
-      var galleryImages = _.map(req.files.galleryImages, function (file) {
-        return file.objectId.toString();
-      });
-
-      Addon.create({
-        // General tab
-        name: req.body.name,
-        price: parseFloat(req.body.price) * 100,
-        gamemode: req.body.gamemode,
-        type: req.body.type,
-        zipFile: req.files.zipFile[0].objectId.toString(),
-        size: req.files.zipFile[0].size,
-        youtubeLink: req.body.youtubeLink,
-        shortDescription: req.body.shortDescription,
-        description: req.body.description,
-        instructions: req.body.instructions,
-        explanation: req.body.explanation,
-        outsideServers: (req.body.outsideServers !== undefined),
-        containsDrm: (req.body.containsDrm !== undefined),
-        // Associations
-        author: req.session.passport.user,
-        rawTags: req.body.rawTags,
-        galleryImages: galleryImages,
-        cardImage: req.files.cardImage[0].objectId.toString(),
-        bannerImage: bannerImage
-      }).then(function (addon) {
-        return [addon, User.findOne(req.session.passport.user).populate('addons')];
-      }).spread(function (addon, user) {
-        user.addons.add(addon);
-        return [addon, user.save()]
-      }).spread(function (addon) {
-        sails.log.verbose("New addon was submitted and is awaiting approval:", addon);
-        req.flash('success', "Addon '" + addon.name + "' has been submitted and is now waiting approval.");
-        res.redirect('/profile/addons/' + addon.id)
-      }).catch(function (err) {
-        PrettyError(err, 'An error occurred during Addon.create inside ProfileController.createAddonPOST');
-        req.flash('error', 'Something went wrong while submitting your addon. Please try again.');
-        res.redirect('/profile/addons/create');
-      });
-    }
-  },
-
   viewAddon: function (req, res) {
     NewRelic.setControllerName('ProfileController.viewAddon');
     var addonId = req.param('id');
@@ -206,93 +383,6 @@ module.exports = {
       });
   },
 
-  editAddon: function (req, res) {
-    NewRelic.setControllerName('ProfileController.editAddon');
-    var addonId = req.param('id');
-    Addon.findOne(addonId)
-      .then(function (addon:Addon) {
-        if (addon === undefined) {
-          res.notFound();
-        } else if (!addon.canModify(req.user)) {
-          res.forbidden();
-        } else {
-          Tag.getPopularTags()
-            .then(function (tags) {
-              res.view({
-                title: "Edit Addon",
-                subtitle: "Editing Addon '" + addon.name + "'",
-                breadcrumbs: [['/profile', 'Profile'], ['/profile/addons', 'Addons'], ['/profile/addons/' + addonId, addon.name]],
-                activeTab: 'profile.addons',
-                addon: addon,
-                popularTags: tags
-              })
-            });
-        }
-      }).catch(function (err) {
-        PrettyError(err, 'An error occurred inside ProfileController.editAddon');
-        req.flash('error', "Something went wrong while trying to edit addon '" + addonId + "', please try again");
-        res.redirect('/profile/addons/' + addonId);
-      });
-  },
-
-  editAddonPOST: function (req, res) {
-    NewRelic.setControllerName('ProfileController.editAddonPOST');
-    var addonId = req.param('id');
-    Addon.findOne(addonId)
-      .then(function (addon:Addon) {
-        if (addon === undefined) {
-          res.notFound();
-        } else if (!addon.canModify(req.user)) {
-          res.forbidden();
-        } else {
-          req.body.outsideServers = req.body.outsideServers !== undefined;
-          req.body.containsDrm = req.body.containsDrm !== undefined;
-          req.body.status = Addon.Status.PENDING;
-          if (req.files.zipFile !== undefined) {
-            req.body.zipFile = req.files.zipFile[0].objectId.toString();
-            req.body.size = req.files.zipFile[0].size;
-          }
-
-          if (req.files.bannerImage !== undefined) {
-            req.body.bannerImage = req.files.bannerImage[0].objectId.toString();
-          }
-          if (req.files.cardImage !== undefined) {
-            req.body.cardImage = req.files.cardImage[0].objectId.toString();
-          }
-          if (req.files.galleryImages !== undefined) {
-            req.body.galleryImages = _.map(req.files.galleryImages, function (file) {
-              return file.objectId.toString();
-            });
-          }
-
-          if (req.body.price) {
-            req.body.price = parseFloat(req.body.price) * 100;
-          }
-
-          var oldStatus = addon.status;
-          Addon.update(addonId, req.body)
-            .then(function () {
-              if (oldStatus === Addon.Status.PUBLISHED) {
-                addon.decrementTags(function () {
-                  req.flash('success', "Addon " + addonId + " updated successfully");
-                })
-              } else {
-                req.flash('success', "Addon " + addonId + " updated successfully");
-              }
-            })
-            .catch(function (err) {
-              req.flash('error', "Something went wrong while trying to update addon " + addonId);
-              PrettyError(err, 'An error occurred during Addon.update inside ProfileController.editAddonPOST')
-            }).finally(function () {
-              res.redirect('/profile/addons/' + addonId);
-            })
-        }
-      }).catch(function (err) {
-        PrettyError(err, 'An error occurred during Addon.findOne inside ProfileController.editAddonPOST');
-        req.flash('error', "Something went wrong while trying to update addon '" + addonId + "', please try again");
-        res.redirect('/profile/addons/' + addonId);
-      });
-  },
 
   removeAddon: function (req, res) {
     NewRelic.setControllerName('ProfileController.removeAddon');

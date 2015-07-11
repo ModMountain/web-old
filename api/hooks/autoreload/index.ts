@@ -74,7 +74,7 @@ module.exports = function (sails) {
         .on('all', sails.util.debounce(function (action, path, stats) {
         sails.log.info("Detected service change, reloading services...");
 
-        sails.hooks.services.loadModules();
+        sails.hooks.services.loadModules(function() {});
       }, 100));
 
       Chokidar.watch(path.resolve(sails.config.appPath, 'views'), sails.config[this.configKey].chokidar)

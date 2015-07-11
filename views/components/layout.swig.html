@@ -48,13 +48,15 @@
   {#<script src="https://use.fonticons.com/b63071a6.js"></script>#}
   <link rel="stylesheet" href="{{ assetPrefix }}/css/fonticons.css">
 
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#9b6bcc">
+
   {% block css %}{% endblock %}
   {% if sails.config.analytics %}{% include 'components/analytics.swig.html' %}{% endif %}
 </head>
 
 <body class="header-fixed">
 <div class="wrapper">
-
   {% include 'components/navigation.swig.html' %}
   {% if breadcrumbs %}
     {% include 'components/breadcrumbs.swig.html' %}
@@ -64,11 +66,10 @@
 
   {% include 'components/footer.swig.html' %}
 </div>
-<!--/wrapper-->
 
 {# Sync Plugins #}
-<script src="{{ assetPrefix }}/plugins/jquery/jquery.js"></script>
-<script src="{{ assetPrefix }}/plugins/jquery/jquery-migrate.js"></script>
+<script src="{{ assetPrefix }}/plugins/jquery/jquery-1.11.3.js"></script>
+{#<script src="{{ assetPrefix }}/plugins/jquery/jquery-migrate.js"></script>#}
 <script src="{{ assetPrefix }}/plugins/sails.io.js"></script>
 <script src="{{ assetPrefix }}/plugins/bootstrap-3.3.4/js/bootstrap.js"></script>
 <script src="{{ assetPrefix }}/plugins/scrollbar/js/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -83,14 +84,15 @@
 <![endif]-->
 <script>
   var alertArea = $("#alertArea");
-  function addAlert(type, title, message) {
+  function addAlert(type, title, message, area) {
     if (type === 'error') type = 'danger';
+    if (area === undefined) area = alertArea;
 
     var alertString = "<br><div class=\"alert alert-" + type + " alert-dismissible\" role=\"alert\">";
     alertString += "  <button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;<\/span><\/button>";
     alertString += "  <strong>" + title + "<\/strong> " + message;
     alertString += "<\/div>";
-    $(alertString).appendTo(alertArea).hide().slideDown();
+    $(alertString).appendTo(area).hide().slideDown();
   }
 
   function getCSRF(cb) {
