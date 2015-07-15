@@ -156,7 +156,14 @@ var AddonModel = {
      * @returns {boolean} Whether or not the user can modify this addon.
      */
     canModify: function canModify(user):Boolean {
-      return !!(this.author === user.id || user.permissionLevel >= 2);
+      // Anonymous users cannot make modifications
+      if (!user) return false;
+      // The author can make modifications
+      else if (this.author === user.id) return true;
+      // Administrators can make modifications
+      else if (user.permissionLevel >= 2) return true;
+      // Failed all other checks
+      else return false;
     },
 
     /**
