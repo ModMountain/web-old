@@ -17,7 +17,7 @@ exports.config = {
     ignore_status_codes: [404, 403]
   },
   rules: {
-    ignore: ['^/socket.io/*/xhr-polling', '^/assets/*']
+    ignore: ['^\/socket\.io\/.*', '^\/assets\/.*']
   },
   browser_monitoring: {
     enable: false,
