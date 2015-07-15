@@ -140,7 +140,7 @@ module.exports = {
             res.notFound();
           } else {
             // If the addon is published, any artwork currently attached to the model can be loaded by any user
-            if (addon.status === Addon.Status.PUBLISHED) {
+            if (addon.status === Addon.Status.PUBLISHED && addon.images) {
               for (let i = 0; i < addon.images.length; i++) {
                 let image = addon.images[i];
                 // Return and break out of the loop so we don't send a 404
