@@ -132,14 +132,20 @@ var AddonModel = {
      * @returns {boolean} Whether or not the user can download the addon.
      */
     canDownload: function canDownload(user):Boolean {
-      // If this is a production env, the user can download an addon if they're the author, an admin, or if it's free
-      if (process.env.NODE_ENV === 'production' && (this.author === user.id || user.permissionLevel >= 1 || this.price === 0)) {
-        return true;
-      }
+      // Free addons are always downloadable without a login
+      if (this.price === 0) return true;
+
+      // Paid addons require a user to be logged in, so this is easy to filter out
+      if (!user) return false;
+
+      // If this user authored this addon or is an administrator, they may download it
+      if (this.author === user.id || user.permissionLevel >= 1) return true;
+
       // Otherwise they must have purchased it
       for (var i = 0; i < this.purchasers.length; i++) {
         if (this.purchasers[i].id === user.id) return true;
       }
+
       // If they didn't pass one of the above checks, they cannot download it
       return false;
     },
