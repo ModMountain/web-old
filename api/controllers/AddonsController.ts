@@ -2,6 +2,7 @@
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 /// <reference path='../../typings/stripe/stripe-node.d.ts' />
+"use strict";
 
 var PayPal = require('paypal-rest-sdk');
 PayPal.configure({
@@ -54,6 +55,8 @@ module.exports = {
   },
 
   viewAddon: function (req, res) {
+    if (req.isSocket) return fetchStats(req, res);
+
     NewRelic.setControllerName('AddonsController.viewAddon');
     var wishlistPromise = null;
     if (req.user !== undefined) wishlistPromise = User.findOne(req.user.id).populate('wishlist');
@@ -128,18 +131,18 @@ module.exports = {
         var image = req.session.newAddon.images[i];
         if (image && image.objectId === artwork) return FileService.sendFile(image.objectId, res);
       }
-      return res.send(404);
+      return res.notFound();
     // Handle artwork from other places
     } else {
       Addon.findOne(addonId)
         .then(function (addon:Addon) {
           if (addon === undefined) { // Addon doesn't exist
-            res.send(404);
+            res.notFound();
           } else {
             // If the addon is published, any artwork currently attached to the model can be loaded by any user
             if (addon.status === Addon.Status.PUBLISHED) {
-              for (var i = 0; i < addon.images.length; i++) {
-                var image = addon.images[i];
+              for (let i = 0; i < addon.images.length; i++) {
+                let image = addon.images[i];
                 // Return and break out of the loop so we don't send a 404
                 if (image.objectId === artwork) return FileService.sendFile(image.objectId, res);
               }
@@ -149,18 +152,18 @@ module.exports = {
             if (addon.canModify(req.user)) {
               // Attempt to load from session first
               if (!req.session.addonEditor[addonId] || !req.session.addonEditor[addonId].images) return res.send(404);
-              for (var i = 0; i < req.session.addonEditor[addonId].images.length; i++) {
-                var image = req.session.addonEditor[addonId].images[i];
+              for (let i = 0; i < req.session.addonEditor[addonId].images.length; i++) {
+                let image = req.session.addonEditor[addonId].images[i];
                 if (image && image.objectId === artwork) return FileService.sendFile(image.objectId, res);
               }
             }
 
             // Artwork was not attached to model or in session store
-            res.send(404);
+            res.notFound();
           }
         }).catch(function (err) {
-          PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
-          res.send(500);
+          PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.artwork');
+          res.serverError()
         });
     }
   },
@@ -521,3 +524,31 @@ module.exports = {
       })
   }
 };
+
+// Called from viewAddon if the request is a socket
+function fetchStats(req, res) {
+  var addonID = req.param('id');
+  var eventName = req.param('eventName');
+
+  AddonEvent.find({
+    addon: addonID,
+    name: eventName
+  }).then(function(results) {
+    var total = 0;
+    results.forEach(function(result) {
+      if (result.data && result.data.total) total += result.data.total;
+    });
+    console.log({
+      eventName: eventName,
+      total: total,
+      count: results.length
+    });
+    req.socket.emit('eventResponse', {
+      eventName: eventName,
+      total: total,
+      count: results.length
+    });
+  }).catch(function(err) {
+    PrettyError(err, "An error occurred during AddonsController.fetchStats");
+  });
+}

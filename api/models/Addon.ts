@@ -117,10 +117,13 @@ var AddonModel = {
       type: 'array',
       defaultsTo: []
     },
-
     versions: {
       collection: 'AddonVersion',
       via: 'addon'
+    },
+    events: {
+      type: 'array',
+      defaultsTo: []
     },
 
     /**

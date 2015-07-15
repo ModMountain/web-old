@@ -240,6 +240,57 @@ module.exports = {
         if (value.substr(0,1) === "$") value = parseFloat(value.substr(1, value.length));
         objToUpdate[field] = value * 100;
         req.session.save();
+      } else if (field === 'event') {
+        var action = req.param('action');
+        if (action === 'new') {
+          var eventName = req.param('value');
+          if (objToUpdate.events === undefined) objToUpdate.events = [];
+
+          for (var i = 0; i < objToUpdate.length; i++) {
+            if (objToUpdate.events[i] === eventName) {
+              return req.socket.emit('eventActionResponse', {
+                err: true,
+                type: "Event Error",
+                msg: "An event with that name already exists"
+              })
+            }
+          }
+
+          objToUpdate.events.push(eventName);
+          req.session.save(() =>
+            req.socket.emit('eventActionResponse', {
+              name: eventName,
+              count: 0,
+              action: action
+            })
+          );
+        } else if (action === 'remove') {
+          var eventName = req.param('value');
+
+          for (var i = 0; i < objToUpdate.events.length; i++) {
+            if (objToUpdate.events[i] === eventName) {
+              objToUpdate.events.splice(i, 1);
+              return req.session.save(() =>
+                  req.socket.emit('eventActionResponse', {
+                    name: eventName,
+                    action: action
+                  })
+              )
+            }
+          }
+
+          return req.socket.emit('eventActionResponse', {
+            err: true,
+            type: "Event Error",
+            msg: "Event not found"
+          })
+        } else {
+          req.socket.emit('eventActionResponse', {
+            err: true,
+            type: "Action Error",
+            msg: "Invalid action '" + action + "'"
+          });
+        }
       } else {
         objToUpdate[field] = req.param('value');
         req.session.save();
