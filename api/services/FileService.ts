@@ -90,7 +90,7 @@ var Service = {
           'Content-Disposition': 'inline; filename="' + file.filename + '"',
           'Content-Length': file.length,
           'ETag': file.md5,
-          'Cache-Control': "public, max-age=" + 60 * 60 * 24 * 30
+          'Cache-Control': "public, max-age=" + 60 * 60 * 24 * 365
         });
         sails.hooks.gfs.createReadStream({
           _id: objectId,
