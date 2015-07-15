@@ -20,8 +20,10 @@
  * `node modmtn.js --silent --port=80 --prod`
  */
 
+
+
   // Load New Relic
-require("sails-hook-newrelic/register");
+require('newrelic');
 
 // Ensure we're in the project directory, so relative paths work as expected
 // no matter where we actually lift from.

@@ -126,3 +126,5 @@ Gruntfile.js*
 modmtn.js*
 UnifyHTML
 assets/plugins/master-slider/transition-gallery
+
+newrelic_agent.log
