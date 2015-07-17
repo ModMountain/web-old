@@ -1,6 +1,7 @@
 /// <reference path='../../typings/node/node.d.ts' />
 /// <reference path='../../typings/bluebird/bluebird.d.ts' />
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
+/// <reference path='../../typings/lodash/lodash.d.ts' />
 
 var AddonVersionModel = {
   schema: true,
@@ -10,7 +11,7 @@ var AddonVersionModel = {
       via: "versions",
       required: true
     },
-    versionNumber: {
+    number: {
       type: "string",
       required: true
     },
@@ -26,40 +27,19 @@ var AddonVersionModel = {
       type: "number",
       defaultsTo: true
     },
-    explanation: {
-      type: "string",
-      required: true
-    },
-    // Whether or not the addon makes calls to outside servers. Shown to users to keep them informed.
-    outsideServers: {
-      type: 'boolean',
-      required: true
-    },
-    // Whether or not the addon contains DRM or any sort of tracker. Shown to users to keep them informed.
-    containsDrm: {
-      type: 'boolean',
-      required: true
-    },
-    // Whether or not Mod Mountain should automatically update this addon, if possible.
-    autoUpdaterEnabled: {
-      type: 'boolean',
-      defaultsTo: false
-    },
-    // Whether or not the Mod Mountain configurator is enabled for this addon.
-    configuratorEnabled: {
-      type: 'boolean',
-      defaultsTo: false
-    },
-    // Whether or not Mod Mountain leak protection (unique obfuscation) is enabled for this addon.
-    leakProtectionEnabled: {
-      type: 'boolean',
-      defaultsTo: false
-    },
-    // Whether or not the Mod Mountain stat tracking is enabled for this addon.
-    statTrackerEnabled: {
+    approved: {
       type: 'boolean',
       defaultsTo: false
     }
+  },
+
+  beforeValidate: function(addonVersion, cb) {
+    _.keys(addonVersion).forEach(function(key) {
+	    var prop = addonVersion[key];
+      if (typeof prop === 'string' && !isNaN(prop)) addonVersion[key] = parseFloat(prop);
+    });
+
+    cb();
   }
 };
 

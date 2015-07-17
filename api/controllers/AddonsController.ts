@@ -62,7 +62,7 @@ module.exports = {
     if (req.user !== undefined) wishlistPromise = User.findOne(req.user.id).populate('wishlist');
 
     var addonId:String = req.param('id');
-    Promise.join(Addon.findOne(addonId).populate('author').populate('reviews').populate('tags').populate('purchasers'), wishlistPromise,
+    Promise.join(Addon.findOne(addonId).populate('author').populate('reviews').populate('tags').populate('purchasers').populate('versions'), wishlistPromise,
       function (addon:Addon, user:User) {
         res.locals.user = _.merge(res.locals.user, user);
         req.user = _.merge(req.user, user);
@@ -102,21 +102,46 @@ module.exports = {
   download: function (req, res) {
     NewRelic.setControllerName('AddonsController.download');
     var addonId:String = req.param('id');
-    Addon.findOne(addonId).populate('purchasers')
-      .then(function (addon:Addon) {
-		    if (addon === undefined) {
-          res.send(404);
-        } else if (!addon.canDownload(req.user)) {
-          res.send(403);
-        } else {
-          // Get the file and it's metadata from GridFS
-          FileService.sendFile(addon.zipFile, res);
-        }
-      })
-      .catch(function (err) {
-        PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
-        res.send(500);
-      });
+
+    if (req.session.addonEditor[addonId]) downloadFromSession(req, res, req.session.addonEditor[addonId]);
+    else {
+      Addon.findOne(addonId).populate('purchasers')
+        .then(function (addon:Addon) {
+          if (!addon) res.notFound();
+          if (!addon.canDownload(req.user)) res.forbidden();
+
+          // User can download this file, must do a version lookup
+          var versionNumber:String = req.param('version');
+
+          if (versionNumber) { // User wants a specific version
+            return AddonVersion.findOne({
+              addon: addonId,
+              number: versionNumber
+            });
+          } else { // User wants the latest version
+            return AddonVersion.find({
+              addon: addonId
+            }).then(function(addonVersions) {
+              var vc = require('version_compare');
+              addonVersions.sort(function(a, b) {
+                return vc.compare(a.number, b.number);
+              });
+              return addonVersions[0];
+            });
+          }
+        }).then(function(addonVersion) {
+          if (addonVersion) {
+            FileService.sendFile(addonVersion.file, res);
+            addonVersion.downloads++;
+            addonVersion.save();
+          } else {
+            res.notFound();
+          }
+        }).catch(function (err) {
+          PrettyError(err, 'Error occurred during Addon.findOne inside AddonsController.download');
+          res.serverError();
+        });
+    }
   },
 
   artwork: function (req, res) {
@@ -551,4 +576,28 @@ function fetchStats(req, res) {
   }).catch(function(err) {
     PrettyError(err, "An error occurred during AddonsController.fetchStats");
   });
+}
+
+function downloadFromSession(req, res, sessionAddon) {
+  var versionNumber:String = req.param('version');
+  var versionToDownload;
+
+  if (versionNumber) { // User wants a specific version
+    for (let i = 0; i < sessionAddon.versions.length; i++) {
+      let addonVersion = sessionAddon.versions[i];
+      if (addonVersion.number === versionNumber) {
+        versionToDownload = sessionAddon.versions[i];
+        break;
+      }
+    }
+  } else { // User wants the latest version
+    var vc = require('version_compare');
+    sessionAddon.versions.sort(function(a, b) {
+      return vc.compare(b.number, a.number);
+    });
+    versionToDownload = sessionAddon.versions[0];
+  }
+
+  if (versionToDownload) FileService.sendFile(versionToDownload.file, res);
+  else res.notFound();
 }

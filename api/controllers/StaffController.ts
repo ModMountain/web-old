@@ -28,9 +28,9 @@ module.exports = {
 	    NewRelic.setControllerName('StaffController.approveAddon');
 	    var addonId = req.param('addonId');
       Addon.findOne(addonId)
-      .then(function(addon) {
+      .then(function(addon:Addon) {
           addon.status = Addon.Status.APPROVED;
-          addon.save()
+          return [addon.save(), AddonVersion.update({addon: addon.id}, {approved: true})];
         }).then(function() {
           if (req.isSocket) {
             req.socket.emit('notification', {type: 'success', msg: 'Addon approved.'});

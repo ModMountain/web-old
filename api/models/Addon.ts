@@ -103,10 +103,10 @@ var AddonModel = {
       via: 'dependencies'
     },
     // The comments by users on this addon
-    reviews: {
-      collection: 'Review',
-      via: 'addon'
-    },
+    //reviews: {
+    //  collection: 'Review',
+    //  via: 'addon'
+    //},
     // The addon's tags
     tags: {
       collection: 'Tag',
@@ -159,7 +159,7 @@ var AddonModel = {
       // Anonymous users cannot make modifications
       if (!user) return false;
       // The author can make modifications
-      else if (this.author === user.id) return true;
+      else if (this.author === user.id || this.author.id === user.id) return true;
       // Administrators can make modifications
       else if (user.permissionLevel >= 2) return true;
       // Failed all other checks
@@ -460,8 +460,14 @@ var AddonModel = {
     if (addon.size !== undefined) addon.size = parseInt(addon.size);
     if (addon.status !== undefined) addon.status = parseInt(addon.status);
     if (addon.price !== undefined) addon.price = parseInt(addon.price);
-    addon.rawTags = addon.rawTags.toLowerCase();
+    if (addon.rawTags) addon.rawTags = addon.rawTags.toLowerCase();
 
+    // Dirty hack because waterline is a POS
+    if (addon.reviews && addon.reviews.length === 0) addon.reviews = undefined;
+    cb();
+  },
+
+  afterValidate: function(addon, cb) {
     cb();
   }
 };

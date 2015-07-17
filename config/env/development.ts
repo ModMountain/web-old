@@ -17,14 +17,17 @@ module.exports = {
     port: 1337,
 
     log: {
-        level: 'info'
+        level: 'silly'
     },
 
     connections: {
         mongodb: {
             adapter: 'sails-mongo',
             url: 'mongodb://localhost:27017/modmountain_development'
-        }
+        },
+      disk: {
+        adapter: 'sails-disk'
+      }
     },
 
     session: {
@@ -35,7 +38,7 @@ module.exports = {
     },
 
     models: {
-        connection: 'mongodb',
+        connection: 'disk',
         migrate: 'safe'
     },
 

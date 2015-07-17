@@ -20,21 +20,21 @@ module.exports = {
 
     if (req.param('id')) {
       var addonId = req.param('id');
-      Addon.findOne(addonId)
+      Addon.findOne(addonId).populateAll()
       .then(function(addon:Addon) {
           if (addon === undefined) res.notFound();
           else if (!addon.canModify(req.user)) res.forbidden();
           else {
             if (req.session.addonEditor[addonId] === undefined) req.session.addonEditor[addonId] = addon;
-            return req.session.save();
+            return req.session.save(function() {
+              res.view({
+                title: "Addon Editor",
+                addon: req.session.addonEditor[addonId],
+                activeTab: 'profile.addons',
+                breadcrumbs: [["/profile", "Profile"], ["/addons", "Addons"]],
+              });
+            });
           }
-        }).then(function() {
-          res.view({
-            title: "Addon Editor",
-            addon: req.session.addonEditor[addonId],
-            activeTab: 'profile.addons',
-            breadcrumbs: [["/profile", "Profile"], ["/addons", "Addons"]],
-          });
         }).catch(function(err) {
           PrettyError(err, "Something went wrong during liveEdit")
           res.serverError();
@@ -43,7 +43,7 @@ module.exports = {
       // Stick default addon into session
       if (req.session.addonEditor.new === undefined) {
         req.session.addonEditor.new = {
-          id: 'session',
+          id: 'new',
           author: req.user.id,
           name: "New Addon",
           price: 0,
@@ -52,7 +52,9 @@ module.exports = {
           rawTags: "some, sample, tags",
           activeTab: 'profile.liveedit',
           images: [],
-          videos: []
+          videos: [],
+          versions: [],
+          events: []
         };
         return req.session.save(function(err) {
           if (err) res.serverError();
@@ -291,6 +293,23 @@ module.exports = {
             msg: "Invalid action '" + action + "'"
           });
         }
+      } else if (field === 'version') {
+        var action = req.param('action').toUpperCase();
+        if (action === 'NEW') {
+          var versionNumber = req.param('versionNumber');
+          var versionFile = req.files.versionFile[0].objectId;
+          objToUpdate.versions.push({
+            number: versionNumber,
+            downloads: 0,
+            createdAt: Date.now(),
+            approved: false,
+            size: req.files.versionFile[0].size,
+            file: versionFile
+          });
+          req.session.save(function() {
+            res.redirect(req.path);
+          })
+        }
       } else {
         objToUpdate[field] = req.param('value');
         req.session.save();
@@ -310,18 +329,40 @@ module.exports = {
       if (objToUpdate.images.length < 3) return req.socket.emit('finalizeResponse', {error: true, type: "Validation Error", msg: "Your add must have at least 3 images."});
 
       var promise;
-      if (objToUpdate.id) promise = Addon.update(objToUpdate.id, objToUpdate);
-      else promise = Addon.create(objToUpdate);
+      if (objToUpdate.id === 'new') {
+        promise = Addon.create(objToUpdate);
+        console.log("Creating a new addon")
+      }
+      else {
+        promise = Addon.update(objToUpdate.id, objToUpdate);
+        console.log("Updating an existing addon")
+      }
       promise
         .then(function (addon) {
-          objToUpdate = undefined;
-          return [req.session.save(), addon];
-        })
-        .spread(function (session, addon) {
-          req.socket.emit('finalizeResponse', {error: false, addonId: addon.id || addon[0].id})
+          // Chunk of code to generate promises that will add AddonVersions to the database
+          //var makeAddonVersionPromises = [];
+          //objToUpdate.versions.forEach(function(version) {
+          //  if (version.updatedAt) {
+          //    delete version.downloads; // In case people downloaded the addon while it was being edited
+          //    makeAddonVersionPromises.push(AddonVersion.update({addon: objToUpdate, number: version.number}, version));
+          //  } else {
+          //    delete version.createdAt;
+          //    version.addon = addon.id;
+          //    makeAddonVersionPromises.push(AddonVersion.create(version));
+          //  }
+          //});
+
+          // Set the obj to undefined to flush this addonEditor data out of the session store
+          req.session.addonEditor[objToUpdate.id] = undefined;
+          //return [addon, Promise.all(makeAddonVersionPromises), req.session.save()];
+          return [addon, req.session.save()];
+        }).spread(function (addon) {
+          console.log("There are", addon.versions.length, "versions")
+          req.socket.emit('finalizeResponse', {error: false, addonId: addon.id || addon[0].id});
         }).catch(function (error) {
           req.socket.emit('finalizeResponse', {error: true, type: "Finalization Error", msg: "Something went wrong while finalizing your addon, please try again."});
           PrettyError(error, "Something went wrong while finalizing an addon")
+          //console.error(error)
         })
     }
   },

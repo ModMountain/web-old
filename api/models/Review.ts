@@ -3,25 +3,30 @@
 /// <reference path='../../typings/modmountain/modmountain.d.ts' />
 
 var ReviewModel = {
-    schema: true,
-    attributes: {
-        body: {
-            type: "string",
-            required: true
-        },
-        author: {
-            model: 'User',
-            required: true
-        },
-        addon: {
-            model: 'Addon',
-            required: true
-        },
-        children: {
-            collection: 'ReviewComment',
-            via: 'parent'
-        }
+  schema: true,
+  attributes: {
+    body: {
+      type: "string",
+      required: true
+    },
+    author: {
+      model: 'User',
+      required: true
+    },
+    addon: {
+      model: 'Addon',
+      required: true
+    },
+    children: {
+      collection: 'ReviewComment',
+      via: 'parent'
     }
+  },
+
+  beforeValidate: function (vals, cb) {
+    console.log(vals);
+    cb();
+  }
 };
 
 module.exports = ReviewModel;
