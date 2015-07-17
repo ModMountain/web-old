@@ -15,5 +15,5 @@
  */
 
 module.exports.session = {
-	adapter: 'memory'
+	adapter: 'redis'
 };
